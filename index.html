@@ -1,104 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="SMART BUWABA — Dream • Create • Achieve. Films, videos, creativity and entertainment.">
-  <meta name="keywords" content="Smart Buwaba, Smart Buwaba TV, Malawi, films, videos, creator">
-  <meta name="author" content="SMART BUWABA">
-  <title>SMART BUWABA | Dream • Create • Achieve</title>
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
-    body{font-family:Arial,Helvetica,sans-serif;background:#050816;color:#fff;line-height:1.6}
-    header{position:sticky;top:0;z-index:20;background:rgba(5,8,22,.94);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,193,7,.25)}
-    nav{max-width:1150px;margin:auto;display:flex;align-items:center;justify-content:space-between;padding:12px 20px}
-    .brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:1px;color:#ffd43b}
-    .brand img{width:44px;height:44px;object-fit:contain}
-    nav ul{display:flex;gap:22px;list-style:none}
-    nav a{color:#fff;text-decoration:none;font-weight:700}
-    nav a:hover{color:#ffd43b}
-    .hero{min-height:88vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:70px 20px;background:
-      radial-gradient(circle at 50% 20%,rgba(20,71,180,.5),transparent 42%),
-      linear-gradient(180deg,#07112f,#050816)}
-    .hero img{width:min(390px,80vw);filter:drop-shadow(0 0 35px rgba(255,200,0,.28))}
-    .hero h1{font-size:clamp(2.4rem,7vw,5.4rem);margin:12px 0;color:#ffd43b;text-transform:uppercase}
-    .hero p{font-size:1.2rem;color:#dbe4ff;max-width:680px;margin:auto}
-    .buttons{margin-top:25px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-    .btn{display:inline-block;padding:13px 22px;border-radius:999px;text-decoration:none;font-weight:800}
-    .primary{background:#ffd43b;color:#07112f}.secondary{border:1px solid #ffd43b;color:#ffd43b}
-    section{max-width:1150px;margin:auto;padding:80px 20px}
-    .title{text-align:center;font-size:2.3rem;margin-bottom:12px;color:#ffd43b}
-    .sub{text-align:center;color:#aebbd9;margin-bottom:38px}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
-    .card{background:linear-gradient(145deg,#0d1734,#080d20);border:1px solid rgba(255,212,59,.18);border-radius:18px;padding:26px}
-    .card h3{color:#ffd43b;margin-bottom:8px}
-    .card p{color:#c5cee4}
-    .contact{text-align:center}
-    footer{padding:30px 20px;text-align:center;border-top:1px solid rgba(255,193,7,.2);color:#9da9c5}
-    @media(max-width:700px){nav ul{display:none}.hero{min-height:82vh}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="SMART BUWABA — Dream • Create • Achieve. Films, videos, creativity and entertainment.">
+<meta name="author" content="SMART BUWABA">
+<title>SMART BUWABA TV</title>
+<style>
+:root{--bg:#07070a;--card:#111117;--card2:#181820;--text:#f7f7fb;--muted:#a7a7b5;--accent:#e11d48;--accent2:#ff4d6d;--line:#282833;--shadow:0 16px 50px rgba(0,0,0,.35)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(circle at 70% -10%,#2b0b18 0,#07070a 38%),var(--bg);color:var(--text);min-height:100vh}
+button,input,textarea,select{font:inherit}.hidden{display:none!important}
+header{position:sticky;top:0;z-index:50;background:rgba(7,7,10,.84);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.nav{max-width:1180px;margin:auto;display:flex;align-items:center;gap:20px;padding:13px 18px}.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);font-weight:900;letter-spacing:.5px}.brand img{width:43px;height:43px;object-fit:contain;border-radius:12px}.brand span b{color:var(--accent2)}
+.navlinks{display:flex;gap:7px;margin-left:auto}.navlinks button,.iconbtn{border:0;background:transparent;color:var(--muted);padding:10px 12px;border-radius:10px;cursor:pointer}.navlinks button:hover,.navlinks button.active,.iconbtn:hover{background:var(--card2);color:#fff}.menu{display:none}
+main{max-width:1180px;margin:auto;padding:24px 18px 70px}.hero{min-height:390px;border:1px solid var(--line);border-radius:25px;padding:55px 40px;display:flex;align-items:center;background:linear-gradient(110deg,rgba(225,29,72,.22),rgba(17,17,23,.86) 48%,rgba(17,17,23,.7)),radial-gradient(circle at 85% 25%,rgba(255,77,109,.3),transparent 30%);box-shadow:var(--shadow);overflow:hidden;position:relative}.hero:after{content:"SB";position:absolute;right:7%;bottom:-45px;font-size:220px;font-weight:1000;color:rgba(255,255,255,.025)}.heroText{max-width:700px;position:relative;z-index:1}.eyebrow{color:#ff9db0;font-weight:800;text-transform:uppercase;letter-spacing:2px;font-size:12px}.hero h1{font-size:clamp(40px,7vw,78px);line-height:.95;margin:12px 0}.hero p{font-size:17px;line-height:1.7;color:#d1d1dc;max-width:620px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:12px;padding:12px 17px;font-weight:800;cursor:pointer;background:var(--accent);color:white;box-shadow:0 8px 25px rgba(225,29,72,.2)}.btn:hover{filter:brightness(1.12);transform:translateY(-1px)}.btn.secondary{background:var(--card2);border:1px solid var(--line)}
+.section{margin-top:34px}.sectionHead{display:flex;align-items:end;justify-content:space-between;gap:15px;margin-bottom:15px}.section h2{margin:0;font-size:28px}.muted{color:var(--muted)}.tools{display:flex;gap:9px;flex-wrap:wrap}.search{background:var(--card);border:1px solid var(--line);color:#fff;padding:11px 14px;border-radius:11px;min-width:230px;outline:none}.search:focus{border-color:var(--accent)}
+.filters{display:flex;gap:8px;overflow:auto;padding-bottom:5px}.filter{white-space:nowrap;border:1px solid var(--line);background:var(--card);color:var(--muted);padding:9px 13px;border-radius:999px;cursor:pointer}.filter.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.card{background:linear-gradient(180deg,#15151c,#0e0e13);border:1px solid var(--line);border-radius:17px;overflow:hidden;transition:.2s}.card:hover{transform:translateY(-4px);border-color:#454552}.thumb{height:190px;background:#222;position:relative;overflow:hidden}.thumb img{width:100%;height:100%;object-fit:cover}.placeholder{height:100%;display:grid;place-items:center;background:linear-gradient(135deg,#24101a,#15151c)}.sbmark{font-size:44px;font-weight:1000;color:#ff4d6d}.badge{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.72);padding:6px 8px;border-radius:8px;font-size:11px;font-weight:800}.play{position:absolute;right:10px;bottom:10px;width:43px;height:43px;border-radius:50%;border:0;background:var(--accent);color:#fff;font-size:17px;cursor:pointer}.cardBody{padding:13px}.card h3{margin:0 0 6px;font-size:16px}.card p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}.meta{display:flex;justify-content:space-between;color:#7f7f8c;font-size:11px;margin-top:10px}.empty{border:1px dashed #34343f;border-radius:16px;padding:35px;text-align:center;color:var(--muted)}
+.about{display:grid;grid-template-columns:1.2fr .8fr;gap:15px}.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px}.panel h3{margin-top:0}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{background:var(--card2);padding:17px;border-radius:13px}.stat strong{display:block;font-size:26px}.stat span{color:var(--muted);font-size:12px}
+footer{border-top:1px solid var(--line);padding:28px 18px;color:var(--muted);text-align:center}.socials{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}.socials a{color:#ddd;text-decoration:none;padding:8px 11px;background:var(--card);border:1px solid var(--line);border-radius:9px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);z-index:100;display:grid;place-items:center;padding:18px}.modalBox{width:min(650px,100%);max-height:90vh;overflow:auto;background:#101016;border:1px solid #34343f;border-radius:20px;padding:22px;box-shadow:var(--shadow)}.modalTop{display:flex;justify-content:space-between;align-items:center}.close{border:0;background:var(--card2);color:#fff;width:38px;height:38px;border-radius:10px;cursor:pointer}.form{display:grid;gap:12px}.form label{font-size:12px;color:#aaa}.form input,.form textarea,.form select{width:100%;background:#0a0a0e;border:1px solid var(--line);color:#fff;border-radius:10px;padding:11px;outline:none}.form textarea{min-height:100px;resize:vertical}.note{font-size:12px;color:#9292a0;background:#181820;padding:11px;border-radius:10px}
+.player{width:100%;aspect-ratio:16/9;background:#000;border-radius:14px;overflow:hidden}.player video{width:100%;height:100%}
+.settingRow{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}.switch{position:relative;width:48px;height:27px}.switch input{opacity:0;width:0;height:0}.slider{position:absolute;inset:0;background:#333;border-radius:30px;cursor:pointer}.slider:before{content:"";position:absolute;width:21px;height:21px;left:3px;top:3px;background:white;border-radius:50%;transition:.2s}.switch input:checked+.slider{background:var(--accent)}.switch input:checked+.slider:before{transform:translateX(21px)}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.about{grid-template-columns:1fr}.navlinks{display:none}.menu{display:block;margin-left:auto}.nav.open .navlinks{display:flex;position:absolute;top:70px;left:12px;right:12px;background:#101016;border:1px solid var(--line);padding:10px;border-radius:14px;flex-direction:column}.nav.open .navlinks button{text-align:left}}
+@media(max-width:560px){main{padding:14px 12px 50px}.hero{padding:35px 22px;min-height:410px}.grid{grid-template-columns:1fr}.thumb{height:220px}.search{min-width:100%}.stats{grid-template-columns:1fr}.brand span{font-size:13px}}
+</style>
 </head>
 <body>
-<header>
-  <nav>
-    <a class="brand" href="#home"><img src="./logo.png" alt="SMART BUWABA logo"><span>SMART BUWABA</span></a>
-    <ul>
-      <li><a href="#home">Home</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#videos">Videos</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-  </nav>
-</header>
+<header><nav class="nav" id="nav">
+<a class="brand" href="#home" onclick="showPage('home')"><img src="logo.png" onerror="this.style.display='none'" alt="Smart Buwaba logo"><span>SMART <b>BUWABA</b></span></a>
+<button class="iconbtn menu" onclick="document.getElementById('nav').classList.toggle('open')">☰</button>
+<div class="navlinks">
+<button class="active" data-page="home" onclick="showPage('home')">Home</button>
+<button data-page="videos" onclick="showPage('videos')">🎬 Videos</button>
+<button data-page="about" onclick="showPage('about')">About</button>
+<button onclick="openSettings()">⚙️ Settings</button>
+</div></nav></header>
 
 <main>
-  <section class="hero" id="home">
-    <div>
-      <img src="./logo.png" alt="SMART BUWABA">
-      <h1>SMART BUWABA</h1>
-      <p>Dream • Create • Achieve</p>
-      <p>Welcome to the official home of SMART BUWABA — creativity, films, videos and entertainment.</p>
-      <div class="buttons">
-        <a class="btn primary" href="#videos">Watch Videos</a>
-        <a class="btn secondary" href="#about">Learn More</a>
-      </div>
-    </div>
-  </section>
+<section id="home" class="page">
+<div class="hero"><div class="heroText"><div class="eyebrow">SMART BUWABA TV</div><h1>Dream.<br>Create.<br>Achieve.</h1><p>Your home for Smart Buwaba films, comedy, creative videos and entertainment. New content can be added to the Videos section.</p><div class="actions"><button class="btn" onclick="showPage('videos')">▶ Explore Videos</button><button class="btn secondary" onclick="openAddPost()">＋ Add Post</button></div></div></div>
+<div class="section"><div class="sectionHead"><div><h2>Latest Posts</h2><div class="muted">Your newest videos appear here.</div></div></div><div id="homeGrid" class="grid"></div></div>
+<div class="section about"><div class="panel"><h3>Welcome to Smart Buwaba</h3><p class="muted">A creative space for films, comedy, entertainment and original projects. Build your audience one post at a time.</p></div><div class="panel"><div class="stats"><div class="stat"><strong id="countStat">0</strong><span>Posts</span></div><div class="stat"><strong>24/7</strong><span>Creative</span></div><div class="stat"><strong>SB</strong><span>Original</span></div></div></div></div>
+</section>
 
-  <section id="about">
-    <h2 class="title">About SMART BUWABA</h2>
-    <p class="sub">A creative brand built to dream big and create something memorable.</p>
-    <div class="grid">
-      <div class="card"><h3>🎬 Films</h3><p>Discover SMART BUWABA film projects and cinematic stories.</p></div>
-      <div class="card"><h3>📹 Videos</h3><p>New videos, entertainment and creative content will be featured here.</p></div>
-      <div class="card"><h3>✨ Creativity</h3><p>Ideas, music, photography, editing and other creative projects.</p></div>
-    </div>
-  </section>
+<section id="videos" class="page hidden">
+<div class="sectionHead"><div><h2>🎬 Smart Buwaba Videos</h2><div class="muted">Films, comedy and your latest uploads.</div></div><div class="tools"><input id="search" class="search" placeholder="Search videos..." oninput="renderVideos()"></div></div>
+<div class="filters" id="filters"><button class="filter active" onclick="setCategory('All',this)">All</button><button class="filter" onclick="setCategory('Film',this)">Films</button><button class="filter" onclick="setCategory('Comedy',this)">Comedy</button><button class="filter" onclick="setCategory('Music',this)">Music</button><button class="filter" onclick="setCategory('Other',this)">Other</button></div>
+<div id="videoGrid" class="grid" style="margin-top:15px"></div>
+</section>
 
-  <section id="videos">
-    <h2 class="title">Videos</h2>
-    <p class="sub">Your video section is ready. Add YouTube or other video links here.</p>
-    <div class="grid">
-      <div class="card"><h3>Coming Soon</h3><p>Film and video content will appear here.</p></div>
-      <div class="card"><h3>SMART BUWABA TV</h3><p>More entertainment and projects coming soon.</p></div>
-    </div>
-  </section>
-
-  <section id="contact" class="contact">
-    <h2 class="title">Connect With SMART BUWABA</h2>
-    <p class="sub">Add your official social-media links here when you are ready.</p>
-    <div class="buttons">
-      <a class="btn primary" href="#" onclick="alert('Add your YouTube link here.')">YouTube</a>
-      <a class="btn secondary" href="#" onclick="alert('Add your TikTok link here.')">TikTok</a>
-      <a class="btn secondary" href="#" onclick="alert('Add your Instagram link here.')">Instagram</a>
-    </div>
-  </section>
+<section id="about" class="page hidden">
+<div class="section"><div class="panel"><h2>About Smart Buwaba</h2><p class="muted">SMART BUWABA is a creative brand focused on videos, films, comedy and digital entertainment.</p><div class="actions"><button class="btn" onclick="openAddPost()">＋ Create a Post</button></div></div></div>
+</section>
 </main>
 
-<footer>
-  © <span id="year"></span> SMART BUWABA. Dream • Create • Achieve.
-</footer>
-<script>document.getElementById("year").textContent=new Date().getFullYear();</script>
+<footer><div><strong>SMART BUWABA</strong> • Dream • Create • Achieve</div><div class="socials" style="margin-top:12px"><a href="#" onclick="return false">TikTok</a><a href="#" onclick="return false">Facebook</a><a href="#" onclick="return false">YouTube</a></div><div style="margin-top:12px;font-size:12px">© <span id="year"></span> Smart Buwaba</div></footer>
+
+<!-- Add Post -->
+<div id="postModal" class="modal hidden" onclick="if(event.target===this)closeModal('postModal')"><div class="modalBox"><div class="modalTop"><h2>＋ Add New Post</h2><button class="close" onclick="closeModal('postModal')">×</button></div><div class="form">
+<label>Title<input id="pTitle" placeholder="e.g. My New Film"></label>
+<label>Category<select id="pCategory"><option>Film</option><option>Comedy</option><option>Music</option><option>Other</option></select></label>
+<label>Description<textarea id="pDesc" placeholder="Tell people about this video..."></textarea></label>
+<label>Thumbnail URL (optional)<input id="pThumb" placeholder="https://..."></label>
+<label>Video URL (optional)<input id="pVideo" placeholder="https://...mp4 or video link"></label>
+<div class="note">Demo mode: posts are saved in this browser using local storage. For public posts visible to everyone, the next step is connecting a database/video host.</div>
+<button class="btn" onclick="savePost()">Publish Post</button>
+</div></div></div>
+
+<!-- Player -->
+<div id="playerModal" class="modal hidden" onclick="if(event.target===this)closeModal('playerModal')"><div class="modalBox"><div class="modalTop"><h2 id="playerTitle">Video</h2><button class="close" onclick="closeModal('playerModal')">×</button></div><div id="playerArea"></div><p id="playerDesc" class="muted"></p></div></div>
+
+<!-- Settings -->
+<div id="settingsModal" class="modal hidden" onclick="if(event.target===this)closeModal('settingsModal')"><div class="modalBox"><div class="modalTop"><h2>⚙️ Settings</h2><button class="close" onclick="closeModal('settingsModal')">×</button></div>
+<div class="settingRow"><div><strong>Dark theme</strong><div class="muted">Keep the cinematic Smart Buwaba look.</div></div><label class="switch"><input id="darkSwitch" type="checkbox" checked onchange="toggleTheme(this)"><span class="slider"></span></label></div>
+<div class="settingRow"><div><strong>Reset demo posts</strong><div class="muted">Remove posts saved in this browser.</div></div><button class="btn secondary" onclick="resetPosts()">Reset</button></div>
+<div style="margin-top:18px" class="note">Smart Buwaba • Website settings and local posting system.</div>
+</div></div>
+
+<script>
+const defaultPosts=[
+ {id:1,title:"Welcome to Smart Buwaba",category:"Other",desc:"Welcome to the official Smart Buwaba creative space.",thumb:"",video:"",date:new Date().toISOString()},
+ {id:2,title:"Coming Soon",category:"Film",desc:"Your next Smart Buwaba film can appear here.",thumb:"",video:"",date:new Date().toISOString()}
+];
+let posts=JSON.parse(localStorage.getItem("sb_posts")||"null")||defaultPosts;
+let category="All";
+const $=id=>document.getElementById(id);
+function persist(){localStorage.setItem("sb_posts",JSON.stringify(posts))}
+function showPage(id){
+ document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));
+ $(id).classList.remove("hidden");
+ document.querySelectorAll(".navlinks button[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
+ document.getElementById('nav').classList.remove('open');
+ if(id==="videos")renderVideos(); if(id==="home")renderHome(); window.scrollTo({top:0,behavior:"smooth"});
+}
+function card(p){
+ const thumb=p.thumb?`<img src="${esc(p.thumb)}" alt="">`:`<div class="placeholder"><div class="sbmark">SB</div></div>`;
+ return `<article class="card"><div class="thumb">${thumb}<span class="badge">${esc(p.category)}</span><button class="play" onclick="playPost(${p.id})">▶</button></div><div class="cardBody"><h3>${esc(p.title)}</h3><p>${esc(p.desc||"Smart Buwaba video")}</p><div class="meta"><span>${esc(p.category)}</span><span>${new Date(p.date).toLocaleDateString()}</span></div></div></article>`;
+}
+function renderHome(){ $("homeGrid").innerHTML=posts.slice().reverse().slice(0,4).map(card).join("")||empty(); $("countStat").textContent=posts.length }
+function renderVideos(){
+ const q=($("search").value||"").toLowerCase();
+ let arr=posts.slice().reverse().filter(p=>(category==="All"||p.category===category)&&((p.title+" "+p.desc).toLowerCase().includes(q)));
+ $("videoGrid").innerHTML=arr.map(card).join("")||empty();
+}
+function empty(){return `<div class="empty" style="grid-column:1/-1">No posts found yet.<br><button class="btn" style="margin-top:12px" onclick="openAddPost()">＋ Add your first post</button></div>`}
+function setCategory(c,el){category=c;document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));el.classList.add("active");renderVideos()}
+function openAddPost(){ $("postModal").classList.remove("hidden"); $("pTitle").focus() }
+function savePost(){
+ const title=$("pTitle").value.trim(); if(!title){alert("Please enter a title.");return}
+ posts.push({id:Date.now(),title,category:$("pCategory").value,desc:$("pDesc").value.trim(),thumb:$("pThumb").value.trim(),video:$("pVideo").value.trim(),date:new Date().toISOString()});
+ persist();["pTitle","pDesc","pThumb","pVideo"].forEach(x=>$(x).value="");closeModal("postModal");renderHome();renderVideos();alert("Post published on this browser.");
+}
+function playPost(id){
+ const p=posts.find(x=>x.id===id); if(!p)return;
+ $("playerTitle").textContent=p.title;$("playerDesc").textContent=p.desc||"";
+ if(p.video){$("playerArea").innerHTML=`<div class="player"><video controls autoplay src="${esc(p.video)}"></video></div>`}
+ else {$("playerArea").innerHTML=`<div class="empty">This post does not have a video URL yet.<br><span class="muted">Edit the website/backend later to connect the actual movie file.</span></div>`}
+ $("playerModal").classList.remove("hidden");
+}
+function openSettings(){ $("settingsModal").classList.remove("hidden") }
+function closeModal(id){$(id).classList.add("hidden"); if(id==="playerModal")$("playerArea").innerHTML=""}
+function resetPosts(){if(confirm("Reset demo posts?")){posts=defaultPosts;persist();renderHome();renderVideos();}}
+function toggleTheme(el){document.body.style.filter=el.checked?"none":"invert(.92) hue-rotate(180deg)";localStorage.setItem("sb_theme",el.checked?"dark":"light")}
+function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+$("year").textContent=new Date().getFullYear();
+if(localStorage.getItem("sb_theme")==="light"){$("darkSwitch").checked=false;toggleTheme($("darkSwitch"))}
+renderHome();
+</script>
 </body>
 </html>
