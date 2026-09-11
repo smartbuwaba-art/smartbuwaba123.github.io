@@ -64,7 +64,7 @@ footer{border-top:1px solid var(--line);padding:28px 18px;color:var(--muted);tex
 <label>Description<textarea id="pDesc" placeholder="Tell people about this video..."></textarea></label>
 <label>Thumbnail URL (optional)<input id="pThumb" placeholder="https://..."></label>
 <label>Video URL (optional)<input id="pVideo" placeholder="https://...mp4 or video link"></label>
-<div class="note">Demo mode: posts are saved in this browser using local storage. For public posts visible to everyone, the next step is connecting a database/video host.</div>
+<div class="note">Posts are stored in Smart Buwaba Firestore so they can be loaded from the website.</div>
 <button class="btn" onclick="savePost()">Publish Post</button>
 </div></div></div>
 
@@ -78,15 +78,27 @@ footer{border-top:1px solid var(--line);padding:28px 18px;color:var(--muted);tex
 <div style="margin-top:18px" class="note">Smart Buwaba • Website settings and local posting system.</div>
 </div></div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script>
+const firebaseConfig={
+ apiKey:"AIzaSyC5ia_DjqTg-cepVQcbYiM7m3tBTGhtnNs",
+ authDomain:"smartbuwaba-40422.firebaseapp.com",
+ projectId:"smartbuwaba-40422",
+ storageBucket:"smartbuwaba-40422.firebasestorage.app",
+ messagingSenderId:"84013599664",
+ appId:"1:84013599664:web:7a22f7deaf2e40557ba475",
+ measurementId:"G-QHR81JB1D6"
+};
+firebase.initializeApp(firebaseConfig);
+const db=firebase.firestore();
 const defaultPosts=[
- {id:1,title:"Welcome to Smart Buwaba",category:"Other",desc:"Welcome to the official Smart Buwaba creative space.",thumb:"",video:"",date:new Date().toISOString()},
- {id:2,title:"Coming Soon",category:"Film",desc:"Your next Smart Buwaba film can appear here.",thumb:"",video:"",date:new Date().toISOString()}
+ {id:"demo1",title:"Welcome to Smart Buwaba",category:"Other",desc:"Welcome to the official Smart Buwaba creative space.",thumb:"",video:"",date:new Date().toISOString()},
+ {id:"demo2",title:"Coming Soon",category:"Film",desc:"Your next Smart Buwaba film can appear here.",thumb:"",video:"",date:new Date().toISOString()}
 ];
-let posts=JSON.parse(localStorage.getItem("sb_posts")||"null")||defaultPosts;
+let posts=[];
 let category="All";
 const $=id=>document.getElementById(id);
-function persist(){localStorage.setItem("sb_posts",JSON.stringify(posts))}
 function showPage(id){
  document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));
  $(id).classList.remove("hidden");
@@ -96,37 +108,53 @@ function showPage(id){
 }
 function card(p){
  const thumb=p.thumb?`<img src="${esc(p.thumb)}" alt="">`:`<div class="placeholder"><div class="sbmark">SB</div></div>`;
- return `<article class="card"><div class="thumb">${thumb}<span class="badge">${esc(p.category)}</span><button class="play" onclick="playPost(${p.id})">▶</button></div><div class="cardBody"><h3>${esc(p.title)}</h3><p>${esc(p.desc||"Smart Buwaba video")}</p><div class="meta"><span>${esc(p.category)}</span><span>${new Date(p.date).toLocaleDateString()}</span></div></div></article>`;
+ return `<article class="card"><div class="thumb">${thumb}<span class="badge">${esc(p.category||"Other")}</span><button class="play" onclick="playPost('${String(p.id).replace(/'/g,"\\'")}')">▶</button></div><div class="cardBody"><h3>${esc(p.title)}</h3><p>${esc(p.desc||"Smart Buwaba video")}</p><div class="meta"><span>${esc(p.category||"Other")}</span><span>${p.date?new Date(p.date).toLocaleDateString():""}</span></div></div></article>`;
 }
 function renderHome(){ $("homeGrid").innerHTML=posts.slice().reverse().slice(0,4).map(card).join("")||empty(); $("countStat").textContent=posts.length }
 function renderVideos(){
  const q=($("search").value||"").toLowerCase();
- let arr=posts.slice().reverse().filter(p=>(category==="All"||p.category===category)&&((p.title+" "+p.desc).toLowerCase().includes(q)));
+ let arr=posts.slice().reverse().filter(p=>(category==="All"||(p.category||"Other")==category)&&((p.title+" "+(p.desc||"")).toLowerCase().includes(q)));
  $("videoGrid").innerHTML=arr.map(card).join("")||empty();
 }
 function empty(){return `<div class="empty" style="grid-column:1/-1">No posts found yet.<br><button class="btn" style="margin-top:12px" onclick="openAddPost()">＋ Add your first post</button></div>`}
 function setCategory(c,el){category=c;document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));el.classList.add("active");renderVideos()}
 function openAddPost(){ $("postModal").classList.remove("hidden"); $("pTitle").focus() }
-function savePost(){
+async function savePost(){
  const title=$("pTitle").value.trim(); if(!title){alert("Please enter a title.");return}
- posts.push({id:Date.now(),title,category:$("pCategory").value,desc:$("pDesc").value.trim(),thumb:$("pThumb").value.trim(),video:$("pVideo").value.trim(),date:new Date().toISOString()});
- persist();["pTitle","pDesc","pThumb","pVideo"].forEach(x=>$(x).value="");closeModal("postModal");renderHome();renderVideos();alert("Post published on this browser.");
+ const post={title,category:$("pCategory").value,desc:$("pDesc").value.trim(),thumb:$("pThumb").value.trim(),video:$("pVideo").value.trim(),date:new Date().toISOString()};
+ try{
+   const ref=await db.collection("videos").add(post);
+   posts.push({...post,id:ref.id});
+   ["pTitle","pDesc","pThumb","pVideo"].forEach(x=>$(x).value="");
+   closeModal("postModal");renderHome();renderVideos();alert("Post saved to Smart Buwaba database.");
+ }catch(e){console.error(e);alert("Could not save the post. Check your Firestore Rules and try again.\n\n"+e.message);}
 }
 function playPost(id){
- const p=posts.find(x=>x.id===id); if(!p)return;
+ const p=posts.find(x=>String(x.id)===String(id)); if(!p)return;
  $("playerTitle").textContent=p.title;$("playerDesc").textContent=p.desc||"";
  if(p.video){$("playerArea").innerHTML=`<div class="player"><video controls autoplay src="${esc(p.video)}"></video></div>`}
- else {$("playerArea").innerHTML=`<div class="empty">This post does not have a video URL yet.<br><span class="muted">Edit the website/backend later to connect the actual movie file.</span></div>`}
+ else {$("playerArea").innerHTML=`<div class="empty">This post does not have a video URL yet.</div>`}
  $("playerModal").classList.remove("hidden");
 }
 function openSettings(){ $("settingsModal").classList.remove("hidden") }
 function closeModal(id){$(id).classList.add("hidden"); if(id==="playerModal")$("playerArea").innerHTML=""}
-function resetPosts(){if(confirm("Reset demo posts?")){posts=defaultPosts;persist();renderHome();renderVideos();}}
+function resetPosts(){alert("Smart Buwaba posts are stored in Firestore. Use the Firebase Console to delete database documents.")}
 function toggleTheme(el){document.body.style.filter=el.checked?"none":"invert(.92) hue-rotate(180deg)";localStorage.setItem("sb_theme",el.checked?"dark":"light")}
 function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+async function loadPosts(){
+ try{
+   const snap=await db.collection("videos").orderBy("date","desc").get();
+   posts=snap.docs.map(d=>({id:d.id,...d.data(),category:d.data().category||"Other"}));
+ }catch(e){
+   console.error(e);
+   try{const snap=await db.collection("videos").get();posts=snap.docs.map(d=>({id:d.id,...d.data(),category:d.data().category||"Other"}));}
+   catch(err){console.error(err);posts=[];alert("Could not load videos from Firestore. Check Firestore Rules.");}
+ }
+ renderHome();renderVideos();
+}
 $("year").textContent=new Date().getFullYear();
 if(localStorage.getItem("sb_theme")==="light"){$("darkSwitch").checked=false;toggleTheme($("darkSwitch"))}
-renderHome();
+loadPosts();
 </script>
 </body>
 </html>
