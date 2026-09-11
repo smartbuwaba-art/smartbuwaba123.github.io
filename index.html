@@ -24,6 +24,20 @@ footer{border-top:1px solid var(--line);padding:28px 18px;color:var(--muted);tex
 .settingRow{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}.switch{position:relative;width:48px;height:27px}.switch input{opacity:0;width:0;height:0}.slider{position:absolute;inset:0;background:#333;border-radius:30px;cursor:pointer}.slider:before{content:"";position:absolute;width:21px;height:21px;left:3px;top:3px;background:white;border-radius:50%;transition:.2s}.switch input:checked+.slider{background:var(--accent)}.switch input:checked+.slider:before{transform:translateX(21px)}
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.about{grid-template-columns:1fr}.navlinks{display:none}.menu{display:block;margin-left:auto}.nav.open .navlinks{display:flex;position:absolute;top:70px;left:12px;right:12px;background:#101016;border:1px solid var(--line);padding:10px;border-radius:14px;flex-direction:column}.nav.open .navlinks button{text-align:left}}
 @media(max-width:560px){main{padding:14px 12px 50px}.hero{padding:35px 22px;min-height:410px}.grid{grid-template-columns:1fr}.thumb{height:220px}.search{min-width:100%}.stats{grid-template-columns:1fr}.brand span{font-size:13px}}
+
+/* Smart Buwaba social features */
+.socialBar{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
+.socialBtn{border:1px solid var(--line);background:var(--card2);color:#ddd;padding:7px 10px;border-radius:10px;cursor:pointer;font-size:12px}
+.socialBtn:hover{border-color:var(--accent);color:#fff}
+.socialBtn.liked,.socialBtn.following{background:rgba(225,29,72,.18);border-color:var(--accent);color:#fff}
+.notifDot{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;border-radius:99px;background:var(--accent);color:#fff;font-size:10px;margin-left:4px}
+.notifList{display:grid;gap:9px}.notifItem{padding:12px;border:1px solid var(--line);background:var(--card2);border-radius:12px}
+.commentBox{margin-top:13px;border-top:1px solid var(--line);padding-top:13px}.commentList{display:grid;gap:7px;margin-top:9px}
+.comment{padding:9px 11px;border-radius:10px;background:var(--card2);font-size:13px}.comment small{display:block;color:var(--muted);margin-top:3px}
+.videoFrame{width:100%;aspect-ratio:16/9;border:0;border-radius:14px;background:#000}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.about{grid-template-columns:1fr}}
+@media(max-width:520px){.grid{grid-template-columns:1fr}.hero{padding:35px 22px}}
+
 </style>
 </head>
 <body>
@@ -31,6 +45,7 @@ footer{border-top:1px solid var(--line);padding:28px 18px;color:var(--muted);tex
 <a class="brand" href="#home" onclick="showPage('home')"><img src="logo.png" onerror="this.style.display='none'" alt="Smart Buwaba logo"><span>SMART <b>BUWABA</b></span></a>
 <button class="iconbtn menu" onclick="document.getElementById('nav').classList.toggle('open')">☰</button>
 <div class="navlinks">
+<button onclick="openNotifications()">🔔 Notifications <span id="notifCount" class="notifDot hidden">0</span></button>
 <button class="active" data-page="home" onclick="showPage('home')">Home</button>
 <button data-page="videos" onclick="showPage('videos')">🎬 Videos</button>
 <button data-page="about" onclick="showPage('about')">About</button>
@@ -68,18 +83,39 @@ footer{border-top:1px solid var(--line);padding:28px 18px;color:var(--muted);tex
 <button class="btn" onclick="savePost()">Publish Post</button>
 </div></div></div>
 
+
+<!-- Comments -->
+<div id="commentsModal" class="modal hidden" onclick="if(event.target===this)closeModal('commentsModal')">
+ <div class="modalBox">
+  <div class="modalTop"><h2>💬 Comments</h2><button class="close" onclick="closeModal('commentsModal')">×</button></div>
+  <div id="commentList" class="commentList"></div>
+  <div class="commentBox"><textarea id="commentText" placeholder="Write a comment..." style="width:100%;min-height:80px;background:var(--card2);color:#fff;border:1px solid var(--line);border-radius:10px;padding:10px"></textarea>
+  <button class="btn" style="margin-top:8px" onclick="sendComment()">Post comment</button></div>
+ </div>
+</div>
+
 <!-- Player -->
 <div id="playerModal" class="modal hidden" onclick="if(event.target===this)closeModal('playerModal')"><div class="modalBox"><div class="modalTop"><h2 id="playerTitle">Video</h2><button class="close" onclick="closeModal('playerModal')">×</button></div><div id="playerArea"></div><p id="playerDesc" class="muted"></p></div></div>
+
+
+<!-- Notifications -->
+<div id="notificationsModal" class="modal hidden" onclick="if(event.target===this)closeModal('notificationsModal')">
+  <div class="modalBox">
+    <div class="modalTop"><h2>🔔 Notifications</h2><button class="close" onclick="closeModal('notificationsModal')">×</button></div>
+    <div id="notificationList" class="notifList"></div>
+  </div>
+</div>
 
 <!-- Settings -->
 <div id="settingsModal" class="modal hidden" onclick="if(event.target===this)closeModal('settingsModal')"><div class="modalBox"><div class="modalTop"><h2>⚙️ Settings</h2><button class="close" onclick="closeModal('settingsModal')">×</button></div>
 <div class="settingRow"><div><strong>Dark theme</strong><div class="muted">Keep the cinematic Smart Buwaba look.</div></div><label class="switch"><input id="darkSwitch" type="checkbox" checked onchange="toggleTheme(this)"><span class="slider"></span></label></div>
 <div class="settingRow"><div><strong>Reset demo posts</strong><div class="muted">Remove posts saved in this browser.</div></div><button class="btn secondary" onclick="resetPosts()">Reset</button></div>
-<div style="margin-top:18px" class="note">Smart Buwaba • Website settings and local posting system.</div>
+<div style="margin-top:18px" class="note">Smart Buwaba • Videos, likes, comments, follows and notifications.</div>
 </div></div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script>
 const firebaseConfig={
  apiKey:"AIzaSyC5ia_DjqTg-cepVQcbYiM7m3tBTGhtnNs",
@@ -107,8 +143,22 @@ function showPage(id){
  if(id==="videos")renderVideos(); if(id==="home")renderHome(); window.scrollTo({top:0,behavior:"smooth"});
 }
 function card(p){
- const thumb=p.thumb?`<img src="${esc(p.thumb)}" alt="">`:`<div class="placeholder"><div class="sbmark">SB</div></div>`;
- return `<article class="card"><div class="thumb">${thumb}<span class="badge">${esc(p.category||"Other")}</span><button class="play" onclick="playPost('${String(p.id).replace(/'/g,"\\'")}')">▶</button></div><div class="cardBody"><h3>${esc(p.title)}</h3><p>${esc(p.desc||"Smart Buwaba video")}</p><div class="meta"><span>${esc(p.category||"Other")}</span><span>${p.date?new Date(p.date).toLocaleDateString():""}</span></div></div></article>`;
+ const thumb=p.thumbnailUrl||p.thumb||"";
+ const desc=p.description||p.desc||"Smart Buwaba video";
+ const video=p.videoUrl||p.video||"";
+ const liked=likedPosts.has(String(p.id));
+ const following=followingUsers.has(String(p.ownerId||""));
+ const thumbHtml=thumb?`<img src="${esc(thumb)}" alt="">`:`<div class="placeholder"><div class="sbmark">SB</div></div>`;
+ return `<article class="card">
+ <div class="thumb">${thumbHtml}<span class="badge">${esc(p.category||"Other")}</span>
+ <button class="play" onclick="playPost('${String(p.id).replace(/'/g,"\\'")}')">▶</button></div>
+ <div class="cardBody"><h3>${esc(p.title||"Untitled video")}</h3><p>${esc(desc)}</p>
+ <div class="meta"><span>${esc(p.category||"Other")}</span><span>${p.date?new Date(p.date).toLocaleDateString():""}</span></div>
+ <div class="socialBar">
+ <button class="socialBtn ${liked?"liked":""}" onclick="toggleLike('${String(p.id).replace(/'/g,"\\'")}')">❤️ <span id="like-${esc(p.id)}">${p.likeCount||0}</span></button>
+ <button class="socialBtn" onclick="openComments('${String(p.id).replace(/'/g,"\\'")}')">💬 <span id="comment-${esc(p.id)}">${p.commentCount||0}</span></button>
+ ${p.ownerId?`<button class="socialBtn ${following?"following":""}" onclick="toggleFollow('${String(p.ownerId).replace(/'/g,"\\'")}')">＋ ${following?"Following":"Follow"}</button>`:""}
+ </div></div></article>`;
 }
 function renderHome(){ $("homeGrid").innerHTML=posts.slice().reverse().slice(0,4).map(card).join("")||empty(); $("countStat").textContent=posts.length }
 function renderVideos(){
@@ -121,19 +171,27 @@ function setCategory(c,el){category=c;document.querySelectorAll(".filter").forEa
 function openAddPost(){ $("postModal").classList.remove("hidden"); $("pTitle").focus() }
 async function savePost(){
  const title=$("pTitle").value.trim(); if(!title){alert("Please enter a title.");return}
- const post={title,category:$("pCategory").value,desc:$("pDesc").value.trim(),thumb:$("pThumb").value.trim(),video:$("pVideo").value.trim(),date:new Date().toISOString()};
+ const post={title,category:$("pCategory").value,description:$("pDesc").value.trim(),thumbnailUrl:$("pThumb").value.trim(),videoUrl:$("pVideo").value.trim(),date:new Date().toISOString(),likeCount:0,commentCount:0};
+ if(currentUser) post.ownerId=currentUser.uid;
  try{
    const ref=await db.collection("videos").add(post);
    posts.push({...post,id:ref.id});
    ["pTitle","pDesc","pThumb","pVideo"].forEach(x=>$(x).value="");
-   closeModal("postModal");renderHome();renderVideos();alert("Post saved to Smart Buwaba database.");
- }catch(e){console.error(e);alert("Could not save the post. Check your Firestore Rules and try again.\n\n"+e.message);}
+   closeModal("postModal");renderHome();renderVideos();notify("Post published successfully.");
+ }catch(e){console.error(e);alert("Could not save the post. Check Firestore Rules and make sure Anonymous sign-in is enabled.\n\n"+e.message);}
 }
 function playPost(id){
  const p=posts.find(x=>String(x.id)===String(id)); if(!p)return;
- $("playerTitle").textContent=p.title;$("playerDesc").textContent=p.desc||"";
- if(p.video){$("playerArea").innerHTML=`<div class="player"><video controls autoplay src="${esc(p.video)}"></video></div>`}
- else {$("playerArea").innerHTML=`<div class="empty">This post does not have a video URL yet.</div>`}
+ $("playerTitle").textContent=p.title||"Video";$("playerDesc").textContent=p.description||p.desc||"";
+ const url=p.videoUrl||p.video||"";
+ const yt=getYouTubeId(url);
+ if(yt){
+   $("playerArea").innerHTML=`<iframe class="videoFrame" src="https://www.youtube.com/embed/${yt}" title="${esc(p.title||"Smart Buwaba video")}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+ }else if(url){
+   $("playerArea").innerHTML=`<div class="player"><video controls autoplay src="${esc(url)}" style="width:100%;border-radius:14px"></video></div>`;
+ }else{
+   $("playerArea").innerHTML=`<div class="empty">This post does not have a video URL yet.</div>`;
+ }
  $("playerModal").classList.remove("hidden");
 }
 function openSettings(){ $("settingsModal").classList.remove("hidden") }
@@ -143,15 +201,89 @@ function toggleTheme(el){document.body.style.filter=el.checked?"none":"invert(.9
 function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 async function loadPosts(){
  try{
-   const snap=await db.collection("videos").orderBy("date","desc").get();
-   posts=snap.docs.map(d=>({id:d.id,...d.data(),category:d.data().category||"Other"}));
+   const snap=await db.collection("videos").get();
+   posts=snap.docs.map(d=>({id:d.id,...d.data(),category:d.data().category||"Other",likeCount:d.data().likeCount||0,commentCount:d.data().commentCount||0}));
+   posts.sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
  }catch(e){
-   console.error(e);
-   try{const snap=await db.collection("videos").get();posts=snap.docs.map(d=>({id:d.id,...d.data(),category:d.data().category||"Other"}));}
-   catch(err){console.error(err);posts=[];alert("Could not load videos from Firestore. Check Firestore Rules.");}
+   console.error(e);posts=[];alert("Could not load videos from Firestore. Check Firestore Rules.\n\n"+e.message);
  }
  renderHome();renderVideos();
 }
+
+let currentUser=null, currentCommentVideoId=null;
+const likedPosts=new Set(JSON.parse(localStorage.getItem("sb_likes")||"[]"));
+const followingUsers=new Set(JSON.parse(localStorage.getItem("sb_follows")||"[]"));
+let notifications=JSON.parse(localStorage.getItem("sb_notifications")||"[]");
+
+function persistSocial(){
+ localStorage.setItem("sb_likes",JSON.stringify([...likedPosts]));
+ localStorage.setItem("sb_follows",JSON.stringify([...followingUsers]));
+ localStorage.setItem("sb_notifications",JSON.stringify(notifications));
+ updateNotifCount();
+}
+function notify(text){
+ notifications.unshift({text,date:new Date().toISOString(),read:false});
+ notifications=notifications.slice(0,50);persistSocial();
+}
+function updateNotifCount(){
+ const n=notifications.filter(x=>!x.read).length, el=$("notifCount");
+ el.textContent=n;if(n)el.classList.remove("hidden");else el.classList.add("hidden");
+}
+function openNotifications(){
+ notifications.forEach(x=>x.read=true);persistSocial();
+ $("notificationList").innerHTML=notifications.length?notifications.map(n=>`<div class="notifItem">🔔 ${esc(n.text)}<div class="muted" style="font-size:11px;margin-top:4px">${new Date(n.date).toLocaleString()}</div></div>`).join(""):`<div class="empty">No notifications yet.</div>`;
+ $("notificationsModal").classList.remove("hidden");
+}
+async function toggleLike(id){
+ const key=String(id), p=posts.find(x=>String(x.id)===key); if(!p)return;
+ const ref=db.collection("videos").doc(key);
+ try{
+   if(likedPosts.has(key)){likedPosts.delete(key);p.likeCount=Math.max(0,(p.likeCount||0)-1)}
+   else{likedPosts.add(key);p.likeCount=(p.likeCount||0)+1;notify("You liked “"+(p.title||"this video")+"”.")}
+   await ref.update({likeCount:p.likeCount});
+   renderHome();renderVideos();
+ }catch(e){alert("Like could not be saved. Check Firestore Rules.");console.error(e)}
+}
+async function openComments(id){
+ currentCommentVideoId=String(id);
+ const list=$("commentList");list.innerHTML=`<div class="muted">Loading comments...</div>`;
+ $("commentsModal").classList.remove("hidden");
+ try{
+   const snap=await db.collection("comments").where("videoId","==",currentCommentVideoId).get();
+   const arr=snap.docs.map(d=>d.data()).sort((a,b)=>String(a.date||"").localeCompare(String(b.date||"")));
+   list.innerHTML=arr.length?arr.map(c=>`<div class="comment">${esc(c.text)}<small>${esc(c.authorName||"Smart Buwaba user")} • ${c.date?new Date(c.date).toLocaleString():""}</small></div>`).join(""):`<div class="empty">No comments yet. Be the first.</div>`;
+ }catch(e){list.innerHTML=`<div class="empty">Comments are not available yet. Check Firestore Rules.</div>`;console.error(e)}
+}
+async function sendComment(){
+ const text=$("commentText").value.trim();if(!text||!currentCommentVideoId)return;
+ try{
+   await db.collection("comments").add({videoId:currentCommentVideoId,text,authorId:currentUser?currentUser.uid:"",authorName:"Smart Buwaba user",date:new Date().toISOString()});
+   const p=posts.find(x=>String(x.id)===currentCommentVideoId);if(p){p.commentCount=(p.commentCount||0)+1;await db.collection("videos").doc(currentCommentVideoId).update({commentCount:p.commentCount});}
+   $("commentText").value="";notify("Your comment was posted.");await openComments(currentCommentVideoId);renderHome();renderVideos();
+ }catch(e){alert("Comment could not be saved. Check Firestore Rules.");console.error(e)}
+}
+async function toggleFollow(uid){
+ const key=String(uid);if(!key||key==="undefined")return;
+ if(followingUsers.has(key)){followingUsers.delete(key);notify("You unfollowed this creator.")}
+ else{followingUsers.add(key);notify("You are now following this creator.")}
+ persistSocial();renderHome();renderVideos();
+}
+function getYouTubeId(url){
+ try{
+   const u=new URL(url);
+   if(u.hostname.includes("youtu.be"))return u.pathname.slice(1).split("/")[0];
+   if(u.hostname.includes("youtube.com")){
+     if(u.pathname==="/watch")return u.searchParams.get("v");
+     if(u.pathname.startsWith("/shorts/"))return u.pathname.split("/")[2];
+     if(u.pathname.startsWith("/embed/"))return u.pathname.split("/")[2];
+   }
+ }catch(e){}
+ return null;
+}
+firebase.auth().onAuthStateChanged(u=>{currentUser=u;});
+firebase.auth().signInAnonymously().catch(e=>console.warn("Anonymous auth not enabled yet:",e.message));
+updateNotifCount();
+
 $("year").textContent=new Date().getFullYear();
 if(localStorage.getItem("sb_theme")==="light"){$("darkSwitch").checked=false;toggleTheme($("darkSwitch"))}
 loadPosts();
