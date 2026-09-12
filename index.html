@@ -93,6 +93,10 @@ footer{border-top:1px solid var(--line);padding:28px 18px;color:var(--muted);tex
 <button onclick="openNotifications()">🔔 Notifications <span id="notifCount" class="notifDot hidden">0</span></button>
 <button class="active" data-page="home" onclick="showPage('home')">Home</button>
 <button data-page="videos" onclick="showPage('videos')">🎬 Videos</button>
+<button data-page="feed" onclick="showPage('feed')">📰 Community</button>
+<button data-page="chat" onclick="showPage('chat')">💬 Chat</button>
+<button data-page="camera" onclick="showPage('camera')">📷 Camera</button>
+<button data-page="ai" onclick="showPage('ai')">🤖 AI</button>
 <button data-page="about" onclick="showPage('about')">About</button>
 <button onclick="openSettings()">⚙️ Settings</button>
 </div></nav></header>
@@ -126,6 +130,15 @@ footer{border-top:1px solid var(--line);padding:28px 18px;color:var(--muted);tex
 <div class="chatPanel"><div id="chatTitle" style="padding:12px;border-bottom:1px solid var(--line);font-weight:800">Select a person</div><div id="chatMessages" class="chatMessages"></div><div class="chatInput"><input id="chatText" placeholder="Write a message..." onkeydown="if(event.key==='Enter')sendChat()"><button class="btn" onclick="sendChat()">Send</button></div></div>
 </div>
 </section>
+
+<section id="camera" class="page hidden">
+<div class="sectionHead"><div><h2>📷 Smart Buwaba Camera</h2><div class="muted">Take a photo or record a video, preview it, then post it to the community.</div></div></div>
+<div class="panel" style="max-width:850px;margin:auto">
+<video id="cameraPreview" autoplay playsinline muted style="width:100%;max-height:520px;background:#000;border-radius:16px"></video>
+<div class="actions" style="margin-top:12px"><button class="btn" onclick="startCamera()">📷 Start Camera</button><button class="btn secondary" onclick="capturePhoto()">📸 Take Photo</button><button class="btn secondary" onclick="toggleRecording()" id="recordBtn">🔴 Start Video</button><button class="btn secondary" onclick="stopCamera()">⏹ Stop Camera</button></div>
+<canvas id="cameraCanvas" class="hidden"></canvas><div id="cameraStatus" class="note" style="margin-top:12px">Allow camera permission when your browser asks.</div>
+<div id="cameraPreviewWrap" class="hidden" style="margin-top:14px"><h3>Preview</h3><img id="capturedPhoto" class="feedMedia hidden" alt="Captured photo"><video id="capturedVideo" class="feedMedia hidden" controls></video><div class="actions"><button class="btn" onclick="postCameraMedia()">🚀 Post to Community</button><button class="btn secondary" onclick="clearCameraCapture()">Clear</button></div></div>
+</div></section>
 
 <section id="ai" class="page hidden">
 <div class="sectionHead"><div><h2>🤖 Smart Buwaba AI</h2><div class="muted">Your creative assistant for captions, ideas and website help.</div></div></div>
@@ -387,7 +400,7 @@ function getYouTubeId(url){
  return null;
 }
 firebase.auth().onAuthStateChanged(u=>{currentUser=u;});
-firebase.auth().signInAnonymously().catch(e=>console.warn("Anonymous auth not enabled yet:",e.message));
+// Anonymous sign-in disabled; users sign in with their Smart Buwaba account.
 updateNotifCount();
 
 $("year").textContent=new Date().getFullYear();
@@ -499,7 +512,7 @@ async function loadChatUsers(){
  const box=$("chatUsers"); if(!box)return;
  if(!currentUser){box.innerHTML='<div class="muted" style="margin-top:8px">Sign in to chat.</div>';return;}
  const snap=await db.collection("users").limit(30).get();
- box.innerHTML=snap.docs.filter(d=>d.id!==currentUser.uid).map(d=>{const u=d.data();return `<div class="chatUser" onclick="selectChatUser('${d.id}','${safeText(u.name||u.email||"User")}')">👤 ${safeText(u.name||u.email||"User")}</div>`}).join("")||'<div class="muted">No other users yet.</div>';
+ box.innerHTML=snap.docs.filter(d=>d.id!==currentUser.uid).map(d=>{const u=d.data();const name=safeText(u.name||u.email||"User");return `<div class="chatUser"><span onclick="selectChatUser('${d.id}','${name}')">👤 ${name}</span><button class="socialBtn" style="float:right" onclick="addFriend('${d.id}')">＋ Friend</button></div>`}).join("")||'<div class="muted">No other users yet.</div>';
 }
 function chatId(a,b){return [a,b].sort().join("_")}
 function selectChatUser(uid,name){activeChatUser={uid,name};$("chatTitle").textContent="💬 "+name;loadMessages();}
@@ -532,6 +545,17 @@ function askAI(){
  else a+="Nditha kukuthandiza kupanga ma captions, ma video ideas, ma post ideas, kapena kukonza Smart Buwaba TV. Funsa chilichonse.";
  setTimeout(()=>addAI(a,"ai"),250);
 }
+
+/* ===== CAMERA + FRIENDS ===== */
+let cameraStream=null, mediaRecorder=null, recordedChunks=[], cameraBlob=null, cameraType="";
+async function startCamera(){try{cameraStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"user"}},audio:true});$("cameraPreview").srcObject=cameraStream;$("cameraStatus").textContent="Camera is ready.";}catch(e){$("cameraStatus").textContent="Camera access failed: "+e.message;}}
+function stopCamera(){if(mediaRecorder&&mediaRecorder.state!=="inactive")mediaRecorder.stop();if(cameraStream){cameraStream.getTracks().forEach(t=>t.stop());cameraStream=null;}$("cameraPreview").srcObject=null;$("cameraStatus").textContent="Camera stopped.";}
+function toggleRecording(){if(!cameraStream)return startCamera().then(()=>setTimeout(toggleRecording,300));if(mediaRecorder&&mediaRecorder.state==="recording"){mediaRecorder.stop();$("recordBtn").textContent="🔴 Start Video";return;}recordedChunks=[];let mime=MediaRecorder.isTypeSupported("video/webm;codecs=vp9,opus")?"video/webm;codecs=vp9,opus":"video/webm";mediaRecorder=new MediaRecorder(cameraStream,{mimeType:mime});mediaRecorder.ondataavailable=e=>{if(e.data.size)recordedChunks.push(e.data)};mediaRecorder.onstop=()=>{cameraBlob=new Blob(recordedChunks,{type:"video/webm"});cameraType="video";$("capturedVideo").src=URL.createObjectURL(cameraBlob);$("capturedVideo").classList.remove("hidden");$("capturedPhoto").classList.add("hidden");$("cameraPreviewWrap").classList.remove("hidden");$("cameraStatus").textContent="Video recorded. Preview it before posting.";};mediaRecorder.start();$("recordBtn").textContent="⏹ Stop Recording";$("cameraStatus").textContent="Recording…";}
+function capturePhoto(){if(!cameraStream)return startCamera().then(()=>setTimeout(capturePhoto,300));const v=$("cameraPreview"),c=$("cameraCanvas");c.width=v.videoWidth||1280;c.height=v.videoHeight||720;c.getContext("2d").drawImage(v,0,0,c.width,c.height);c.toBlob(b=>{cameraBlob=b;cameraType="image";$("capturedPhoto").src=URL.createObjectURL(b);$("capturedPhoto").classList.remove("hidden");$("capturedVideo").classList.add("hidden");$("cameraPreviewWrap").classList.remove("hidden");$("cameraStatus").textContent="Photo captured. Preview it before posting."},"image/jpeg",.92);}
+function clearCameraCapture(){cameraBlob=null;cameraType="";$("cameraPreviewWrap").classList.add("hidden");}
+async function postCameraMedia(){if(!currentUser)return openAuth();if(!cameraBlob)return alert("Take a photo or record a video first.");try{const ext=cameraType==="image"?"jpg":"webm",name=`camera_${Date.now()}.${ext}`,url=await uploadFile(new File([cameraBlob],name,{type:cameraBlob.type}),`community/${currentUser.uid}/${name}`);await db.collection("communityPosts").add({text:"",mediaUrl:url,mediaType:cameraType,ownerId:currentUser.uid,ownerName:currentUser.displayName||currentUser.email,createdAt:firebase.firestore.FieldValue.serverTimestamp(),likes:[]});notify("Camera post published!");clearCameraCapture();showPage("feed");loadFeed();}catch(e){alert("Camera upload failed: "+e.message)}}
+async function addFriend(uid){if(!currentUser)return openAuth();if(uid===currentUser.uid)return;try{await db.collection("friends").doc(currentUser.uid+"_"+uid).set({from:currentUser.uid,to:uid,status:"requested",createdAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});notify("Friend request sent.");}catch(e){alert("Friend request failed: "+e.message)}}
+
 const oldShowPage=window.showPage;
 window.showPage=function(id){oldShowPage(id);if(id==="feed")loadFeed();if(id==="chat")loadChatUsers();};
 
