@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://smartbuwaba-art.github.io/smartbuwaba123.github.io/sitemap.xml

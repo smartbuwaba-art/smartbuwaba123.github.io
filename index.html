@@ -2,823 +2,136 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="description" content="SMART BUWABA TV — Videos, Shorts, Pictures and Creativity">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="SMART BUWABA — Dream • Create • Achieve. Films, videos, creativity and entertainment.">
 <meta name="author" content="SMART BUWABA">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="googlebot" content="index, follow">
+<meta name="keywords" content="Smart Buwaba, Smart Buwaba TV, Malawi videos, Malawi creators, videos, shorts, comedy, films">
+<link rel="canonical" href="https://smartbuwaba-art.github.io/smartbuwaba123.github.io/">
 <title>SMART BUWABA TV</title>
-
 <style>
-:root{
- --bg:#07070a;--card:#111117;--card2:#181820;--text:#f7f7fb;
- --muted:#a7a7b5;--accent:#e11d48;--accent2:#ff4d6d;
- --line:#282833;--shadow:0 16px 50px rgba(0,0,0,.35)
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
- margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
- background:radial-gradient(circle at 70% -10%,#2b0b18 0,#07070a 38%),var(--bg);
- color:var(--text);min-height:100vh
-}
-button,input,textarea,select{font:inherit}
-.hidden{display:none!important}
+:root{--bg:#07070a;--card:#111117;--card2:#181820;--text:#f7f7fb;--muted:#a7a7b5;--accent:#e11d48;--accent2:#ff4d6d;--line:#282833;--shadow:0 16px 50px rgba(0,0,0,.35)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(circle at 70% -10%,#2b0b18 0,#07070a 38%),var(--bg);color:var(--text);min-height:100vh}
+button,input,textarea,select{font:inherit}.hidden{display:none!important}
+header{position:sticky;top:0;z-index:50;background:rgba(7,7,10,.84);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.nav{max-width:1180px;margin:auto;display:flex;align-items:center;gap:20px;padding:13px 18px}.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);font-weight:900;letter-spacing:.5px}.brand img{width:43px;height:43px;object-fit:contain;border-radius:12px}.brand span b{color:var(--accent2)}
+.navlinks{display:flex;gap:7px;margin-left:auto}.navlinks button,.iconbtn{border:0;background:transparent;color:var(--muted);padding:10px 12px;border-radius:10px;cursor:pointer}.navlinks button:hover,.navlinks button.active,.iconbtn:hover{background:var(--card2);color:#fff}.menu{display:none}
+main{max-width:1180px;margin:auto;padding:24px 18px 70px}.hero{min-height:390px;border:1px solid var(--line);border-radius:25px;padding:55px 40px;display:flex;align-items:center;background:linear-gradient(110deg,rgba(225,29,72,.22),rgba(17,17,23,.86) 48%,rgba(17,17,23,.7)),radial-gradient(circle at 85% 25%,rgba(255,77,109,.3),transparent 30%);box-shadow:var(--shadow);overflow:hidden;position:relative}.hero:after{content:"SB";position:absolute;right:7%;bottom:-45px;font-size:220px;font-weight:1000;color:rgba(255,255,255,.025)}.heroText{max-width:700px;position:relative;z-index:1}.eyebrow{color:#ff9db0;font-weight:800;text-transform:uppercase;letter-spacing:2px;font-size:12px}.hero h1{font-size:clamp(40px,7vw,78px);line-height:.95;margin:12px 0}.hero p{font-size:17px;line-height:1.7;color:#d1d1dc;max-width:620px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:12px;padding:12px 17px;font-weight:800;cursor:pointer;background:var(--accent);color:white;box-shadow:0 8px 25px rgba(225,29,72,.2)}.btn:hover{filter:brightness(1.12);transform:translateY(-1px)}.btn.secondary{background:var(--card2);border:1px solid var(--line)}
+.section{margin-top:34px}.sectionHead{display:flex;align-items:end;justify-content:space-between;gap:15px;margin-bottom:15px}.section h2{margin:0;font-size:28px}.muted{color:var(--muted)}.tools{display:flex;gap:9px;flex-wrap:wrap}.search{background:var(--card);border:1px solid var(--line);color:#fff;padding:11px 14px;border-radius:11px;min-width:230px;outline:none}.search:focus{border-color:var(--accent)}
+.filters{display:flex;gap:8px;overflow:auto;padding-bottom:5px}.filter{white-space:nowrap;border:1px solid var(--line);background:var(--card);color:var(--muted);padding:9px 13px;border-radius:999px;cursor:pointer}.filter.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.card{background:linear-gradient(180deg,#15151c,#0e0e13);border:1px solid var(--line);border-radius:17px;overflow:hidden;transition:.2s}.card:hover{transform:translateY(-4px);border-color:#454552}.thumb{height:190px;background:#222;position:relative;overflow:hidden}.thumb img{width:100%;height:100%;object-fit:cover}.placeholder{height:100%;display:grid;place-items:center;background:linear-gradient(135deg,#24101a,#15151c)}.sbmark{font-size:44px;font-weight:1000;color:#ff4d6d}.badge{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.72);padding:6px 8px;border-radius:8px;font-size:11px;font-weight:800}.play{position:absolute;right:10px;bottom:10px;width:43px;height:43px;border-radius:50%;border:0;background:var(--accent);color:#fff;font-size:17px;cursor:pointer}.cardBody{padding:13px}.card h3{margin:0 0 6px;font-size:16px}.card p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}.meta{display:flex;justify-content:space-between;color:#7f7f8c;font-size:11px;margin-top:10px}.empty{border:1px dashed #34343f;border-radius:16px;padding:35px;text-align:center;color:var(--muted)}
+.about{display:grid;grid-template-columns:1.2fr .8fr;gap:15px}.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px}.panel h3{margin-top:0}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{background:var(--card2);padding:17px;border-radius:13px}.stat strong{display:block;font-size:26px}.stat span{color:var(--muted);font-size:12px}
+footer{border-top:1px solid var(--line);padding:28px 18px;color:var(--muted);text-align:center}.socials{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}.socials a{color:#ddd;text-decoration:none;padding:8px 11px;background:var(--card);border:1px solid var(--line);border-radius:9px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);z-index:100;display:grid;place-items:center;padding:18px}.modalBox{width:min(650px,100%);max-height:90vh;overflow:auto;background:#101016;border:1px solid #34343f;border-radius:20px;padding:22px;box-shadow:var(--shadow)}.modalTop{display:flex;justify-content:space-between;align-items:center}.close{border:0;background:var(--card2);color:#fff;width:38px;height:38px;border-radius:10px;cursor:pointer}.form{display:grid;gap:12px}.form label{font-size:12px;color:#aaa}.form input,.form textarea,.form select{width:100%;background:#0a0a0e;border:1px solid var(--line);color:#fff;border-radius:10px;padding:11px;outline:none}.form textarea{min-height:100px;resize:vertical}.note{font-size:12px;color:#9292a0;background:#181820;padding:11px;border-radius:10px}
+.player{width:100%;aspect-ratio:16/9;background:#000;border-radius:14px;overflow:hidden}.player video{width:100%;height:100%}
+.settingRow{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}.switch{position:relative;width:48px;height:27px}.switch input{opacity:0;width:0;height:0}.slider{position:absolute;inset:0;background:#333;border-radius:30px;cursor:pointer}.slider:before{content:"";position:absolute;width:21px;height:21px;left:3px;top:3px;background:white;border-radius:50%;transition:.2s}.switch input:checked+.slider{background:var(--accent)}.switch input:checked+.slider:before{transform:translateX(21px)}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.about{grid-template-columns:1fr}.navlinks{display:none}.menu{display:block;margin-left:auto}.nav.open .navlinks{display:flex;position:absolute;top:70px;left:12px;right:12px;background:#101016;border:1px solid var(--line);padding:10px;border-radius:14px;flex-direction:column}.nav.open .navlinks button{text-align:left}}
+@media(max-width:560px){main{padding:14px 12px 50px}.hero{padding:35px 22px;min-height:410px}.grid{grid-template-columns:1fr}.thumb{height:220px}.search{min-width:100%}.stats{grid-template-columns:1fr}.brand span{font-size:13px}}
 
-header{
- position:sticky;top:0;z-index:50;background:rgba(7,7,10,.88);
- backdrop-filter:blur(16px);border-bottom:1px solid var(--line)
-}
-.nav{
- max-width:1180px;margin:auto;display:flex;align-items:center;gap:18px;padding:13px 18px
-}
-.brand{
- display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);
- font-weight:900;letter-spacing:.5px
-}
-.brand img{width:43px;height:43px;object-fit:contain;border-radius:12px}
-.brand span b{color:var(--accent2)}
-.navlinks{display:flex;gap:6px;margin-left:auto;align-items:center}
-.navlinks button,.iconbtn{
- border:0;background:transparent;color:var(--muted);padding:10px 12px;
- border-radius:10px;cursor:pointer
-}
-.navlinks button:hover,.navlinks button.active,.iconbtn:hover{
- background:var(--card2);color:#fff
-}
-.menu{display:none}
-
-.accountBtn{
- display:flex!important;align-items:center;gap:7px;
- background:var(--card2)!important;border:1px solid var(--line)!important;
- color:#fff!important
-}
-.avatar{
- width:28px;height:28px;border-radius:50%;object-fit:cover;
- background:#333;display:inline-grid;place-items:center;font-size:12px;font-weight:800
-}
-
-main{max-width:1180px;margin:auto;padding:24px 18px 70px}
-.hero{
- min-height:390px;border:1px solid var(--line);border-radius:25px;padding:55px 40px;
- display:flex;align-items:center;
- background:linear-gradient(110deg,rgba(225,29,72,.22),rgba(17,17,23,.86) 48%,rgba(17,17,23,.7));
- box-shadow:var(--shadow);overflow:hidden;position:relative
-}
-.hero:after{
- content:"SB";position:absolute;right:7%;bottom:-45px;font-size:220px;
- font-weight:1000;color:rgba(255,255,255,.025)
-}
-.heroText{max-width:700px;position:relative;z-index:1}
-.eyebrow{color:#ff9db0;font-weight:800;text-transform:uppercase;letter-spacing:2px;font-size:12px}
-.hero h1{font-size:clamp(40px,7vw,78px);line-height:.95;margin:12px 0}
-.hero p{font-size:17px;line-height:1.7;color:#d1d1dc;max-width:620px}
-.actions{display:flex;gap:10px;flex-wrap:wrap}
-.btn{
- border:0;border-radius:12px;padding:12px 17px;font-weight:800;cursor:pointer;
- background:var(--accent);color:#fff
-}
-.btn:hover{filter:brightness(1.12)}
-.btn.secondary{background:var(--card2);border:1px solid var(--line)}
-
-.section{margin-top:34px}
-.sectionHead{
- display:flex;align-items:end;justify-content:space-between;gap:15px;margin-bottom:15px
-}
-.section h2{margin:0;font-size:28px}
-.muted{color:var(--muted)}
-.tools{display:flex;gap:9px;flex-wrap:wrap}
-.search{
- background:var(--card);border:1px solid var(--line);color:#fff;
- padding:11px 14px;border-radius:11px;min-width:230px;outline:none
-}
-.filters{display:flex;gap:8px;overflow:auto;padding-bottom:5px}
-.filter{
- white-space:nowrap;border:1px solid var(--line);background:var(--card);
- color:var(--muted);padding:9px 13px;border-radius:999px;cursor:pointer
-}
-.filter.active{background:var(--accent);border-color:var(--accent);color:#fff}
-
-.grid{
- display:grid;grid-template-columns:repeat(4,1fr);gap:15px
-}
-.card{
- background:linear-gradient(180deg,#15151c,#0e0e13);
- border:1px solid var(--line);border-radius:17px;overflow:hidden
-}
-.card:hover{transform:translateY(-3px);border-color:#454552}
-.thumb{
- height:190px;background:#222;position:relative;overflow:hidden
-}
-.thumb img{width:100%;height:100%;object-fit:cover}
-.thumb.short{height:300px}
-.placeholder{
- height:100%;display:grid;place-items:center;
- background:linear-gradient(135deg,#24101a,#15151c)
-}
-.sbmark{font-size:44px;font-weight:1000;color:#ff4d6d}
-.badge{
- position:absolute;left:10px;top:10px;background:rgba(0,0,0,.72);
- padding:6px 8px;border-radius:8px;font-size:11px;font-weight:800
-}
-.play{
- position:absolute;right:10px;bottom:10px;width:43px;height:43px;border-radius:50%;
- border:0;background:var(--accent);color:#fff;font-size:17px;cursor:pointer
-}
-.cardBody{padding:13px}
-.card h3{margin:0 0 6px;font-size:16px}
-.card p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}
-.meta{
- display:flex;justify-content:space-between;color:#7f7f8c;
- font-size:11px;margin-top:10px
-}
-.socialBar{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}
-.socialBtn{
- border:1px solid var(--line);background:var(--card2);color:#ddd;
- padding:7px 10px;border-radius:10px;cursor:pointer;font-size:12px
-}
+/* Smart Buwaba social features */
+.socialBar{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
+.socialBtn{border:1px solid var(--line);background:var(--card2);color:#ddd;padding:7px 10px;border-radius:10px;cursor:pointer;font-size:12px}
 .socialBtn:hover{border-color:var(--accent);color:#fff}
-.socialBtn.liked,.socialBtn.following{
- background:rgba(225,29,72,.18);border-color:var(--accent);color:#fff
-}
-.empty{
- border:1px dashed #34343f;border-radius:16px;padding:35px;
- text-align:center;color:var(--muted);grid-column:1/-1
-}
+.socialBtn.liked,.socialBtn.following{background:rgba(225,29,72,.18);border-color:var(--accent);color:#fff}
+.notifDot{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;border-radius:99px;background:var(--accent);color:#fff;font-size:10px;margin-left:4px}
+.notifList{display:grid;gap:9px}.notifItem{padding:12px;border:1px solid var(--line);background:var(--card2);border-radius:12px}
+.commentBox{margin-top:13px;border-top:1px solid var(--line);padding-top:13px}.commentList{display:grid;gap:7px;margin-top:9px}
+.comment{padding:9px 11px;border-radius:10px;background:var(--card2);font-size:13px}.comment small{display:block;color:var(--muted);margin-top:3px}
+.videoFrame{width:100%;aspect-ratio:16/9;border:0;border-radius:14px;background:#000}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.about{grid-template-columns:1fr}}
+@media(max-width:520px){.grid{grid-template-columns:1fr}.hero{padding:35px 22px}}
 
-.about{display:grid;grid-template-columns:1.2fr .8fr;gap:15px}
-.panel{
- background:var(--card);border:1px solid var(--line);
- border-radius:18px;padding:22px
-}
-.panel h3{margin-top:0}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.stat{background:var(--card2);padding:17px;border-radius:13px}
-.stat strong{display:block;font-size:26px}
-.stat span{color:var(--muted);font-size:12px}
-
-.profile{
- display:flex;align-items:center;gap:15px;padding:10px 0
-}
-.profileAvatar{
- width:90px;height:90px;border-radius:50%;object-fit:cover;background:#292930;
- display:grid;place-items:center;font-size:30px;font-weight:900
-}
-
-.modal{
- position:fixed;inset:0;background:rgba(0,0,0,.78);
- backdrop-filter:blur(8px);z-index:100;display:grid;place-items:center;padding:18px
-}
-.modalBox{
- width:min(650px,100%);max-height:90vh;overflow:auto;background:#101016;
- border:1px solid #34343f;border-radius:20px;padding:22px
-}
-.modalTop{display:flex;justify-content:space-between;align-items:center}
-.close{
- border:0;background:var(--card2);color:#fff;width:38px;height:38px;
- border-radius:10px;cursor:pointer
-}
-.form{display:grid;gap:12px}
-.form label{font-size:12px;color:#aaa}
-.form input,.form textarea,.form select{
- width:100%;background:#0a0a0e;border:1px solid var(--line);
- color:#fff;border-radius:10px;padding:11px;outline:none
-}
-.form textarea{min-height:100px;resize:vertical}
-.note{
- font-size:12px;color:#9292a0;background:#181820;padding:11px;border-radius:10px
-}
-.error{
- background:#3b101c;color:#ffb4c2;padding:10px;border-radius:10px;font-size:13px
-}
-.player{
- width:100%;aspect-ratio:16/9;background:#000;border-radius:14px;overflow:hidden
-}
-.player video{width:100%;height:100%}
-.videoFrame{
- width:100%;aspect-ratio:16/9;border:0;border-radius:14px;background:#000
-}
-.imageViewer{
- width:100%;max-height:70vh;object-fit:contain;background:#000;border-radius:14px
-}
-.notifList{display:grid;gap:9px}
-.notifItem{
- padding:12px;border:1px solid var(--line);background:var(--card2);border-radius:12px
-}
-.commentList{display:grid;gap:7px;margin-top:9px}
-.comment{
- padding:9px 11px;border-radius:10px;background:var(--card2);font-size:13px
-}
-.comment small{display:block;color:var(--muted);margin-top:3px}
-
-.settingRow{
- display:flex;justify-content:space-between;align-items:center;
- padding:14px 0;border-bottom:1px solid var(--line)
-}
-.switch{position:relative;width:48px;height:27px}
-.switch input{opacity:0;width:0;height:0}
-.slider{
- position:absolute;inset:0;background:#333;border-radius:30px;cursor:pointer
-}
-.slider:before{
- content:"";position:absolute;width:21px;height:21px;left:3px;top:3px;
- background:white;border-radius:50%;transition:.2s
-}
-.switch input:checked+.slider{background:var(--accent)}
-.switch input:checked+.slider:before{transform:translateX(21px)}
-
-footer{
- border-top:1px solid var(--line);padding:28px 18px;
- color:var(--muted);text-align:center
-}
-.socials{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
-.socials a{
- color:#ddd;text-decoration:none;padding:8px 11px;background:var(--card);
- border:1px solid var(--line);border-radius:9px
-}
-
-.notifDot{
- display:inline-grid;place-items:center;min-width:18px;height:18px;
- padding:0 5px;border-radius:99px;background:var(--accent);
- color:#fff;font-size:10px;margin-left:4px
-}
-
-@media(max-width:900px){
- .grid{grid-template-columns:repeat(2,1fr)}
- .about{grid-template-columns:1fr}
- .navlinks{display:none}
- .menu{display:block;margin-left:auto}
- .nav.open .navlinks{
-  display:flex;position:absolute;top:70px;left:12px;right:12px;
-  background:#101016;border:1px solid var(--line);padding:10px;
-  border-radius:14px;flex-direction:column
- }
- .nav.open .navlinks button{text-align:left;width:100%}
-}
-@media(max-width:560px){
- main{padding:14px 12px 50px}
- .hero{padding:35px 22px;min-height:410px}
- .grid{grid-template-columns:1fr}
- .thumb{height:220px}
- .thumb.short{height:350px}
- .search{min-width:100%}
- .stats{grid-template-columns:1fr}
- .brand span{font-size:13px}
-}
 </style>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebSite",
+  "name":"SMART BUWABA TV",
+  "url":"https://smartbuwaba-art.github.io/smartbuwaba123.github.io/",
+  "description":"Smart Buwaba TV — videos, Shorts, creativity and entertainment.",
+  "publisher":{"@type":"Organization","name":"SMART BUWABA"}
+}
+</script>
 </head>
-
 <body>
-
-<header>
-<nav class="nav" id="nav">
-
-<a class="brand" href="#home" onclick="showPage('home')">
-<img src="logo.png" onerror="this.style.display='none'" alt="Smart Buwaba">
-<span>SMART <b>BUWABA</b></span>
-</a>
-
-<button class="iconbtn menu"
- onclick="document.getElementById('nav').classList.toggle('open')">☰</button>
-
+<header><nav class="nav" id="nav">
+<a class="brand" href="#home" onclick="showPage('home')"><img src="logo.png" onerror="this.style.display='none'" alt="Smart Buwaba logo"><span>SMART <b>BUWABA</b></span></a>
+<button class="iconbtn menu" onclick="document.getElementById('nav').classList.toggle('open')">☰</button>
 <div class="navlinks">
-
-<button onclick="openNotifications()">
-🔔 Notifications <span id="notifCount" class="notifDot hidden">0</span>
-</button>
-
+<button onclick="openNotifications()">🔔 Notifications <span id="notifCount" class="notifDot hidden">0</span></button>
 <button class="active" data-page="home" onclick="showPage('home')">Home</button>
-
 <button data-page="videos" onclick="showPage('videos')">🎬 Videos</button>
-
-<button data-page="shorts" onclick="showPage('shorts')">⚡ Shorts</button>
-
-<button data-page="pictures" onclick="showPage('pictures')">🖼️ Pictures</button>
-
 <button data-page="about" onclick="showPage('about')">About</button>
-
-<button class="accountBtn" id="accountNavBtn" onclick="openAccount()">
-👤 Account
-</button>
-
 <button onclick="openSettings()">⚙️ Settings</button>
-
-</div>
-</nav>
-</header>
+</div></nav></header>
 
 <main>
-
-<!-- HOME -->
 <section id="home" class="page">
-
-<div class="hero">
-<div class="heroText">
-<div class="eyebrow">SMART BUWABA TV</div>
-<h1>Dream.<br>Create.<br>Achieve.</h1>
-<p>
-Your home for Smart Buwaba films, comedy, Shorts, pictures,
-creative videos and entertainment.
-</p>
-
-<div class="actions">
-<button class="btn" onclick="showPage('videos')">▶ Explore Videos</button>
-<button class="btn secondary" onclick="openAddPost()">＋ Add Post</button>
-</div>
-</div>
-</div>
-
-<div class="section">
-<div class="sectionHead">
-<div>
-<h2>Latest Posts</h2>
-<div class="muted">Newest Smart Buwaba content.</div>
-</div>
-</div>
-
-<div id="homeGrid" class="grid"></div>
-</div>
-
-<div class="section about">
-
-<div class="panel">
-<h3>Welcome to Smart Buwaba</h3>
-<p class="muted">
-A creative space for films, comedy, entertainment and original projects.
-Build your audience one post at a time.
-</p>
-</div>
-
-<div class="panel">
-<div class="stats">
-<div class="stat"><strong id="countStat">0</strong><span>Posts</span></div>
-<div class="stat"><strong id="userStat">0</strong><span>Users</span></div>
-<div class="stat"><strong>SB</strong><span>Original</span></div>
-</div>
-</div>
-
-</div>
+<div class="hero"><div class="heroText"><div class="eyebrow">SMART BUWABA TV</div><h1>Dream.<br>Create.<br>Achieve.</h1><p>Your home for Smart Buwaba films, comedy, creative videos and entertainment. New content can be added to the Videos section.</p><div class="actions"><button class="btn" onclick="showPage('videos')">▶ Explore Videos</button><button class="btn secondary" onclick="openAddPost()">＋ Add Post</button></div></div></div>
+<div class="section"><div class="sectionHead"><div><h2>Latest Posts</h2><div class="muted">Your newest videos appear here.</div></div></div><div id="homeGrid" class="grid"></div></div>
+<div class="section about"><div class="panel"><h3>Welcome to Smart Buwaba</h3><p class="muted">A creative space for films, comedy, entertainment and original projects. Build your audience one post at a time.</p></div><div class="panel"><div class="stats"><div class="stat"><strong id="countStat">0</strong><span>Posts</span></div><div class="stat"><strong>24/7</strong><span>Creative</span></div><div class="stat"><strong>SB</strong><span>Original</span></div></div></div></div>
 </section>
 
-
-<!-- VIDEOS -->
 <section id="videos" class="page hidden">
-
-<div class="sectionHead">
-<div>
-<h2>🎬 Smart Buwaba Videos</h2>
-<div class="muted">Films, comedy and creative videos.</div>
-</div>
-
-<div class="tools">
-<input id="search" class="search"
-placeholder="Search videos..."
-oninput="renderVideos()">
-</div>
-</div>
-
-<div class="filters">
-
-<button class="filter active" onclick="setCategory('All',this)">All</button>
-<button class="filter" onclick="setCategory('Film',this)">Films</button>
-<button class="filter" onclick="setCategory('Comedy',this)">Comedy</button>
-<button class="filter" onclick="setCategory('Music',this)">Music</button>
-<button class="filter" onclick="setCategory('Other',this)">Other</button>
-
-</div>
-
+<div class="sectionHead"><div><h2>🎬 Smart Buwaba Videos</h2><div class="muted">Films, comedy and your latest uploads.</div></div><div class="tools"><input id="search" class="search" placeholder="Search videos..." oninput="renderVideos()"></div></div>
+<div class="filters" id="filters"><button class="filter active" onclick="setCategory('All',this)">All</button><button class="filter" onclick="setCategory('Film',this)">Films</button><button class="filter" onclick="setCategory('Comedy',this)">Comedy</button><button class="filter" onclick="setCategory('Music',this)">Music</button><button class="filter" onclick="setCategory('Other',this)">Other</button></div>
 <div id="videoGrid" class="grid" style="margin-top:15px"></div>
-
 </section>
 
-
-<!-- SHORTS -->
-<section id="shorts" class="page hidden">
-
-<div class="sectionHead">
-<div>
-<h2>⚡ Smart Buwaba Shorts</h2>
-<div class="muted">Short videos and clips.</div>
-</div>
-</div>
-
-<div id="shortGrid" class="grid"></div>
-
-</section>
-
-
-<!-- PICTURES -->
-<section id="pictures" class="page hidden">
-
-<div class="sectionHead">
-<div>
-<h2>🖼️ Smart Buwaba Pictures</h2>
-<div class="muted">Pictures shared by creators.</div>
-</div>
-</div>
-
-<div id="pictureGrid" class="grid"></div>
-
-</section>
-
-
-<!-- ABOUT -->
 <section id="about" class="page hidden">
-
-<div class="section">
-<div class="panel">
-<h2>About Smart Buwaba</h2>
-
-<p class="muted">
-SMART BUWABA is a creative brand focused on videos, films,
-comedy, Shorts, pictures and digital entertainment.
-</p>
-
-<div class="actions">
-<button class="btn" onclick="openAddPost()">＋ Create a Post</button>
-<button class="btn secondary" onclick="openAccount()">👤 My Account</button>
-</div>
-
-</div>
-</div>
-
+<div class="section"><div class="panel"><h2>About Smart Buwaba</h2><p class="muted">SMART BUWABA is a creative brand focused on videos, films, comedy and digital entertainment.</p><div class="actions"><button class="btn" onclick="openAddPost()">＋ Create a Post</button></div></div></div>
 </section>
-
 </main>
 
-
-<footer>
-<div><strong>SMART BUWABA</strong> • Dream • Create • Achieve</div>
-
-<div class="socials" style="margin-top:12px">
-<a href="#" onclick="return false">TikTok</a>
-<a href="#" onclick="return false">Facebook</a>
-<a href="#" onclick="return false">YouTube</a>
-</div>
-
-<div style="margin-top:12px;font-size:12px">
-© <span id="year"></span> Smart Buwaba
-</div>
-</footer>
-
-
-<!-- ACCOUNT -->
-<div id="accountModal" class="modal hidden"
-onclick="if(event.target===this)closeModal('accountModal')">
-
-<div class="modalBox">
-
-<div class="modalTop">
-<h2>👤 Smart Buwaba Account</h2>
-<button class="close" onclick="closeModal('accountModal')">×</button>
-</div>
-
-<div id="loggedOutAccount">
-
-<div class="note">
-Create your Smart Buwaba account to publish posts, comment and build your profile.
-</div>
-
-<div class="actions" style="margin-top:15px">
-<button class="btn" onclick="openSignup()">＋ Create Account</button>
-<button class="btn secondary" onclick="openLogin()">🔐 Login</button>
-</div>
-
-</div>
-
-
-<div id="loggedInAccount" class="hidden">
-
-<div class="profile">
-
-<div id="profileAvatar" class="profileAvatar">SB</div>
-
-<div>
-<h2 id="profileName" style="margin:0">Smart Buwaba User</h2>
-<div id="profileUsername" class="muted">@user</div>
-<div id="profileEmail" class="muted"></div>
-</div>
-
-</div>
-
-<div class="actions">
-<button class="btn" onclick="openProfileEdit()">✏️ Edit Profile</button>
-<button class="btn secondary" onclick="logout()">Logout</button>
-</div>
-
-<div class="panel" style="margin-top:15px">
-<h3>My Posts</h3>
-<div id="myPosts" class="grid"></div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-
-<!-- SIGNUP -->
-<div id="signupModal" class="modal hidden"
-onclick="if(event.target===this)closeModal('signupModal')">
-
-<div class="modalBox">
-
-<div class="modalTop">
-<h2>✨ Create Account</h2>
-<button class="close" onclick="closeModal('signupModal')">×</button>
-</div>
-
-<div class="form">
-
-<label>
-Full Name
-<input id="signupName" placeholder="Your name">
-</label>
-
-<label>
-Username
-<input id="signupUsername" placeholder="e.g. smartbuwaba">
-</label>
-
-<label>
-Email
-<input id="signupEmail" type="email" placeholder="you@example.com">
-</label>
-
-<label>
-Password
-<input id="signupPassword" type="password" placeholder="At least 6 characters">
-</label>
-
-<label>
-Profile Picture URL
-<input id="signupPhoto" placeholder="https://...">
-</label>
-
-<div id="signupError" class="error hidden"></div>
-
-<button class="btn" onclick="createAccount()">Create Account</button>
-
-<div class="note">
-Profile picture currently uses an image URL because Firebase Storage
-is not enabled on this project.
-</div>
-
-</div>
-</div>
-</div>
-
-
-<!-- LOGIN -->
-<div id="loginModal" class="modal hidden"
-onclick="if(event.target===this)closeModal('loginModal')">
-
-<div class="modalBox">
-
-<div class="modalTop">
-<h2>🔐 Login</h2>
-<button class="close" onclick="closeModal('loginModal')">×</button>
-</div>
-
-<div class="form">
-
-<label>
-Email
-<input id="loginEmail" type="email" placeholder="you@example.com">
-</label>
-
-<label>
-Password
-<input id="loginPassword" type="password" placeholder="Your password">
-</label>
-
-<div id="loginError" class="error hidden"></div>
-
-<button class="btn" onclick="login()">Login</button>
-
-<button class="btn secondary" onclick="openSignup()">
-Create new account
-</button>
-
-</div>
-</div>
-</div>
-
-
-<!-- EDIT PROFILE -->
-<div id="profileEditModal" class="modal hidden"
-onclick="if(event.target===this)closeModal('profileEditModal')">
-
-<div class="modalBox">
-
-<div class="modalTop">
-<h2>✏️ Edit Profile</h2>
-<button class="close" onclick="closeModal('profileEditModal')">×</button>
-</div>
-
-<div class="form">
-
-<label>
-Full Name
-<input id="editName">
-</label>
-
-<label>
-Username
-<input id="editUsername">
-</label>
-
-<label>
-Profile Picture URL
-<input id="editPhoto" placeholder="https://...">
-</label>
-
-<button class="btn" onclick="saveProfile()">Save Profile</button>
-
-</div>
-</div>
-</div>
-
-
-<!-- ADD POST -->
-<div id="postModal" class="modal hidden"
-onclick="if(event.target===this)closeModal('postModal')">
-
-<div class="modalBox">
-
-<div class="modalTop">
-<h2>＋ Add New Post</h2>
-<button class="close" onclick="closeModal('postModal')">×</button>
-</div>
-
-<div class="form">
-
-<label>
-Post Type
-<select id="pType">
-<option value="video">🎬 Video</option>
-<option value="short">⚡ Short</option>
-<option value="image">🖼️ Picture</option>
-</select>
-</label>
-
-<label>
-Title
-<input id="pTitle" placeholder="e.g. My New Film">
-</label>
-
-<label>
-Category
-<select id="pCategory">
-<option>Film</option>
-<option>Comedy</option>
-<option>Music</option>
-<option>Other</option>
-</select>
-</label>
-
-<label>
-Description
-<textarea id="pDesc" placeholder="Tell people about your post..."></textarea>
-</label>
-
-<label>
-Thumbnail / Image URL
-<input id="pThumb" placeholder="https://...">
-</label>
-
-<label>
-Video URL
-<input id="pVideo" placeholder="YouTube link or direct video URL">
-</label>
-
-<div class="note">
-🎬 Video = YouTube/video URL<br>
-⚡ Short = YouTube Shorts/video URL<br>
-🖼️ Picture = Image URL
-<br><br>
-Direct file upload is not enabled yet because Firebase Storage
-requires a billing-enabled project.
-</div>
-
-<div id="postError" class="error hidden"></div>
-
+<footer><div><strong>SMART BUWABA</strong> • Dream • Create • Achieve</div><div class="socials" style="margin-top:12px"><a href="#" onclick="return false">TikTok</a><a href="#" onclick="return false">Facebook</a><a href="#" onclick="return false">YouTube</a></div><div style="margin-top:12px;font-size:12px">© <span id="year"></span> Smart Buwaba</div></footer>
+
+<!-- Add Post -->
+<div id="postModal" class="modal hidden" onclick="if(event.target===this)closeModal('postModal')"><div class="modalBox"><div class="modalTop"><h2>＋ Add New Post</h2><button class="close" onclick="closeModal('postModal')">×</button></div><div class="form">
+<label>Title<input id="pTitle" placeholder="e.g. My New Film"></label>
+<label>Category<select id="pCategory"><option>Film</option><option>Comedy</option><option>Music</option><option>Other</option></select></label>
+<label>Description<textarea id="pDesc" placeholder="Tell people about this video..."></textarea></label>
+<label>Thumbnail URL (optional)<input id="pThumb" placeholder="https://..."></label>
+<label>Video URL (optional)<input id="pVideo" placeholder="https://...mp4 or video link"></label>
+<div class="note">Posts are stored in Smart Buwaba Firestore so they can be loaded from the website.</div>
 <button class="btn" onclick="savePost()">Publish Post</button>
-
-</div>
-</div>
-</div>
+</div></div></div>
 
 
-<!-- COMMENTS -->
-<div id="commentsModal" class="modal hidden"
-onclick="if(event.target===this)closeModal('commentsModal')">
-
-<div class="modalBox">
-
-<div class="modalTop">
-<h2>💬 Comments</h2>
-<button class="close" onclick="closeModal('commentsModal')">×</button>
+<!-- Comments -->
+<div id="commentsModal" class="modal hidden" onclick="if(event.target===this)closeModal('commentsModal')">
+ <div class="modalBox">
+  <div class="modalTop"><h2>💬 Comments</h2><button class="close" onclick="closeModal('commentsModal')">×</button></div>
+  <div id="commentList" class="commentList"></div>
+  <div class="commentBox"><textarea id="commentText" placeholder="Write a comment..." style="width:100%;min-height:80px;background:var(--card2);color:#fff;border:1px solid var(--line);border-radius:10px;padding:10px"></textarea>
+  <button class="btn" style="margin-top:8px" onclick="sendComment()">Post comment</button></div>
+ </div>
 </div>
 
-<div id="commentList" class="commentList"></div>
+<!-- Player -->
+<div id="playerModal" class="modal hidden" onclick="if(event.target===this)closeModal('playerModal')"><div class="modalBox"><div class="modalTop"><h2 id="playerTitle">Video</h2><button class="close" onclick="closeModal('playerModal')">×</button></div><div id="playerArea"></div><p id="playerDesc" class="muted"></p><div id="playerActions" class="actions"></div></div></div>
 
-<div style="margin-top:13px;border-top:1px solid var(--line);padding-top:13px">
 
-<textarea id="commentText"
-placeholder="Write a comment..."
-style="width:100%;min-height:80px;background:var(--card2);color:#fff;border:1px solid var(--line);border-radius:10px;padding:10px"></textarea>
-
-<button class="btn" style="margin-top:8px" onclick="sendComment()">
-Post comment
-</button>
-
+<!-- Notifications -->
+<div id="notificationsModal" class="modal hidden" onclick="if(event.target===this)closeModal('notificationsModal')">
+  <div class="modalBox">
+    <div class="modalTop"><h2>🔔 Notifications</h2><button class="close" onclick="closeModal('notificationsModal')">×</button></div>
+    <div id="notificationList" class="notifList"></div>
+  </div>
 </div>
 
-</div>
-</div>
+<!-- Settings -->
+<div id="settingsModal" class="modal hidden" onclick="if(event.target===this)closeModal('settingsModal')"><div class="modalBox"><div class="modalTop"><h2>⚙️ Settings</h2><button class="close" onclick="closeModal('settingsModal')">×</button></div>
+<div class="settingRow"><div><strong>Dark theme</strong><div class="muted">Keep the cinematic Smart Buwaba look.</div></div><label class="switch"><input id="darkSwitch" type="checkbox" checked onchange="toggleTheme(this)"><span class="slider"></span></label></div>
+<div class="settingRow"><div><strong>Reset demo posts</strong><div class="muted">Remove posts saved in this browser.</div></div><button class="btn secondary" onclick="resetPosts()">Reset</button></div>
+<div style="margin-top:18px" class="note">Smart Buwaba • Videos, likes, comments, follows and notifications.</div>
+</div></div>
 
-
-<!-- PLAYER -->
-<div id="playerModal" class="modal hidden"
-onclick="if(event.target===this)closeModal('playerModal')">
-
-<div class="modalBox">
-
-<div class="modalTop">
-<h2 id="playerTitle">Post</h2>
-<button class="close" onclick="closeModal('playerModal')">×</button>
-</div>
-
-<div id="playerArea"></div>
-<p id="playerDesc" class="muted"></p>
-
-</div>
-</div>
-
-
-<!-- NOTIFICATIONS -->
-<div id="notificationsModal" class="modal hidden"
-onclick="if(event.target===this)closeModal('notificationsModal')">
-
-<div class="modalBox">
-
-<div class="modalTop">
-<h2>🔔 Notifications</h2>
-<button class="close" onclick="closeModal('notificationsModal')">×</button>
-</div>
-
-<div id="notificationList" class="notifList"></div>
-
-</div>
-</div>
-
-
-<!-- SETTINGS -->
-<div id="settingsModal" class="modal hidden"
-onclick="if(event.target===this)closeModal('settingsModal')">
-
-<div class="modalBox">
-
-<div class="modalTop">
-<h2>⚙️ Settings</h2>
-<button class="close" onclick="closeModal('settingsModal')">×</button>
-</div>
-
-<div class="settingRow">
-
-<div>
-<strong>Dark theme</strong>
-<div class="muted">Keep the cinematic Smart Buwaba look.</div>
-</div>
-
-<label class="switch">
-<input id="darkSwitch" type="checkbox" checked onchange="toggleTheme(this)">
-<span class="slider"></span>
-</label>
-
-</div>
-
-<div class="settingRow">
-
-<div>
-<strong>Account</strong>
-<div class="muted">Login or manage your Smart Buwaba account.</div>
-</div>
-
-<button class="btn secondary" onclick="openAccount()">Open</button>
-
-</div>
-
-</div>
-</div>
-
-
-<!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
-
 <script>
-
 const firebaseConfig={
  apiKey:"AIzaSyC5ia_DjqTg-cepVQcbYiM7m3tBTGhtnNs",
  authDomain:"smartbuwaba-40422.firebaseapp.com",
@@ -828,1209 +141,184 @@ const firebaseConfig={
  appId:"1:84013599664:web:7a22f7deaf2e40557ba475",
  measurementId:"G-QHR81JB1D6"
 };
-
 firebase.initializeApp(firebaseConfig);
-
 const db=firebase.firestore();
-const auth=firebase.auth();
-
+const defaultPosts=[
+ {id:"demo1",title:"Welcome to Smart Buwaba",category:"Other",desc:"Welcome to the official Smart Buwaba creative space.",thumb:"",video:"",date:new Date().toISOString()},
+ {id:"demo2",title:"Coming Soon",category:"Film",desc:"Your next Smart Buwaba film can appear here.",thumb:"",video:"",date:new Date().toISOString()}
+];
 let posts=[];
 let category="All";
-let currentUser=null;
-let currentProfile=null;
-let currentCommentVideoId=null;
-
 const $=id=>document.getElementById(id);
-
-const likedPosts=new Set(
- JSON.parse(localStorage.getItem("sb_likes")||"[]")
-);
-
-const followingUsers=new Set(
- JSON.parse(localStorage.getItem("sb_follows")||"[]")
-);
-
-let notifications=JSON.parse(
- localStorage.getItem("sb_notifications")||"[]"
-);
-
-
-/* PAGE NAVIGATION */
-
 function showPage(id){
-
- document.querySelectorAll(".page").forEach(x=>{
-   x.classList.add("hidden");
- });
-
+ document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));
  $(id).classList.remove("hidden");
-
- document.querySelectorAll(".navlinks button[data-page]").forEach(b=>{
-   b.classList.toggle("active",b.dataset.page===id);
- });
-
- $("nav")?.classList.remove("open");
-
- if(id==="home")renderHome();
- if(id==="videos")renderVideos();
- if(id==="shorts")renderShorts();
- if(id==="pictures")renderPictures();
-
- window.scrollTo({top:0,behavior:"smooth"});
+ document.querySelectorAll(".navlinks button[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
+ document.getElementById('nav').classList.remove('open');
+ if(id==="videos")renderVideos(); if(id==="home")renderHome(); window.scrollTo({top:0,behavior:"smooth"});
 }
-
-
-/* ACCOUNT */
-
-function openAccount(){
-
- $("accountModal").classList.remove("hidden");
-
- if(currentUser && !currentUser.isAnonymous){
-   $("loggedOutAccount").classList.add("hidden");
-   $("loggedInAccount").classList.remove("hidden");
-   loadProfile();
- }else{
-   $("loggedOutAccount").classList.remove("hidden");
-   $("loggedInAccount").classList.add("hidden");
- }
-}
-
-function openSignup(){
-
- closeModal("loginModal");
- closeModal("accountModal");
-
- $("signupError").classList.add("hidden");
- $("signupModal").classList.remove("hidden");
-}
-
-function openLogin(){
-
- closeModal("accountModal");
-
- $("loginError").classList.add("hidden");
- $("loginModal").classList.remove("hidden");
-}
-
-async function createAccount(){
-
- const name=$("signupName").value.trim();
- const username=$("signupUsername").value.trim();
- const email=$("signupEmail").value.trim();
- const password=$("signupPassword").value;
- const photo=$("signupPhoto").value.trim();
-
- const err=$("signupError");
-
- if(!name||!username||!email||!password){
-   err.textContent="Please fill in all required fields.";
-   err.classList.remove("hidden");
-   return;
- }
-
- if(password.length<6){
-   err.textContent="Password must be at least 6 characters.";
-   err.classList.remove("hidden");
-   return;
- }
-
- try{
-
-   const result=await auth.createUserWithEmailAndPassword(
-     email,password
-   );
-
-   const user=result.user;
-
-   await db.collection("users").doc(user.uid).set({
-     uid:user.uid,
-     name:name,
-     username:username,
-     email:email,
-     photoURL:photo,
-     createdAt:new Date().toISOString()
-   });
-
-   await user.updateProfile({
-     displayName:name,
-     photoURL:photo||null
-   });
-
-   currentUser=user;
-
-   closeModal("signupModal");
-
-   notify("Welcome to Smart Buwaba, "+name+"!");
-
-   updateAccountButton();
-
-   alert("Account created successfully! 🎉");
-
-   openAccount();
-
- }catch(e){
-
-   console.error(e);
-
-   err.textContent=getAuthError(e);
-
-   err.classList.remove("hidden");
- }
-}
-
-async function login(){
-
- const email=$("loginEmail").value.trim();
- const password=$("loginPassword").value;
- const err=$("loginError");
-
- if(!email||!password){
-   err.textContent="Enter your email and password.";
-   err.classList.remove("hidden");
-   return;
- }
-
- try{
-
-   await auth.signInWithEmailAndPassword(email,password);
-
-   closeModal("loginModal");
-
-   alert("Welcome back! 👋");
-
- }catch(e){
-
-   console.error(e);
-
-   err.textContent=getAuthError(e);
-   err.classList.remove("hidden");
- }
-}
-
-async function logout(){
-
- try{
-   await auth.signOut();
-   currentUser=null;
-   currentProfile=null;
-
-   closeModal("accountModal");
-
-   updateAccountButton();
-
-   alert("You have logged out.");
- }catch(e){
-   console.error(e);
- }
-}
-
-function getAuthError(e){
-
- const code=e.code||"";
-
- if(code.includes("email-already-in-use"))
-   return "This email already has an account.";
-
- if(code.includes("invalid-email"))
-   return "The email address is not valid.";
-
- if(code.includes("weak-password"))
-   return "Password is too weak. Use at least 6 characters.";
-
- if(code.includes("invalid-credential"))
-   return "Email or password is incorrect.";
-
- return e.message||"Something went wrong.";
-}
-
-
-/* PROFILE */
-
-async function loadProfile(){
-
- if(!currentUser||currentUser.isAnonymous)return;
-
- try{
-
-   const snap=await db.collection("users")
-     .doc(currentUser.uid)
-     .get();
-
-   if(snap.exists){
-
-     currentProfile=snap.data();
-
-   }else{
-
-     currentProfile={
-       name:currentUser.displayName||"Smart Buwaba User",
-       username:"user",
-       email:currentUser.email||"",
-       photoURL:currentUser.photoURL||""
-     };
-   }
-
-   updateProfileUI();
-   loadMyPosts();
-
- }catch(e){
-   console.error(e);
- }
-}
-
-function updateProfileUI(){
-
- if(!currentProfile)return;
-
- $("profileName").textContent=
-   currentProfile.name||"Smart Buwaba User";
-
- $("profileUsername").textContent=
-   "@"+(currentProfile.username||"user");
-
- $("profileEmail").textContent=
-   currentProfile.email||"";
-
- const photo=currentProfile.photoURL||"";
-
- $("profileAvatar").innerHTML=photo
- ? `<img src="${esc(photo)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.style.display='none'">`
- : "SB";
-
- updateAccountButton();
-}
-
-function updateAccountButton(){
-
- const btn=$("accountNavBtn");
-
- if(currentUser&&!currentUser.isAnonymous){
-
-   const name=currentProfile?.name||
-     currentUser.displayName||
-     "Account";
-
-   const photo=currentProfile?.photoURL||
-     currentUser.photoURL||
-     "";
-
-   btn.innerHTML=
-     photo
-     ? `<img class="avatar" src="${esc(photo)}"> ${esc(name)}`
-     : `👤 ${esc(name)}`;
-
- }else{
-
-   btn.innerHTML="👤 Account";
- }
-}
-
-function openProfileEdit(){
-
- if(!currentProfile)return;
-
- $("editName").value=currentProfile.name||"";
- $("editUsername").value=currentProfile.username||"";
- $("editPhoto").value=currentProfile.photoURL||"";
-
- $("profileEditModal").classList.remove("hidden");
-}
-
-async function saveProfile(){
-
- if(!currentUser||currentUser.isAnonymous)return;
-
- const name=$("editName").value.trim();
- const username=$("editUsername").value.trim();
- const photo=$("editPhoto").value.trim();
-
- if(!name||!username){
-   alert("Name and username are required.");
-   return;
- }
-
- try{
-
-   await db.collection("users").doc(currentUser.uid).update({
-     name:name,
-     username:username,
-     photoURL:photo
-   });
-
-   await currentUser.updateProfile({
-     displayName:name,
-     photoURL:photo||null
-   });
-
-   currentProfile.name=name;
-   currentProfile.username=username;
-   currentProfile.photoURL=photo;
-
-   updateProfileUI();
-
-   closeModal("profileEditModal");
-
-   notify("Your profile was updated.");
-
- }catch(e){
-
-   console.error(e);
-   alert("Profile could not be updated.");
- }
-}
-
-async function loadMyPosts(){
-
- if(!currentUser||currentUser.isAnonymous)return;
-
- const arr=posts.filter(
-   p=>String(p.ownerId||"")===String(currentUser.uid)
- );
-
- $("myPosts").innerHTML=
-   arr.length
-   ? arr.map(card).join("")
-   : `<div class="empty">You have not posted anything yet.</div>`;
-}
-
-
-/* POSTS */
-
-function openAddPost(){
-
- if(!currentUser||currentUser.isAnonymous){
-
-   alert("Please create an account or login before publishing a post.");
-
-   openAccount();
-
-   return;
- }
-
- $("postError").classList.add("hidden");
- $("postModal").classList.remove("hidden");
- $("pTitle").focus();
-}
-
-async function savePost(){
-
- if(!currentUser||currentUser.isAnonymous){
-
-   alert("Please login first.");
-   return;
- }
-
- const title=$("pTitle").value.trim();
-
- if(!title){
-
-   $("postError").textContent="Please enter a title.";
-   $("postError").classList.remove("hidden");
-
-   return;
- }
-
- const type=$("pType").value;
-
- const post={
-   type:type,
-   title:title,
-   category:$("pCategory").value,
-   description:$("pDesc").value.trim(),
-   thumbnailUrl:$("pThumb").value.trim(),
-   videoUrl:$("pVideo").value.trim(),
-   ownerId:currentUser.uid,
-   ownerName:currentProfile?.name||currentUser.displayName||"Smart Buwaba User",
-   ownerUsername:currentProfile?.username||"user",
-   date:new Date().toISOString(),
-   likeCount:0,
-   commentCount:0
- };
-
- try{
-
-   const ref=await db.collection("videos").add(post);
-
-   posts.push({
-     ...post,
-     id:ref.id
-   });
-
-   ["pTitle","pDesc","pThumb","pVideo"].forEach(
-     x=>$(x).value=""
-   );
-
-   closeModal("postModal");
-
-   renderHome();
-   renderVideos();
-   renderShorts();
-   renderPictures();
-
-   loadMyPosts();
-
-   notify("Your post was published successfully! 🎉");
-
-   alert("Post published! 🎬");
-
- }catch(e){
-
-   console.error(e);
-
-   $("postError").textContent=
-     "Could not save post: "+e.message;
-
-   $("postError").classList.remove("hidden");
- }
-}
-
-
-/* CARD */
-
 function card(p){
-
- const type=p.type||"video";
-
  const thumb=p.thumbnailUrl||p.thumb||"";
- const desc=p.description||p.desc||"Smart Buwaba post";
-
+ const desc=p.description||p.desc||"Smart Buwaba video";
+ const video=p.videoUrl||p.video||"";
  const liked=likedPosts.has(String(p.id));
  const following=followingUsers.has(String(p.ownerId||""));
-
- let label=
-   type==="short"?"⚡ SHORT":
-   type==="image"?"🖼️ PICTURE":
-   "🎬 VIDEO";
-
- const thumbHtml=thumb
- ? `<img src="${esc(thumb)}" alt="${esc(p.title)}">`
- : `<div class="placeholder"><div class="sbmark">SB</div></div>`;
-
- const id=String(p.id).replace(/'/g,"\\'");
-
- return `
- <article class="card">
-
- <div class="thumb ${type==="short"?"short":""}">
-
- ${thumbHtml}
-
- <span class="badge">${label}</span>
-
- <button class="play" onclick="playPost('${id}')">
- ${type==="image"?"👁":"▶"}
- </button>
-
- </div>
-
- <div class="cardBody">
-
- <h3>${esc(p.title||"Untitled")}</h3>
-
- <p>${esc(desc)}</p>
-
- <div class="meta">
- <span>${esc(p.category||"Other")}</span>
- <span>${p.date?new Date(p.date).toLocaleDateString():""}</span>
- </div>
-
- <div class="muted" style="font-size:11px;margin-top:7px">
- 👤 ${esc(p.ownerName||"Smart Buwaba User")}
- </div>
-
+ const thumbHtml=thumb?`<img src="${esc(thumb)}" alt="">`:`<div class="placeholder"><div class="sbmark">SB</div></div>`;
+ return `<article class="card">
+ <div class="thumb">${thumbHtml}<span class="badge">${esc(p.category||"Other")}</span>
+ <button class="play" onclick="playPost('${String(p.id).replace(/'/g,"\\'")}')">▶</button></div>
+ <div class="cardBody"><h3>${esc(p.title||"Untitled video")}</h3><p>${esc(desc)}</p>
+ <div class="meta"><span>${esc(p.category||"Other")}</span><span>👁️ ${p.viewCount||0} views</span><span>${p.date?new Date(p.date).toLocaleString():""}</span></div>
  <div class="socialBar">
-
- <button class="socialBtn ${liked?"liked":""}"
- onclick="toggleLike('${id}')">
- ❤️ <span>${p.likeCount||0}</span>
- </button>
-
- <button class="socialBtn"
- onclick="openComments('${id}')">
- 💬 <span>${p.commentCount||0}</span>
- </button>
-
- ${p.ownerId&&p.ownerId!==currentUser?.uid
- ? `<button class="socialBtn ${following?"following":""}"
- onclick="toggleFollow('${String(p.ownerId).replace(/'/g,"\\'")}')">
- ${following?"✓ Following":"＋ Follow"}
- </button>`
- : ""}
-
- <button class="socialBtn"
- onclick="sharePost('${id}')">
- 🔗 Share
- </button>
-
- </div>
-
- </div>
- </article>
- `;
+ <button class="socialBtn ${liked?"liked":""}" onclick="toggleLike('${String(p.id).replace(/'/g,"\\'")}')">❤️ <span id="like-${esc(p.id)}">${p.likeCount||0}</span></button>
+ <button class="socialBtn" onclick="openComments('${String(p.id).replace(/'/g,"\\'")}')">💬 <span id="comment-${esc(p.id)}">${p.commentCount||0}</span></button><button class="socialBtn" onclick="downloadPost('${String(p.id).replace(/'/g,"\\'")}')">⬇ Download</button>
+ ${p.ownerId?`<button class="socialBtn ${following?"following":""}" onclick="toggleFollow('${String(p.ownerId).replace(/'/g,"\\'")}')">＋ ${following?"Following":"Follow"}</button>`:""}
+ </div></div></article>`;
 }
-
-
-/* HOME */
-
-function renderHome(){
-
- $("homeGrid").innerHTML=
-   posts.slice().reverse().slice(0,4).map(card).join("")
-   ||empty();
-
- $("countStat").textContent=posts.length;
-}
-
-
-/* VIDEOS */
-
+function renderHome(){ $("homeGrid").innerHTML=posts.slice().reverse().slice(0,4).map(card).join("")||empty(); $("countStat").textContent=posts.length }
 function renderVideos(){
-
- const search=$("search");
-
- const q=search
-   ? search.value.toLowerCase()
-   : "";
-
- let arr=posts.slice().reverse().filter(p=>{
-
-   const type=p.type||"video";
-
-   if(type!=="video")return false;
-
-   const text=
-     (p.title||"")+" "+
-     (p.description||p.desc||"");
-
-   return(
-     (category==="All"||
-      (p.category||"Other")===category)
-     &&
-     text.toLowerCase().includes(q)
-   );
- });
-
- $("videoGrid").innerHTML=
-   arr.map(card).join("")||empty();
+ const q=($("search").value||"").toLowerCase();
+ let arr=posts.slice().reverse().filter(p=>(category==="All"||(p.category||"Other")==category)&&((p.title+" "+(p.desc||"")).toLowerCase().includes(q)));
+ $("videoGrid").innerHTML=arr.map(card).join("")||empty();
 }
-
-
-/* SHORTS */
-
-function renderShorts(){
-
- const arr=posts.slice().reverse().filter(
-   p=>(p.type||"video")==="short"
- );
-
- $("shortGrid").innerHTML=
-   arr.map(card).join("")||empty();
+function empty(){return `<div class="empty" style="grid-column:1/-1">No posts found yet.<br><button class="btn" style="margin-top:12px" onclick="openAddPost()">＋ Add your first post</button></div>`}
+function setCategory(c,el){category=c;document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));el.classList.add("active");renderVideos()}
+function openAddPost(){ $("postModal").classList.remove("hidden"); $("pTitle").focus() }
+async function savePost(){
+ const title=$("pTitle").value.trim(); if(!title){alert("Please enter a title.");return}
+ const post={title,category:$("pCategory").value,description:$("pDesc").value.trim(),thumbnailUrl:$("pThumb").value.trim(),videoUrl:$("pVideo").value.trim(),date:new Date().toISOString(),likeCount:0,commentCount:0,viewCount:0};
+ if(currentUser) post.ownerId=currentUser.uid;
+ try{
+   const ref=await db.collection("videos").add(post);
+   posts.push({...post,id:ref.id});
+   ["pTitle","pDesc","pThumb","pVideo"].forEach(x=>$(x).value="");
+   closeModal("postModal");renderHome();renderVideos();notify("Post published successfully.");
+ }catch(e){console.error(e);alert("Could not save the post. Check Firestore Rules and make sure Anonymous sign-in is enabled.\n\n"+e.message);}
 }
-
-
-/* PICTURES */
-
-function renderPictures(){
-
- const arr=posts.slice().reverse().filter(
-   p=>(p.type||"video")==="image"
- );
-
- $("pictureGrid").innerHTML=
-   arr.map(card).join("")||empty();
-}
-
-function empty(){
-
- return `
- <div class="empty">
- No posts found yet.<br>
- <button class="btn" style="margin-top:12px"
- onclick="openAddPost()">
- ＋ Add your first post
- </button>
- </div>
- `;
-}
-
-function setCategory(c,el){
-
- category=c;
-
- document.querySelectorAll(".filter")
- .forEach(x=>x.classList.remove("active"));
-
- el.classList.add("active");
-
- renderVideos();
-}
-
-
-/* PLAYER */
-
-function playPost(id){
-
- const p=posts.find(
-   x=>String(x.id)===String(id)
- );
-
- if(!p)return;
-
- $("playerTitle").textContent=p.title||"Post";
-
- $("playerDesc").textContent=
-   p.description||p.desc||"";
-
- const type=p.type||"video";
+async function playPost(id){
+ const p=posts.find(x=>String(x.id)===String(id)); if(!p)return;
+ try{
+   await db.collection("videos").doc(String(id)).update({viewCount:firebase.firestore.FieldValue.increment(1)});
+ }catch(e){console.warn("View count could not be saved:",e.message)}
+ p.viewCount=(p.viewCount||0)+1;
+ $("playerTitle").textContent=p.title||"Video";
+ $("playerDesc").textContent=(p.description||p.desc||"")+" • 👁️ "+p.viewCount+" views";
  const url=p.videoUrl||p.video||"";
-
- if(type==="image"){
-
-   const image=p.thumbnailUrl||p.thumb||"";
-
-   $("playerArea").innerHTML=image
-   ? `<img class="imageViewer" src="${esc(image)}">`
-   : `<div class="empty">No image URL.</div>`;
-
+ const yt=getYouTubeId(url);
+ if(yt){
+   $("playerArea").innerHTML=`<iframe class="videoFrame" src="https://www.youtube.com/embed/${yt}" title="${esc(p.title||"Smart Buwaba video")}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+   $("playerActions").innerHTML=`<button class="btn secondary" onclick="downloadPost('${String(id).replace(/'/g,"\\'")}')">⬇ Download</button><span class="small">YouTube videos can be watched/shared here; downloading depends on the source's permissions.</span>`;
+ }else if(url){
+   $("playerArea").innerHTML=`<div class="player"><video controls autoplay src="${esc(url)}" style="width:100%;border-radius:14px"></video></div>`;
+   $("playerActions").innerHTML=`<a class="btn" href="${esc(url)}" download>⬇ Download video</a>`;
  }else{
-
-   const yt=getYouTubeId(url);
-
-   if(yt){
-
-     $("playerArea").innerHTML=`
-     <iframe
-       class="videoFrame"
-       src="https://www.youtube.com/embed/${esc(yt)}?autoplay=1"
-       title="${esc(p.title||"Smart Buwaba video")}"
-       allow="autoplay; encrypted-media; picture-in-picture"
-       allowfullscreen>
-     </iframe>`;
-
-   }else if(url){
-
-     $("playerArea").innerHTML=`
-     <div class="player">
-       <video controls autoplay src="${esc(url)}"></video>
-     </div>`;
-
-   }else{
-
-     $("playerArea").innerHTML=
-       `<div class="empty">This post does not have a video URL yet.</div>`;
-   }
+   $("playerArea").innerHTML=`<div class="empty">This post does not have a video URL yet.</div>`;
+   $("playerActions").innerHTML="";
  }
-
  $("playerModal").classList.remove("hidden");
+ renderHome();renderVideos();
 }
-
-
-/* YOUTUBE */
-
-function getYouTubeId(url){
-
+function openSettings(){ $("settingsModal").classList.remove("hidden") }
+function closeModal(id){$(id).classList.add("hidden"); if(id==="playerModal")$("playerArea").innerHTML=""}
+function resetPosts(){alert("Smart Buwaba posts are stored in Firestore. Use the Firebase Console to delete database documents.")}
+function toggleTheme(el){document.body.style.filter=el.checked?"none":"invert(.92) hue-rotate(180deg)";localStorage.setItem("sb_theme",el.checked?"dark":"light")}
+function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+async function loadPosts(){
  try{
-
-   const u=new URL(url);
-
-   if(u.hostname.includes("youtu.be"))
-     return u.pathname.slice(1).split("/")[0];
-
-   if(u.hostname.includes("youtube.com")){
-
-     if(u.pathname==="/watch")
-       return u.searchParams.get("v");
-
-     if(u.pathname.startsWith("/shorts/"))
-       return u.pathname.split("/")[2];
-
-     if(u.pathname.startsWith("/embed/"))
-       return u.pathname.split("/")[2];
-   }
-
- }catch(e){}
-
- return null;
-}
-
-
-/* LIKES */
-
-async function toggleLike(id){
-
- if(!currentUser||currentUser.isAnonymous){
-
-   alert("Please login to like posts.");
-   openAccount();
-   return;
- }
-
- const key=String(id);
-
- const p=posts.find(
-   x=>String(x.id)===key
- );
-
- if(!p)return;
-
- const ref=db.collection("videos").doc(key);
-
- try{
-
-   if(likedPosts.has(key)){
-
-     likedPosts.delete(key);
-
-     p.likeCount=Math.max(
-       0,(p.likeCount||0)-1
-     );
-
-   }else{
-
-     likedPosts.add(key);
-
-     p.likeCount=(p.likeCount||0)+1;
-
-     notify("You liked “"+p.title+"”.");
-   }
-
-   await ref.update({
-     likeCount:p.likeCount
-   });
-
-   persistSocial();
-
-   renderHome();
-   renderVideos();
-   renderShorts();
-   renderPictures();
-
+   const snap=await db.collection("videos").get();
+   posts=snap.docs.map(d=>({id:d.id,...d.data(),category:d.data().category||"Other",likeCount:d.data().likeCount||0,commentCount:d.data().commentCount||0,viewCount:d.data().viewCount||0}));
+   posts.sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
  }catch(e){
-
-   console.error(e);
-   alert("Like could not be saved.");
+   console.error(e);posts=[];alert("Could not load videos from Firestore. Check Firestore Rules.\n\n"+e.message);
  }
+ renderHome();renderVideos();
 }
 
-
-/* COMMENTS */
-
-async function openComments(id){
-
- if(!currentUser||currentUser.isAnonymous){
-
-   alert("Please login to comment.");
-   openAccount();
-   return;
- }
-
- currentCommentVideoId=String(id);
-
- $("commentList").innerHTML=
-   `<div class="muted">Loading comments...</div>`;
-
- $("commentsModal").classList.remove("hidden");
-
- try{
-
-   const snap=await db.collection("comments")
-     .where("videoId","==",currentCommentVideoId)
-     .get();
-
-   const arr=snap.docs.map(
-     d=>d.data()
-   ).sort(
-     (a,b)=>String(a.date||"").localeCompare(
-       String(b.date||"")
-     )
-   );
-
-   $("commentList").innerHTML=
-     arr.length
-     ? arr.map(c=>`
-       <div class="comment">
-       ${esc(c.text)}
-       <small>
-       ${esc(c.authorName||"Smart Buwaba user")}
-       • ${c.date?new Date(c.date).toLocaleString():""}
-       </small>
-       </div>
-     `).join("")
-     : `<div class="empty">No comments yet. Be the first.</div>`;
-
- }catch(e){
-
-   console.error(e);
-
-   $("commentList").innerHTML=
-     `<div class="empty">Comments are not available.</div>`;
- }
-}
-
-async function sendComment(){
-
- if(!currentUser||currentUser.isAnonymous){
-
-   alert("Please login first.");
-   return;
- }
-
- const text=$("commentText").value.trim();
-
- if(!text||!currentCommentVideoId)return;
-
- try{
-
-   await db.collection("comments").add({
-
-     videoId:currentCommentVideoId,
-     text:text,
-     authorId:currentUser.uid,
-     authorName:currentProfile?.name||
-       currentUser.displayName||
-       "Smart Buwaba user",
-
-     date:new Date().toISOString()
-   });
-
-   const p=posts.find(
-     x=>String(x.id)===currentCommentVideoId
-   );
-
-   if(p){
-
-     p.commentCount=
-       (p.commentCount||0)+1;
-
-     await db.collection("videos")
-       .doc(currentCommentVideoId)
-       .update({
-         commentCount:p.commentCount
-       });
-   }
-
-   $("commentText").value="";
-
-   notify("Your comment was posted.");
-
-   await openComments(currentCommentVideoId);
-
-   renderHome();
-   renderVideos();
-   renderShorts();
-   renderPictures();
-
- }catch(e){
-
-   console.error(e);
-   alert("Comment could not be saved.");
- }
-}
-
-
-/* FOLLOW */
-
-async function toggleFollow(uid){
-
- if(!currentUser||currentUser.isAnonymous){
-
-   alert("Please login to follow creators.");
-   openAccount();
-   return;
- }
-
- const key=String(uid);
-
- if(followingUsers.has(key)){
-
-   followingUsers.delete(key);
-   notify("You unfollowed this creator.");
-
- }else{
-
-   followingUsers.add(key);
-   notify("You are now following this creator.");
- }
-
- persistSocial();
-
- renderHome();
- renderVideos();
- renderShorts();
- renderPictures();
-}
-
-
-/* SHARE */
-
-async function sharePost(id){
-
- const p=posts.find(
-   x=>String(x.id)===String(id)
- );
-
- if(!p)return;
-
- const url=
-   location.href.split("#")[0]+
-   "#post="+encodeURIComponent(id);
-
- const data={
-   title:p.title||"Smart Buwaba",
-   text:p.description||"Smart Buwaba post",
-   url:url
- };
-
- try{
-
-   if(navigator.share){
-
-     await navigator.share(data);
-
-   }else{
-
-     await navigator.clipboard.writeText(url);
-
-     alert("Post link copied! 🔗");
-   }
-
- }catch(e){
-   console.log("Share cancelled.");
- }
-}
-
-
-/* NOTIFICATIONS */
+let currentUser=null, currentCommentVideoId=null;
+const likedPosts=new Set(JSON.parse(localStorage.getItem("sb_likes")||"[]"));
+const followingUsers=new Set(JSON.parse(localStorage.getItem("sb_follows")||"[]"));
+let notifications=JSON.parse(localStorage.getItem("sb_notifications")||"[]");
 
 function persistSocial(){
-
- localStorage.setItem(
-   "sb_likes",
-   JSON.stringify([...likedPosts])
- );
-
- localStorage.setItem(
-   "sb_follows",
-   JSON.stringify([...followingUsers])
- );
-
- localStorage.setItem(
-   "sb_notifications",
-   JSON.stringify(notifications)
- );
-
+ localStorage.setItem("sb_likes",JSON.stringify([...likedPosts]));
+ localStorage.setItem("sb_follows",JSON.stringify([...followingUsers]));
+ localStorage.setItem("sb_notifications",JSON.stringify(notifications));
  updateNotifCount();
 }
-
 function notify(text){
-
- notifications.unshift({
-   text:text,
-   date:new Date().toISOString(),
-   read:false
- });
-
- notifications=notifications.slice(0,50);
-
- persistSocial();
+ notifications.unshift({text,date:new Date().toISOString(),read:false});
+ notifications=notifications.slice(0,50);persistSocial();
 }
-
 function updateNotifCount(){
-
- const n=notifications.filter(
-   x=>!x.read
- ).length;
-
- const el=$("notifCount");
-
- el.textContent=n;
-
- if(n)
-   el.classList.remove("hidden");
- else
-   el.classList.add("hidden");
+ const n=notifications.filter(x=>!x.read).length, el=$("notifCount");
+ el.textContent=n;if(n)el.classList.remove("hidden");else el.classList.add("hidden");
 }
-
 function openNotifications(){
-
- notifications.forEach(
-   x=>x.read=true
- );
-
- persistSocial();
-
- $("notificationList").innerHTML=
-   notifications.length
-   ? notifications.map(n=>`
-     <div class="notifItem">
-     🔔 ${esc(n.text)}
-     <div class="muted" style="font-size:11px;margin-top:4px">
-     ${new Date(n.date).toLocaleString()}
-     </div>
-     </div>
-   `).join("")
-   : `<div class="empty">No notifications yet.</div>`;
-
+ notifications.forEach(x=>x.read=true);persistSocial();
+ $("notificationList").innerHTML=notifications.length?notifications.map(n=>`<div class="notifItem">🔔 ${esc(n.text)}<div class="muted" style="font-size:11px;margin-top:4px">${new Date(n.date).toLocaleString()}</div></div>`).join(""):`<div class="empty">No notifications yet.</div>`;
  $("notificationsModal").classList.remove("hidden");
 }
-
-
-/* LOAD POSTS */
-
-async function loadPosts(){
-
+async function toggleLike(id){
+ const key=String(id), p=posts.find(x=>String(x.id)===key); if(!p)return;
+ const ref=db.collection("videos").doc(key);
  try{
-
-   const snap=await db.collection("videos").get();
-
-   posts=snap.docs.map(d=>({
-
-     id:d.id,
-     ...d.data(),
-
-     category:d.data().category||"Other",
-
-     likeCount:d.data().likeCount||0,
-
-     commentCount:d.data().commentCount||0
-
-   }));
-
-   posts.sort(
-     (a,b)=>String(b.date||"")
-       .localeCompare(String(a.date||""))
-   );
-
- }catch(e){
-
-   console.error(e);
-
-   posts=[];
- }
-
- renderHome();
- renderVideos();
- renderShorts();
- renderPictures();
+   if(likedPosts.has(key)){likedPosts.delete(key);p.likeCount=Math.max(0,(p.likeCount||0)-1)}
+   else{likedPosts.add(key);p.likeCount=(p.likeCount||0)+1;notify("You liked “"+(p.title||"this video")+"”.")}
+   await ref.update({likeCount:p.likeCount});
+   renderHome();renderVideos();
+ }catch(e){alert("Like could not be saved. Check Firestore Rules.");console.error(e)}
 }
-
-
-/* USERS COUNT */
-
-async function loadUserCount(){
-
+function downloadPost(id){
+ const p=posts.find(x=>String(x.id)===String(id)); if(!p)return;
+ const url=p.videoUrl||p.video||"";
+ if(!url){alert("This post has no downloadable video file.");return}
+ const yt=getYouTubeId(url);
+ if(yt){alert("This is a YouTube video. Smart Buwaba does not download it directly.");return}
+ const a=document.createElement("a");a.href=url;a.download=(p.title||"smart-buwaba-video").replace(/[^a-z0-9-_]+/gi,"-")+".mp4";a.target="_blank";document.body.appendChild(a);a.click();a.remove();
+}
+async function openComments(id){
+ currentCommentVideoId=String(id);
+ const list=$("commentList");list.innerHTML=`<div class="muted">Loading comments...</div>`;
+ $("commentsModal").classList.remove("hidden");
  try{
-
-   const snap=await db.collection("users").get();
-
-   $("userStat").textContent=snap.size;
-
- }catch(e){
-
-   $("userStat").textContent="0";
- }
+   const snap=await db.collection("comments").where("videoId","==",currentCommentVideoId).get();
+   const arr=snap.docs.map(d=>d.data()).sort((a,b)=>String(a.date||"").localeCompare(String(b.date||"")));
+   list.innerHTML=arr.length?arr.map(c=>`<div class="comment">${esc(c.text)}<small>${esc(c.authorName||"Smart Buwaba user")} • ${c.date?new Date(c.date).toLocaleString():""}</small></div>`).join(""):`<div class="empty">No comments yet. Be the first.</div>`;
+ }catch(e){list.innerHTML=`<div class="empty">Comments are not available yet. Check Firestore Rules.</div>`;console.error(e)}
 }
-
-
-/* SETTINGS */
-
-function openSettings(){
-
- $("settingsModal").classList.remove("hidden");
+async function sendComment(){
+ const text=$("commentText").value.trim();if(!text||!currentCommentVideoId)return;
+ try{
+   await db.collection("comments").add({videoId:currentCommentVideoId,text,authorId:currentUser?currentUser.uid:"",authorName:"Smart Buwaba user",date:new Date().toISOString()});
+   const p=posts.find(x=>String(x.id)===currentCommentVideoId);if(p){p.commentCount=(p.commentCount||0)+1;await db.collection("videos").doc(currentCommentVideoId).update({commentCount:p.commentCount});}
+   $("commentText").value="";notify("Your comment was posted.");await openComments(currentCommentVideoId);renderHome();renderVideos();
+ }catch(e){alert("Comment could not be saved. Check Firestore Rules.");console.error(e)}
 }
-
-function toggleTheme(el){
-
- document.body.style.filter=
-   el.checked
-   ?"none"
-   :"invert(.92) hue-rotate(180deg)";
-
- localStorage.setItem(
-   "sb_theme",
-   el.checked?"dark":"light"
- );
+async function toggleFollow(uid){
+ const key=String(uid);if(!key||key==="undefined")return;
+ if(followingUsers.has(key)){followingUsers.delete(key);notify("You unfollowed this creator.")}
+ else{followingUsers.add(key);notify("You are now following this creator.")}
+ persistSocial();renderHome();renderVideos();
 }
-
-
-/* CLOSE MODALS */
-
-function closeModal(id){
-
- $(id).classList.add("hidden");
-
- if(id==="playerModal")
-   $("playerArea").innerHTML="";
+function getYouTubeId(url){
+ try{
+   const u=new URL(url);
+   if(u.hostname.includes("youtu.be"))return u.pathname.slice(1).split("/")[0];
+   if(u.hostname.includes("youtube.com")){
+     if(u.pathname==="/watch")return u.searchParams.get("v");
+     if(u.pathname.startsWith("/shorts/"))return u.pathname.split("/")[2];
+     if(u.pathname.startsWith("/embed/"))return u.pathname.split("/")[2];
+   }
+ }catch(e){}
+ return null;
 }
-
-
-/* ESCAPE HTML */
-
-function esc(s){
-
- return String(s||"").replace(
-   /[&<>"']/g,
-   m=>({
-     "&":"&amp;",
-     "<":"&lt;",
-     ">":"&gt;",
-     '"':"&quot;",
-     "'":"&#039;"
-   }[m])
- );
-}
-
-
-/* AUTH STATE */
-
-auth.onAuthStateChanged(async user=>{
-
- currentUser=user;
-
- if(user&&!user.isAnonymous){
-
-   await loadProfile();
-
- }else{
-
-   currentProfile=null;
- }
-
- updateAccountButton();
-});
-
-
-/*
-Anonymous login is kept only as a fallback.
-Users can now create real Email/Password accounts.
-*/
-
-auth.signInAnonymously()
-.catch(e=>console.warn(
- "Anonymous authentication:",e.message
-));
-
-
-/* START */
-
-$("year").textContent=
- new Date().getFullYear();
-
-if(localStorage.getItem("sb_theme")==="light"){
-
- $("darkSwitch").checked=false;
-
- toggleTheme($("darkSwitch"));
-}
-
+firebase.auth().onAuthStateChanged(u=>{currentUser=u;});
+firebase.auth().signInAnonymously().catch(e=>console.warn("Anonymous auth not enabled yet:",e.message));
 updateNotifCount();
 
+$("year").textContent=new Date().getFullYear();
+if(localStorage.getItem("sb_theme")==="light"){$("darkSwitch").checked=false;toggleTheme($("darkSwitch"))}
 loadPosts();
-
-loadUserCount();
-
 </script>
-
 </body>
 </html>
