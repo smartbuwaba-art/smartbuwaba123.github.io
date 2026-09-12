@@ -1,30 +1,24 @@
-SMART BUWABA FIRESTORE WEBSITE — UPGRADED
+SMART BUWABA TV — upgraded v2
 
 Included:
-- Firestore videos collection
-- YouTube links supported in videoUrl
-- MP4/direct video links supported
-- Thumbnail, title, description and category
-- Likes
-- Comments
-- Follow buttons
-- In-app notifications
-- Anonymous Firebase Authentication
-- Starter Firestore rules in firestore.rules
+- Existing Smart Buwaba TV design retained
+- Email/password user accounts and profiles
+- Admin-only official video publishing (set ADMIN_EMAIL in index.html and firestore.rules)
+- Firebase Storage photo/video uploads
+- Community feed for user photos/videos/text posts
+- Likes and sharing
+- Basic user-to-user Firestore chat
+- Smart Buwaba AI local assistant UI (no API key exposed)
 
-IMPORTANT:
-1. In Firebase Console, enable Authentication -> Sign-in method -> Anonymous.
-2. Replace your Firestore Rules with the contents of firestore.rules.
-3. Upload index.html and logo.png to your GitHub Pages repository.
-4. Keep the Firebase project settings already inside index.html.
+SETUP
+1. Open index.html and replace CHANGE_ADMIN_EMAIL@example.com with the email of your admin account.
+2. In Firebase Console, enable Authentication > Sign-in method > Email/Password.
+3. Enable Firestore Database.
+4. Enable Storage.
+5. Deploy firestore.rules and storage.rules.
+6. Upload the project to GitHub Pages or your hosting provider.
 
-Firestore video fields:
-title          string
-description    string
-thumbnailUrl   string (optional)
-videoUrl       string
-category       string
-date           string (recommended)
-ownerId        string (added automatically when publishing from the site)
-likeCount      number
-commentCount   number
+IMPORTANT
+- Never put an OpenAI/Meta/private AI API key directly in index.html. Smart Buwaba AI currently works locally; connect a secure server/backend later.
+- Firebase Storage upload size is limited by the included rule to 200 MB per file. Adjust if needed.
+- The Firebase config is already the project config from the supplied website.

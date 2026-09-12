@@ -42,6 +42,27 @@ footer{border-top:1px solid var(--line);padding:28px 18px;color:var(--muted);tex
 @media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.about{grid-template-columns:1fr}}
 @media(max-width:520px){.grid{grid-template-columns:1fr}.hero{padding:35px 22px}}
 
+
+/* Smart Buwaba v2 additions */
+.userBar{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.avatar{width:34px;height:34px;border-radius:50%;object-fit:cover;background:#252530;border:1px solid var(--line)}
+.feedCard{padding:15px;border:1px solid var(--line);background:var(--card);border-radius:16px;margin-bottom:14px}
+.feedHead{display:flex;align-items:center;gap:10px}.feedMeta{flex:1}.feedName{font-weight:800}.feedTime{font-size:11px;color:var(--muted)}
+.feedMedia{width:100%;max-height:520px;object-fit:cover;border-radius:13px;margin-top:12px;background:#000}
+.postText{white-space:pre-wrap;line-height:1.55;margin-top:10px}
+.pill{display:inline-flex;align-items:center;padding:5px 9px;border:1px solid var(--line);border-radius:99px;font-size:11px;color:var(--muted)}
+.authGrid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.twoCol{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:700px){.authGrid,.twoCol{grid-template-columns:1fr}}
+.chatWrap{display:grid;grid-template-columns:230px 1fr;gap:12px;min-height:460px}
+.chatUsers,.chatPanel{border:1px solid var(--line);background:var(--card);border-radius:14px}
+.chatUsers{padding:10px}.chatUser{padding:10px;border-radius:10px;cursor:pointer}.chatUser:hover{background:var(--card2)}
+.chatPanel{display:flex;flex-direction:column}.chatMessages{flex:1;overflow:auto;padding:14px}.bubble{max-width:75%;padding:9px 12px;border-radius:14px;background:var(--card2);margin:6px 0}.bubble.mine{margin-left:auto;background:rgba(225,29,72,.2)}
+.chatInput{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line)}
+.chatInput input{flex:1}.aiBox{border:1px solid var(--line);background:linear-gradient(145deg,var(--card),var(--card2));border-radius:16px;padding:16px}
+.aiMessages{height:260px;overflow:auto;display:grid;align-content:start;gap:8px;margin:10px 0}.aiMsg{padding:9px 12px;border-radius:12px;background:var(--card2);max-width:85%}.aiMsg.user{margin-left:auto;background:rgba(225,29,72,.18)}
+.progress{height:8px;background:var(--card2);border-radius:99px;overflow:hidden;margin-top:8px}.progress i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+.hidden{display:none!important}
+
 </style>
 
 <script type="application/ld+json">
@@ -83,6 +104,27 @@ footer{border-top:1px solid var(--line);padding:28px 18px;color:var(--muted);tex
 <section id="about" class="page hidden">
 <div class="section"><div class="panel"><h2>About Smart Buwaba</h2><p class="muted">SMART BUWABA is a creative brand focused on videos, films, comedy and digital entertainment.</p><div class="actions"><button class="btn" onclick="openAddPost()">＋ Create a Post</button></div></div></div>
 </section>
+
+<section id="feed" class="page hidden">
+<div class="sectionHead"><div><h2>📰 Community Feed</h2><div class="muted">Photos, videos and posts from the Smart Buwaba community.</div></div><button class="btn" onclick="openCommunityPost()">＋ Create Post</button></div>
+<div id="feedList" style="max-width:760px;margin:16px auto"></div>
+</section>
+
+<section id="chat" class="page hidden">
+<div class="sectionHead"><div><h2>💬 Chat</h2><div class="muted">Chat with other Smart Buwaba users.</div></div></div>
+<div class="chatWrap">
+<div class="chatUsers"><strong>People</strong><div id="chatUsers" style="margin-top:10px"></div></div>
+<div class="chatPanel"><div id="chatTitle" style="padding:12px;border-bottom:1px solid var(--line);font-weight:800">Select a person</div><div id="chatMessages" class="chatMessages"></div><div class="chatInput"><input id="chatText" placeholder="Write a message..." onkeydown="if(event.key==='Enter')sendChat()"><button class="btn" onclick="sendChat()">Send</button></div></div>
+</div>
+</section>
+
+<section id="ai" class="page hidden">
+<div class="sectionHead"><div><h2>🤖 Smart Buwaba AI</h2><div class="muted">Your creative assistant for captions, ideas and website help.</div></div></div>
+<div class="aiBox"><div id="aiMessages" class="aiMessages"><div class="aiMsg"><strong>Smart Buwaba AI</strong><br>Moni bro! Nditha kukuthandiza ndi captions, video ideas, post ideas, kapena kufotokoza momwe website imagwirira ntchito.</div></div>
+<div class="chatInput"><input id="aiText" placeholder="Ask Smart Buwaba AI..." onkeydown="if(event.key==='Enter')askAI()"><button class="btn" onclick="askAI()">Ask</button></div>
+<div class="note" style="margin-top:10px">AI mode is currently local/offline. You can connect a secure AI backend later without exposing an API key in this website.</div></div>
+</section>
+
 </main>
 
 <footer><div><strong>SMART BUWABA</strong> • Dream • Create • Achieve</div><div class="socials" style="margin-top:12px"><a href="#" onclick="return false">TikTok</a><a href="#" onclick="return false">Facebook</a><a href="#" onclick="return false">YouTube</a></div><div style="margin-top:12px;font-size:12px">© <span id="year"></span> Smart Buwaba</div></footer>
@@ -94,7 +136,10 @@ footer{border-top:1px solid var(--line);padding:28px 18px;color:var(--muted);tex
 <label>Description<textarea id="pDesc" placeholder="Tell people about this video..."></textarea></label>
 <label>Thumbnail URL (optional)<input id="pThumb" placeholder="https://..."></label>
 <label>Video URL (optional)<input id="pVideo" placeholder="https://...mp4 or video link"></label>
-<div class="note">Posts are stored in Smart Buwaba Firestore so they can be loaded from the website.</div>
+<label>Or upload a video file <input id="pVideoFile" type="file" accept="video/*"></label>
+<label>Thumbnail file (optional) <input id="pThumbFile" type="file" accept="image/*"></label>
+<div id="uploadProgress" class="progress hidden"><i></i></div>
+<div class="note">Upload files go to Firebase Storage; post information goes to Firestore. Sign in first.</div>
 <button class="btn" onclick="savePost()">Publish Post</button>
 </div></div></div>
 
@@ -108,6 +153,25 @@ footer{border-top:1px solid var(--line);padding:28px 18px;color:var(--muted);tex
   <button class="btn" style="margin-top:8px" onclick="sendComment()">Post comment</button></div>
  </div>
 </div>
+
+
+<!-- Authentication -->
+<div id="authModal" class="modal hidden" onclick="if(event.target===this)closeModal('authModal')">
+<div class="modalBox"><div class="modalTop"><h2>👤 Smart Buwaba Account</h2><button class="close" onclick="closeModal('authModal')">×</button></div>
+<div id="authLoggedOut" class="authGrid">
+<div class="panel"><h3>Sign in</h3><div class="form"><label>Email<input id="loginEmail" type="email"></label><label>Password<input id="loginPassword" type="password"></label><button class="btn" onclick="signIn()">Sign in</button></div></div>
+<div class="panel"><h3>Create account</h3><div class="form"><label>Username<input id="regName" placeholder="Your name"></label><label>Email<input id="regEmail" type="email"></label><label>Password<input id="regPassword" type="password" minlength="6"></label><button class="btn" onclick="registerUser()">Create account</button></div></div>
+</div>
+<div id="authLoggedIn" class="hidden"><div class="panel"><h3 id="accountName"></h3><p class="muted" id="accountEmail"></p><div class="actions"><button class="btn" onclick="openCommunityPost();closeModal('authModal')">＋ Create community post</button><button class="btn secondary" onclick="signOut()">Sign out</button></div></div></div>
+<div class="note" style="margin-top:14px">Admin mode is controlled by the ADMIN_EMAIL value in the project configuration. Change it before publishing if you want a dedicated admin account.</div>
+</div></div>
+
+<!-- Community post -->
+<div id="communityModal" class="modal hidden" onclick="if(event.target===this)closeModal('communityModal')">
+<div class="modalBox"><div class="modalTop"><h2>＋ Community Post</h2><button class="close" onclick="closeModal('communityModal')">×</button></div>
+<div class="form"><label>Post text<textarea id="cText" placeholder="What do you want to share?"></textarea></label>
+<div class="twoCol"><label>Photo <input id="cPhoto" type="file" accept="image/*"></label><label>Video <input id="cVideo" type="file" accept="video/*"></label></div>
+<button class="btn" onclick="publishCommunityPost()">Publish</button></div></div></div>
 
 <!-- Player -->
 <div id="playerModal" class="modal hidden" onclick="if(event.target===this)closeModal('playerModal')"><div class="modalBox"><div class="modalTop"><h2 id="playerTitle">Video</h2><button class="close" onclick="closeModal('playerModal')">×</button></div><div id="playerArea"></div><p id="playerDesc" class="muted"></p><div id="playerActions" class="actions"></div></div></div>
@@ -131,6 +195,7 @@ footer{border-top:1px solid var(--line);padding:28px 18px;color:var(--muted);tex
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-storage-compat.js"></script>
 <script>
 const firebaseConfig={
  apiKey:"AIzaSyC5ia_DjqTg-cepVQcbYiM7m3tBTGhtnNs",
@@ -319,6 +384,156 @@ updateNotifCount();
 $("year").textContent=new Date().getFullYear();
 if(localStorage.getItem("sb_theme")==="light"){$("darkSwitch").checked=false;toggleTheme($("darkSwitch"))}
 loadPosts();
+
+/* ===== SMART BUWABA V2 ===== */
+const storage = firebase.storage();
+const ADMIN_EMAIL = "CHANGE_ADMIN_EMAIL@example.com"; // Set your admin email before publishing.
+let currentUser = null, activeChatUser = null;
+
+function safeText(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
+function isAdmin(){ return !!currentUser && currentUser.email && currentUser.email.toLowerCase()===ADMIN_EMAIL.toLowerCase(); }
+
+function openAuth(){
+  const logged=!!currentUser;
+  $("authLoggedOut").classList.toggle("hidden",logged);
+  $("authLoggedIn").classList.toggle("hidden",!logged);
+  if(logged){$("accountName").textContent=currentUser.displayName||"Smart Buwaba user";$("accountEmail").textContent=currentUser.email||"";}
+  $("authModal").classList.remove("hidden");
+}
+async function registerUser(){
+ try{
+  const name=$("regName").value.trim(), email=$("regEmail").value.trim(), pass=$("regPassword").value;
+  if(!name||!email||pass.length<6)return alert("Enter name, email and a password of at least 6 characters.");
+  const cred=await firebase.auth().createUserWithEmailAndPassword(email,pass);
+  await cred.user.updateProfile({displayName:name});
+  await db.collection("users").doc(cred.user.uid).set({uid:cred.user.uid,name,email,createdAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+  currentUser=cred.user; openAuth(); notify("Account created.");
+ }catch(e){alert(e.message)}
+}
+async function signIn(){
+ try{const c=await firebase.auth().signInWithEmailAndPassword($("loginEmail").value.trim(),$("loginPassword").value);currentUser=c.user;openAuth();notify("Signed in.");}
+ catch(e){alert(e.message)}
+}
+async function signOut(){await firebase.auth().signOut();closeModal("authModal");notify("Signed out.");}
+firebase.auth().onAuthStateChanged(async u=>{
+ currentUser=u;
+ $("userLabel").textContent=u?(u.displayName||u.email.split("@")[0]):"Sign in";
+ if(u){try{await db.collection("users").doc(u.uid).set({uid:u.uid,name:u.displayName||u.email.split("@")[0],email:u.email},{merge:true})}catch(e){}}
+});
+
+function openCommunityPost(){
+ if(!currentUser)return openAuth(),alert("Sign in first to create a community post.");
+ $("communityModal").classList.remove("hidden");
+}
+
+async function uploadFile(file,path){
+ if(!file)return "";
+ const ref=storage.ref().child(path);
+ const task=ref.put(file);
+ task.on("state_changed",snap=>{
+  const pct=Math.round(snap.bytesTransferred/snap.totalBytes*100);
+  $("uploadProgress")?.classList.remove("hidden"); if($("uploadProgress"))$("uploadProgress").querySelector("i").style.width=pct+"%";
+ });
+ await task; return await ref.getDownloadURL();
+}
+
+async function savePostV2(){
+ if(!currentUser)return openAuth();
+ const title=$("pTitle").value.trim(); if(!title)return alert("Add a title.");
+ try{
+  let video=$("pVideo").value.trim(), thumb=$("pThumb").value.trim();
+  const vf=$("pVideoFile").files[0], tf=$("pThumbFile").files[0];
+  const stamp=Date.now();
+  if(vf)video=await uploadFile(vf,`videos/${currentUser.uid}/${stamp}_${vf.name}`);
+  if(tf)thumb=await uploadFile(tf,`thumbnails/${currentUser.uid}/${stamp}_${tf.name}`);
+  const post={title,category:$("pCategory").value,description:$("pDesc").value.trim(),videoUrl:video,thumbUrl:thumb,ownerId:currentUser.uid,ownerName:currentUser.displayName||currentUser.email,date:new Date().toISOString(),likes:[],viewCount:0,type:"video"};
+  const ref=await db.collection("videos").add(post); posts.push({...post,id:ref.id}); closeModal("postModal"); renderHome();renderVideos();notify("Post uploaded successfully.");
+ }catch(e){console.error(e);alert("Upload failed: "+e.message)}
+}
+const oldSavePost=window.savePost; window.savePost=savePostV2;
+
+async function publishCommunityPost(){
+ if(!currentUser)return openAuth();
+ try{
+  const text=$("cText").value.trim(), pf=$("cPhoto").files[0], vf=$("cVideo").files[0];
+  if(!text&&!pf&&!vf)return alert("Add some text, a photo, or a video.");
+  let mediaUrl="",mediaType="";
+  if(pf){mediaUrl=await uploadFile(pf,`community/${currentUser.uid}/${Date.now()}_${pf.name}`);mediaType="image";}
+  if(vf){mediaUrl=await uploadFile(vf,`community/${currentUser.uid}/${Date.now()}_${vf.name}`);mediaType="video";}
+  await db.collection("communityPosts").add({text,mediaUrl,mediaType,ownerId:currentUser.uid,ownerName:currentUser.displayName||currentUser.email,createdAt:firebase.firestore.FieldValue.serverTimestamp(),likes:[]});
+  $("cText").value="";$("cPhoto").value="";$("cVideo").value="";closeModal("communityModal");loadFeed();notify("Community post published.");
+ }catch(e){alert("Could not publish: "+e.message)}
+}
+async function loadFeed(){
+ const box=$("feedList"); if(!box)return;
+ try{
+  const snap=await db.collection("communityPosts").orderBy("createdAt","desc").limit(50).get();
+  if(snap.empty){box.innerHTML='<div class="panel"><div class="muted">No community posts yet. Be the first to post.</div></div>';return;}
+  box.innerHTML=snap.docs.map(d=>{const p=d.data(),id=d.id,liked=(p.likes||[]).includes(currentUser?.uid);
+   let media=p.mediaType==="image"?`<img class="feedMedia" src="${safeText(p.mediaUrl)}" alt="">`:p.mediaType==="video"?`<video class="feedMedia" controls src="${safeText(p.mediaUrl)}"></video>`:"";
+   return `<article class="feedCard"><div class="feedHead"><div class="avatar"></div><div class="feedMeta"><div class="feedName">${safeText(p.ownerName||"User")}</div><div class="feedTime">${p.createdAt?.toDate?p.createdAt.toDate().toLocaleString():"Just now"}</div></div></div><div class="postText">${safeText(p.text)}</div>${media}<div class="actions" style="margin-top:10px"><button class="socialBtn ${liked?"liked":""}" onclick="toggleCommunityLike('${id}')">❤️ ${p.likes?.length||0}</button><button class="socialBtn" onclick="alert('Comments can be added next in the moderation/chat upgrade.')">💬 Comment</button><button class="socialBtn" onclick="sharePost('${id}')">↗ Share</button></div></article>`}).join("");
+ }catch(e){box.innerHTML='<div class="panel">Could not load community feed. Check Firestore rules/indexes.</div>'}
+}
+async function toggleCommunityLike(id){
+ if(!currentUser)return openAuth();
+ const ref=db.collection("communityPosts").doc(id), snap=await ref.get(), arr=snap.data().likes||[];
+ const next=arr.includes(currentUser.uid)?arr.filter(x=>x!==currentUser.uid):[...arr,currentUser.uid];
+ await ref.update({likes:next});loadFeed();
+}
+async function sharePost(id){
+ const url=location.href+"#feed/"+id;
+ if(navigator.share){try{await navigator.share({title:"Smart Buwaba",url})}catch(e){}}
+ else {await navigator.clipboard?.writeText(url);notify("Post link copied.");}
+}
+
+async function loadChatUsers(){
+ const box=$("chatUsers"); if(!box)return;
+ if(!currentUser){box.innerHTML='<div class="muted" style="margin-top:8px">Sign in to chat.</div>';return;}
+ const snap=await db.collection("users").limit(30).get();
+ box.innerHTML=snap.docs.filter(d=>d.id!==currentUser.uid).map(d=>{const u=d.data();return `<div class="chatUser" onclick="selectChatUser('${d.id}','${safeText(u.name||u.email||"User")}')">👤 ${safeText(u.name||u.email||"User")}</div>`}).join("")||'<div class="muted">No other users yet.</div>';
+}
+function chatId(a,b){return [a,b].sort().join("_")}
+function selectChatUser(uid,name){activeChatUser={uid,name};$("chatTitle").textContent="💬 "+name;loadMessages();}
+async function loadMessages(){
+ if(!activeChatUser||!currentUser)return;
+ const id=chatId(currentUser.uid,activeChatUser.uid),box=$("chatMessages");
+ const snap=await db.collection("chats").doc(id).collection("messages").orderBy("createdAt","asc").limit(100).get();
+ box.innerHTML=snap.docs.map(d=>{const m=d.data();return `<div class="bubble ${m.senderId===currentUser.uid?"mine":""}">${safeText(m.text)}</div>`}).join("");
+ box.scrollTop=box.scrollHeight;
+}
+async function sendChat(){
+ if(!currentUser)return openAuth();
+ if(!activeChatUser)return alert("Select a person first.");
+ const text=$("chatText").value.trim();if(!text)return;
+ const id=chatId(currentUser.uid,activeChatUser.uid);
+ await db.collection("chats").doc(id).collection("messages").add({text,senderId:currentUser.uid,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+ $("chatText").value="";loadMessages();
+}
+
+function addAI(text,who){
+ const box=$("aiMessages");box.insertAdjacentHTML("beforeend",`<div class="aiMsg ${who==="user"?"user":""}">${safeText(text)}</div>`);box.scrollTop=box.scrollHeight;
+}
+function askAI(){
+ const input=$("aiText"),q=input.value.trim();if(!q)return;addAI(q,"user");input.value="";
+ let a="Ndili pano bro 😎. ";
+ const l=q.toLowerCase();
+ if(l.includes("caption"))a+="Ndingakupangire caption ya post. Ingondiuza topic kapena video yomwe uli nayo.";
+ else if(l.includes("idea")||l.includes("video"))a+="Idea: pangani short ya masekondi 30–60 yokhala ndi hook yoyamba, middle yokhala ndi joke/story, kenako ending yomwe imalimbikitsa anthu ku-follow.";
+ else if(l.includes("website")||l.includes("upload"))a+="Pa website, tili ndi account, real uploads, community feed, chat ndi upload ya photos/videos. Titha kuwonjezera camera ndi AI backend pambuyo pake.";
+ else a+="Nditha kukuthandiza kupanga ma captions, ma video ideas, ma post ideas, kapena kukonza Smart Buwaba TV. Funsa chilichonse.";
+ setTimeout(()=>addAI(a,"ai"),250);
+}
+const oldShowPage=window.showPage;
+window.showPage=function(id){oldShowPage(id);if(id==="feed")loadFeed();if(id==="chat")loadChatUsers();};
+
+
+const _openAddPost = window.openAddPost;
+window.openAddPost = function(){
+ if(!currentUser)return openAuth();
+ if(!isAdmin())return alert("Only the Smart Buwaba admin account can publish official TV videos. Community users can use Feed → Create Post.");
+ _openAddPost();
+};
+
 </script>
 </body>
 </html>
