@@ -75,6 +75,15 @@ footer{border-top:1px solid var(--line);padding:28px 18px;color:var(--muted);tex
   "publisher":{"@type":"Organization","name":"SMART BUWABA"}
 }
 </script>
+
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#111827">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Smart Buwaba TV">
+  <link rel="apple-touch-icon" href="logo.png">
+
 </head>
 <body>
 <header><nav class="nav" id="nav">
@@ -535,5 +544,12 @@ window.openAddPost = function(){
 };
 
 </script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(console.error));
+}
+</script>
+
 </body>
 </html>
