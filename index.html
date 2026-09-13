@@ -257,17 +257,11 @@ let posts=[];
 let category="All";
 const $=id=>document.getElementById(id);
 function showPage(id){
- const page=$(id);
- if(!page){ console.warn("Smart Buwaba: page not found",id); return; }
  document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));
- page.classList.remove("hidden");
+ $(id).classList.remove("hidden");
  document.querySelectorAll(".navlinks button[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
- const nav=$("nav"); if(nav)nav.classList.remove("open");
- if(id==="videos")renderVideos();
- if(id==="home")renderHome();
- if(id==="feed")loadFeed();
- if(id==="chat")loadChatUsers();
- window.scrollTo({top:0,behavior:"smooth"});
+ document.getElementById('nav').classList.remove('open');
+ if(id==="videos")renderVideos(); if(id==="home")renderHome(); window.scrollTo({top:0,behavior:"smooth"});
 }
 function card(p){
  const thumb=p.thumbnailUrl||p.thumbUrl||p.thumb||"";
@@ -424,7 +418,7 @@ function normalizeModerationText(text){
 function moderateText(text){
   const clean=normalizeModerationText(text);
   if(!clean) return {ok:true};
-  const hit=SB_BLOCKED_WORDS.find(w=>clean.includes(w));
+  const hit=SB_BLOCKED_WORDS.find(w=>new RegExp("\\\\b"+w.replace(/[.*+?^${}()|[\\]\\\\]/g,"\\\\$&")+"\\\\b","i").test(clean));
   return hit ? {ok:false,word:hit} : {ok:true};
 }
 
@@ -432,7 +426,7 @@ function moderationMessage(){
   return `<div class="moderationNotice">⚠️ Please keep Smart Buwaba respectful. Insults or abusive language are not allowed.</div>`;
 }
 
-async function openComments(id){
+function openComments(id){
  currentCommentVideoId=String(id);
  const list=$("commentList");list.innerHTML=`<div class="muted">Loading comments...</div>`;
  $("commentsModal").classList.remove("hidden");
@@ -443,20 +437,12 @@ async function openComments(id){
  }catch(e){list.innerHTML=`<div class="empty">Comments are not available yet. Check Firestore Rules.</div>`;console.error(e)}
 }
 async function sendComment(){
- const text=$("commentText").value.trim();
- if(!text||!currentCommentVideoId)return;
- if(!currentUser)return openAuth();
- if(text.length>500)return alert("Comment is too long. Please keep it under 500 characters.");
- const moderation=moderateText(text);
- if(!moderation.ok)return alert("Please rewrite your comment respectfully. Abusive language is not allowed on Smart Buwaba.");
- const btn=$("postCommentBtn"); if(btn){btn.disabled=true;btn.textContent="Posting...";}
+ const text=$("commentText").value.trim();if(!text||!currentCommentVideoId)return;
  try{
-   await db.collection("comments").add({videoId:currentCommentVideoId,text,authorId:currentUser.uid,authorName:currentUser.displayName||currentUser.email?.split("@")[0]||"Smart Buwaba user",date:new Date().toISOString()});
-   const p=posts.find(x=>String(x.id)===currentCommentVideoId);
-   if(p){p.commentCount=(p.commentCount||0)+1;await db.collection("videos").doc(currentCommentVideoId).update({commentCount:p.commentCount});}
+   await db.collection("comments").add({videoId:currentCommentVideoId,text,authorId:currentUser?currentUser.uid:"",authorName:"Smart Buwaba user",date:new Date().toISOString()});
+   const p=posts.find(x=>String(x.id)===currentCommentVideoId);if(p){p.commentCount=(p.commentCount||0)+1;await db.collection("videos").doc(currentCommentVideoId).update({commentCount:p.commentCount});}
    $("commentText").value="";notify("Your comment was posted.");await openComments(currentCommentVideoId);renderHome();renderVideos();
  }catch(e){alert("Comment could not be saved. Check Firestore Rules.");console.error(e)}
- finally{if(btn){btn.disabled=false;btn.textContent="Post comment";}}
 }
 async function toggleFollow(uid){
  const key=String(uid);if(!key||key==="undefined")return;
@@ -477,7 +463,7 @@ function getYouTubeId(url){
  return null;
 }
 firebase.auth().onAuthStateChanged(u=>{currentUser=u;});
-// Anonymous sign-in disabled: users should explicitly sign in or register.
+firebase.auth().signInAnonymously().catch(e=>console.warn("Anonymous auth not enabled yet:",e.message));
 updateNotifCount();
 
 $("year").textContent=new Date().getFullYear();
@@ -680,28 +666,11 @@ window.showPage=function(id){oldShowPage(id);if(id==="feed")loadFeed();if(id==="
 
 const _openAddPost = window.openAddPost;
 window.openAddPost = function(){
- if(!currentUser){
-   openAuth();
-   notify("Sign in with your Smart Buwaba admin account to publish official TV videos.");
-   return;
- }
- if(!isAdmin()){
-   alert("Only the Smart Buwaba admin account can publish official TV videos.
-
-Admin: mmuhammadallie@gmail.com");
-   return;
- }
+ if(!currentUser)return openAuth();
+ if(!isAdmin())return alert("Only the Smart Buwaba admin account can publish official TV videos. Community users can use Feed → Create Post.");
  _openAddPost();
 };
 
-</script>
-
-<script>
-// Smart Buwaba navigation safety layer
-document.addEventListener("DOMContentLoaded",()=>{
-  document.querySelectorAll("[onclick=\"openSettings()\"]").forEach(b=>b.addEventListener("click",e=>{e.preventDefault();openSettings();}));
-  document.querySelectorAll("[onclick=\"openAuth()\"]").forEach(b=>b.addEventListener("click",e=>{e.preventDefault();openAuth();}));
-});
 </script>
 
 <script>
