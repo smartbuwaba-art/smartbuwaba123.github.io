@@ -179,6 +179,7 @@ footer{border-top:1px solid var(--line);padding:28px 18px;color:var(--muted);tex
 <label>Video URL (optional)<input id="pVideo" placeholder="https://...mp4 or video link"></label>
 <label>Or upload a video file <input id="pVideoFile" type="file" accept="video/*"></label>
 <label>Thumbnail file (optional) <input id="pThumbFile" type="file" accept="image/*"></label>
+<div id="publishStatus" class="note" style="display:none">Preparing...</div>
 <div id="uploadProgress" class="progress hidden"><i></i></div>
 <div class="note">Upload files go to Firebase Storage; post information goes to Firestore. Sign in first.</div>
 <button class="btn" onclick="savePost()">Publish Post</button><div class="publishStatus muted" style="font-size:12px;text-align:center"></div>
@@ -539,30 +540,41 @@ function openCommunityPost(){
 function uploadFile(file,path,label){
  return new Promise((resolve,reject)=>{
   if(!file)return resolve("");
+  if(file.size > 199 * 1024 * 1024){ reject(new Error("This file is too large. Please use a video smaller than 199 MB.")); return; }
   const ref=storage.ref().child(path);
   const progress=$("uploadProgress");
+  const status=$("publishStatus");
   if(progress){progress.classList.remove("hidden"); const bar=progress.querySelector("i"); if(bar)bar.style.width="0%";}
-  const task=ref.put(file);
+  if(status){status.style.display="block";status.textContent=(label||"Uploading file")+" — starting...";}
+  let task;
+  try{
+    task=ref.put(file,{contentType:file.type||"application/octet-stream",cacheControl:"public,max-age=31536000"});
+  }catch(e){reject(e);return;}
   let finished=false;
   const timer=setTimeout(()=>{
     if(finished)return;
     try{task.cancel();}catch(e){}
-    reject(new Error("Upload is taking too long. Check your internet connection and Firebase Storage, then try again."));
-  },10*60*1000);
+    reject(new Error("Firebase Storage did not start the upload. Check that Storage is enabled for smartbuwaba-40422 and that your internet connection is working."));
+  },120000);
   task.on("state_changed",snap=>{
-    const pct=snap.totalBytes?Math.round(snap.bytesTransferred/snap.totalBytes*100):0;
+    const pct=snap.totalBytes?Math.floor((snap.bytesTransferred/snap.totalBytes)*100):0;
     if(progress){const bar=progress.querySelector("i"); if(bar)bar.style.width=pct+"%";}
-    if(publishStatus)publishStatus.textContent=(label||"Uploading file")+" — "+pct+"%";
+    if(status)status.textContent=(label||"Uploading file")+" — "+pct+"%";
   },err=>{
     finished=true; clearTimeout(timer);
-    reject(err);
+    const msg=err && err.code ? (err.code+": "+err.message) : (err?.message||"Upload failed");
+    if(status)status.textContent="Upload failed — "+msg;
+    reject(new Error(msg));
   },async()=>{
     try{
+      if(status)status.textContent=(label||"Uploading file")+" — 100% (finishing...)";
       const url=await ref.getDownloadURL();
       finished=true; clearTimeout(timer);
       resolve(url);
     }catch(e){
-      finished=true; clearTimeout(timer); reject(e);
+      finished=true; clearTimeout(timer);
+      if(status)status.textContent="Could not get video URL — "+(e?.message||e);
+      reject(e);
     }
   });
  });
