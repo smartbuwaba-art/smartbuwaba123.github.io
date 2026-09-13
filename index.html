@@ -481,6 +481,11 @@ firebase.auth().onAuthStateChanged(u=>{currentUser=u;});
 updateNotifCount();
 
 $("year").textContent=new Date().getFullYear();
+$("pVideoFile")?.addEventListener("change",function(){
+ const f=this.files?.[0], st=$("publishStatus");
+ if(f && st){st.style.display="block";st.textContent="Video selected: "+f.name+" ("+(f.size/1024/1024).toFixed(1)+" MB). Ready to upload.";}
+});
+
 if(localStorage.getItem("sb_theme")==="light"){$("darkSwitch").checked=false;toggleTheme($("darkSwitch"))}
 loadPosts();
 
@@ -541,28 +546,40 @@ function uploadFile(file,path,label){
  return new Promise((resolve,reject)=>{
   if(!file)return resolve("");
   if(file.size > 199 * 1024 * 1024){ reject(new Error("This file is too large. Please use a video smaller than 199 MB.")); return; }
+  if(!window.firebase || !firebase.storage){reject(new Error("Firebase Storage SDK is not loaded. Refresh the page and try again."));return;}
+  if(!firebase.app().options.storageBucket){reject(new Error("Firebase Storage bucket is missing from Firebase configuration."));return;}
   const ref=storage.ref().child(path);
   const progress=$("uploadProgress");
   const status=$("publishStatus");
   if(progress){progress.classList.remove("hidden"); const bar=progress.querySelector("i"); if(bar)bar.style.width="0%";}
-  if(status){status.style.display="block";status.textContent=(label||"Uploading file")+" — starting...";}
+  if(status){status.style.display="block";status.textContent=(label||"Uploading file")+" — connecting to Firebase Storage...";}
   let task;
   try{
     task=ref.put(file,{contentType:file.type||"application/octet-stream",cacheControl:"public,max-age=31536000"});
   }catch(e){reject(e);return;}
   let finished=false;
+  let lastBytes=0;
+  let started=false;
   const timer=setTimeout(()=>{
     if(finished)return;
     try{task.cancel();}catch(e){}
-    reject(new Error("Firebase Storage did not start the upload. Check that Storage is enabled for smartbuwaba-40422 and that your internet connection is working."));
-  },120000);
+    const extra = lastBytes===0
+      ? "Upload did not receive any bytes. Make sure Firebase Storage is enabled, the Storage Rules are published, and your internet connection is working."
+      : "Upload is taking too long. Check your internet connection.";
+    reject(new Error(extra));
+  },90000);
   task.on("state_changed",snap=>{
+    started=true;
+    lastBytes=snap.bytesTransferred||0;
     const pct=snap.totalBytes?Math.floor((snap.bytesTransferred/snap.totalBytes)*100):0;
     if(progress){const bar=progress.querySelector("i"); if(bar)bar.style.width=pct+"%";}
     if(status)status.textContent=(label||"Uploading file")+" — "+pct+"%";
   },err=>{
     finished=true; clearTimeout(timer);
-    const msg=err && err.code ? (err.code+": "+err.message) : (err?.message||"Upload failed");
+    let msg=err && err.code ? (err.code+": "+err.message) : (err?.message||"Upload failed");
+    if(err?.code==="storage/unauthorized") msg+=" | Storage Rules denied this upload.";
+    if(err?.code==="storage/bucket-not-found") msg+=" | Firebase Storage bucket was not found. Enable Storage for this Firebase project.";
+    if(err?.code==="storage/retry-limit-exceeded") msg+=" | The connection timed out. Check your internet.";
     if(status)status.textContent="Upload failed — "+msg;
     reject(new Error(msg));
   },async()=>{
@@ -573,7 +590,7 @@ function uploadFile(file,path,label){
       resolve(url);
     }catch(e){
       finished=true; clearTimeout(timer);
-      if(status)status.textContent="Could not get video URL — "+(e?.message||e);
+      if(status)status.textContent="Could not get file URL — "+(e?.message||e);
       reject(e);
     }
   });
@@ -596,6 +613,7 @@ async function savePostV2(){
   if(!currentUser || currentUser.isAnonymous)throw new Error("Please sign in with the admin email account first.");
   let video=$("pVideo").value.trim(), thumb=$("pThumb").value.trim();
   const vf=$("pVideoFile").files[0], tf=$("pThumbFile").files[0];
+  if(!video && !vf){ throw new Error("Add a Video URL or choose a video file before publishing."); }
   const stamp=Date.now();
   if(vf)video=await uploadFile(vf,`videos/${currentUser.uid}/${stamp}_${vf.name}`,"Uploading video");
   if(tf)thumb=await uploadFile(tf,`thumbnails/${currentUser.uid}/${stamp}_${tf.name}`,"Uploading thumbnail");
@@ -723,15 +741,49 @@ async function postCameraMedia(){
  }catch(e){alert("Camera post failed: "+e.message);console.error(e)}
 }
 function askAI(){
- const input=$("aiText"),q=input.value.trim();if(!q)return;addAI(q,"user");input.value="";
- let a="Ndili pano bro 😎. ";
+ const input=$("aiText"),q=input.value.trim();if(!q)return;
+ addAI(q,"user");input.value="";
  const l=q.toLowerCase();
- if(l.includes("caption"))a+="Ndingakupangire caption ya post. Ingondiuza topic kapena video yomwe uli nayo.";
- else if(l.includes("idea")||l.includes("video"))a+="Idea: pangani short ya masekondi 30–60 yokhala ndi hook yoyamba, middle yokhala ndi joke/story, kenako ending yomwe imalimbikitsa anthu ku-follow.";
- else if(l.includes("website")||l.includes("upload"))a+="Pa website, tili ndi account, real uploads, community feed, chat ndi upload ya photos/videos. Camera ndi Smart Buwaba AI zilipo kale mu version iyi.";
- else a+="Nditha kukuthandiza kupanga ma captions, ma video ideas, ma post ideas, kapena kukonza Smart Buwaba TV. Funsa chilichonse.";
- setTimeout(()=>addAI(a,"ai"),250);
+ const greetings=["Moni bro 😎","Eya bro 🔥","Moni! Smart Buwaba AI pano.","Eya! Ndili pano kukuthandiza."];
+ const intro=greetings[Math.floor(Math.random()*greetings.length)];
+ let a="";
+ if(/^(hi|hello|hey|moni|salaam|salam|assalam)/.test(l)){
+   a=intro+" Ndine Smart Buwaba AI. Funsa funso lililonse lokhudza Smart Buwaba, ma video, ma post, ideas, website kapena creative work.";
+ }else if(l.includes("who")&&l.includes("muhammad") || l.includes("owner") || l.includes("mwini") || l.includes("smart buwaba ndi ndani")){
+   a="Smart Buwaba TV ndi brand ya Muhammad Allie, wachinyamata wakumangochi, Malawi, yemwe ali kumbuyo kwa Smart Buwaba ndi ntchito zake za videos, films, comedy ndi creativity.";
+ }else if(l.includes("who are you")||l.includes("ndani iwe")){
+   a="Ndine Smart Buwaba AI 🤖, creative assistant wa Smart Buwaba. Ndingayankhe mafunso osiyanasiyana, kukupatsani ideas, captions, komanso kukuthandizani kumvetsa website.";
+ }else if(l.includes("caption")){
+   const caps=[
+    "Caption idea: “Dream it. Create it. Achieve it. 🔥🎬 #SmartBuwabaTV”",
+    "Caption idea: “New content, new energy. Smart Buwaba TV 🎥🔥”",
+    "Caption idea: “From an idea to the screen — this is Smart Buwaba. 🎬✨”"
+   ];
+   a=caps[Math.floor(Math.random()*caps.length)];
+ }else if(l.includes("idea")||l.includes("video")||l.includes("film")){
+   const ideas=[
+    "Video idea: pangani comedy ya masekondi 30–60 yokhala ndi hook yamphamvu koyambirira, vuto pakati, kenako punchline kumapeto.",
+    "Film idea: yambani ndi scene yomwe imadzutsa funso, pangani conflict pakati, kenako ending yomwe imasiya anthu akufuna sequel.",
+    "Content idea: pangani “Behind the Scenes” ya Smart Buwaba — show preparation, acting, camera work ndi final clip."
+   ];
+   a=ideas[Math.floor(Math.random()*ideas.length)];
+ }else if(l.includes("website")||l.includes("upload")||l.includes("publish")){
+   a="Pa Smart Buwaba TV tili ndi Videos, Community Feed, Chat, Camera, Account, Settings ndi Smart Buwaba AI. Official TV videos zimapangidwa ndi admin account, ndipo community users angapange community posts.";
+ }else if(l.includes("malawi")||l.includes("mangochi")){
+   a="Smart Buwaba ikuchokera ku Malawi, ndipo brand yake ikuyang'ana pa creativity, videos, films, comedy ndi digital entertainment.";
+ }else if(l.includes("how")||l.includes("bwanji")||l.includes("nding")){
+   a="Nditha kukuthandizani step-by-step bro. Funsani funso limodzi kapena angapo — monga website, video ideas, captions, account, posting kapena Smart Buwaba.";
+ }else{
+   const general=[
+    "Funso labwino bro. Ndingakuthandizeni ndi Smart Buwaba, videos, business ideas, captions, website kapena creative projects. Fotokozani zomwe mukufuna.",
+    "Eya, ndikumvetsa. Smart Buwaba AI ingayankhe mafunso osiyanasiyana; yesani kufunsa mwatsatanetsatane kuti ndikupatseni yankho lenileni.",
+    "Ndili pano bro 🤖. Funso limenelo silili mu zomwe ndakonzekera kwambiri pano, koma ndingayesebe kukuthandizani ngati mufotokoza pang'ono."
+   ];
+   a=general[Math.floor(Math.random()*general.length)];
+ }
+ setTimeout(()=>addAI(a,"ai"),220);
 }
+
 const oldShowPage=window.showPage;
 window.showPage=function(id){oldShowPage(id);if(id==="feed")loadFeed();if(id==="chat")loadChatUsers();};
 
