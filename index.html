@@ -181,7 +181,7 @@ footer{border-top:1px solid var(--line);padding:28px 18px;color:var(--muted);tex
 <label>Thumbnail file (optional) <input id="pThumbFile" type="file" accept="image/*"></label>
 <div id="uploadProgress" class="progress hidden"><i></i></div>
 <div class="note">Upload files go to Firebase Storage; post information goes to Firestore. Sign in first.</div>
-<button class="btn" onclick="savePost()">Publish Post</button>
+<button class="btn" onclick="savePost()">Publish Post</button><div class="publishStatus muted" style="font-size:12px;text-align:center"></div>
 </div></div></div>
 
 
@@ -536,17 +536,39 @@ function openCommunityPost(){
  $("communityModal").classList.remove("hidden");
 }
 
-async function uploadFile(file,path){
- if(!file)return "";
- const ref=storage.ref().child(path);
- const task=ref.put(file);
- task.on("state_changed",snap=>{
-  const pct=Math.round(snap.bytesTransferred/snap.totalBytes*100);
-  $("uploadProgress")?.classList.remove("hidden"); if($("uploadProgress"))$("uploadProgress").querySelector("i").style.width=pct+"%";
+function uploadFile(file,path,label){
+ return new Promise((resolve,reject)=>{
+  if(!file)return resolve("");
+  const ref=storage.ref().child(path);
+  const progress=$("uploadProgress");
+  if(progress){progress.classList.remove("hidden"); const bar=progress.querySelector("i"); if(bar)bar.style.width="0%";}
+  const task=ref.put(file);
+  let finished=false;
+  const timer=setTimeout(()=>{
+    if(finished)return;
+    try{task.cancel();}catch(e){}
+    reject(new Error("Upload is taking too long. Check your internet connection and Firebase Storage, then try again."));
+  },10*60*1000);
+  task.on("state_changed",snap=>{
+    const pct=snap.totalBytes?Math.round(snap.bytesTransferred/snap.totalBytes*100):0;
+    if(progress){const bar=progress.querySelector("i"); if(bar)bar.style.width=pct+"%";}
+    if(publishStatus)publishStatus.textContent=(label||"Uploading file")+" — "+pct+"%";
+  },err=>{
+    finished=true; clearTimeout(timer);
+    reject(err);
+  },async()=>{
+    try{
+      const url=await ref.getDownloadURL();
+      finished=true; clearTimeout(timer);
+      resolve(url);
+    }catch(e){
+      finished=true; clearTimeout(timer); reject(e);
+    }
+  });
  });
- await task; return await ref.getDownloadURL();
 }
 
+let publishStatus=null;
 async function savePostV2(){
  if(!isAdmin())return openAuth();
  const title=$("pTitle").value.trim();
@@ -555,17 +577,32 @@ async function savePostV2(){
  const moderation=moderateText(title+" "+desc);
  if(!moderation.ok)return alert("Please keep Smart Buwaba respectful. Offensive language is not allowed.");
  const publishBtn=document.querySelector('#postModal .btn');
+ publishStatus=document.querySelector('#postModal .publishStatus');
  if(publishBtn){publishBtn.disabled=true;publishBtn.textContent="Publishing...";}
+ if(publishStatus)publishStatus.textContent="Preparing your post...";
  try{
+  if(!currentUser || currentUser.isAnonymous)throw new Error("Please sign in with the admin email account first.");
   let video=$("pVideo").value.trim(), thumb=$("pThumb").value.trim();
   const vf=$("pVideoFile").files[0], tf=$("pThumbFile").files[0];
   const stamp=Date.now();
-  if(vf)video=await uploadFile(vf,`videos/${currentUser.uid}/${stamp}_${vf.name}`);
-  if(tf)thumb=await uploadFile(tf,`thumbnails/${currentUser.uid}/${stamp}_${tf.name}`);
-  const post={title,category:$("pCategory").value,description:$("pDesc").value.trim(),videoUrl:video,thumbUrl:thumb,ownerId:currentUser.uid,ownerName:currentUser.displayName||currentUser.email,date:new Date().toISOString(),likes:[],viewCount:0,type:"video"};
-  const ref=await db.collection("videos").add(post); posts.push({...post,id:ref.id}); closeModal("postModal"); renderHome();renderVideos();notify("Post uploaded successfully.");
- }catch(e){console.error(e);alert("Upload failed: "+e.message)}
- finally{if(publishBtn){publishBtn.disabled=false;publishBtn.textContent="Publish Post";}}
+  if(vf)video=await uploadFile(vf,`videos/${currentUser.uid}/${stamp}_${vf.name}`,"Uploading video");
+  if(tf)thumb=await uploadFile(tf,`thumbnails/${currentUser.uid}/${stamp}_${tf.name}`,"Uploading thumbnail");
+  if(publishStatus)publishStatus.textContent="Saving post to Smart Buwaba...";
+  const post={title,category:$("pCategory").value,description:desc,videoUrl:video,thumbUrl:thumb,ownerId:currentUser.uid,ownerName:currentUser.displayName||currentUser.email,date:new Date().toISOString(),likes:[],viewCount:0,type:"video"};
+  const ref=await db.collection("videos").add(post);
+  posts.push({...post,id:ref.id});
+  ["pTitle","pDesc","pThumb","pVideo"].forEach(x=>$(x).value="");
+  $("pVideoFile").value=""; $("pThumbFile").value="";
+  if($("uploadProgress")){ $("uploadProgress").classList.add("hidden"); const bar=$("uploadProgress").querySelector("i"); if(bar)bar.style.width="0%";}
+  closeModal("postModal"); renderHome();renderVideos();notify("Post uploaded successfully.");
+ }catch(e){
+  console.error("Smart Buwaba publish error:",e);
+  const code=e&&e.code?"\nCode: "+e.code:"";
+  alert("Could not publish the video.\n\n"+(e&&e.message?e.message:"Unknown error")+code+"\n\nIf you selected a video file, check Firebase Storage. If you used a Video URL only, check Firestore Rules.");
+  if(publishStatus)publishStatus.textContent="Publish failed — check the error message.";
+ }finally{
+  if(publishBtn){publishBtn.disabled=false;publishBtn.textContent="Publish Post";}
+ }
 }
 const oldSavePost=window.savePost; window.savePost=savePostV2;
 
