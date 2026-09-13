@@ -2,23 +2,34 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     function signedIn(){ return request.auth != null; }
-    function admin(){ return signedIn() && request.auth.token.email == "CHANGE_ADMIN_EMAIL@example.com"; }
+    function admin(){ return signedIn() && request.auth.token.email == "mmuhammadallie@gmail.com"; }
 
     match /users/{uid} {
       allow read: if signedIn();
       allow create, update: if signedIn() && request.auth.uid == uid;
       allow delete: if admin();
     }
+
     match /videos/{id} {
       allow read: if true;
-      allow create, update, delete: if admin();
+      allow create: if admin();
+      allow update: if signedIn();
+      allow delete: if admin();
     }
+
+    match /comments/{id} {
+      allow read: if true;
+      allow create: if signedIn() && request.resource.data.authorId == request.auth.uid;
+      allow update, delete: if signedIn() && (resource.data.authorId == request.auth.uid || admin());
+    }
+
     match /communityPosts/{id} {
       allow read: if true;
       allow create: if signedIn() && request.resource.data.ownerId == request.auth.uid;
       allow update: if signedIn() && (resource.data.ownerId == request.auth.uid);
       allow delete: if signedIn() && (resource.data.ownerId == request.auth.uid || admin());
     }
+
     match /chats/{chatId}/messages/{messageId} {
       allow read: if signedIn();
       allow create: if signedIn() && request.resource.data.senderId == request.auth.uid;

@@ -11,7 +11,7 @@ Included:
 - Smart Buwaba AI local assistant UI (no API key exposed)
 
 SETUP
-1. Open index.html and replace CHANGE_ADMIN_EMAIL@example.com with the email of your admin account.
+1. The configured admin email is mmuhammadallie@gmail.com. Use this email when creating/signing into the admin account.
 2. In Firebase Console, enable Authentication > Sign-in method > Email/Password.
 3. Enable Firestore Database.
 4. Enable Storage.
