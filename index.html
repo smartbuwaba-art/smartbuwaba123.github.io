@@ -257,11 +257,17 @@ let posts=[];
 let category="All";
 const $=id=>document.getElementById(id);
 function showPage(id){
+ const page=$(id);
+ if(!page){ console.warn("Smart Buwaba: page not found",id); return; }
  document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));
- $(id).classList.remove("hidden");
+ page.classList.remove("hidden");
  document.querySelectorAll(".navlinks button[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
- document.getElementById('nav').classList.remove('open');
- if(id==="videos")renderVideos(); if(id==="home")renderHome(); window.scrollTo({top:0,behavior:"smooth"});
+ const nav=$("nav"); if(nav)nav.classList.remove("open");
+ if(id==="videos")renderVideos();
+ if(id==="home")renderHome();
+ if(id==="feed")loadFeed();
+ if(id==="chat")loadChatUsers();
+ window.scrollTo({top:0,behavior:"smooth"});
 }
 function card(p){
  const thumb=p.thumbnailUrl||p.thumbUrl||p.thumb||"";
@@ -471,7 +477,7 @@ function getYouTubeId(url){
  return null;
 }
 firebase.auth().onAuthStateChanged(u=>{currentUser=u;});
-firebase.auth().signInAnonymously().catch(e=>console.warn("Anonymous auth not enabled yet:",e.message));
+// Anonymous sign-in disabled: users should explicitly sign in or register.
 updateNotifCount();
 
 $("year").textContent=new Date().getFullYear();
@@ -674,11 +680,28 @@ window.showPage=function(id){oldShowPage(id);if(id==="feed")loadFeed();if(id==="
 
 const _openAddPost = window.openAddPost;
 window.openAddPost = function(){
- if(!currentUser)return openAuth();
- if(!isAdmin())return alert("Only the Smart Buwaba admin account can publish official TV videos. Community users can use Feed → Create Post.");
+ if(!currentUser){
+   openAuth();
+   notify("Sign in with your Smart Buwaba admin account to publish official TV videos.");
+   return;
+ }
+ if(!isAdmin()){
+   alert("Only the Smart Buwaba admin account can publish official TV videos.
+
+Admin: mmuhammadallie@gmail.com");
+   return;
+ }
  _openAddPost();
 };
 
+</script>
+
+<script>
+// Smart Buwaba navigation safety layer
+document.addEventListener("DOMContentLoaded",()=>{
+  document.querySelectorAll("[onclick=\"openSettings()\"]").forEach(b=>b.addEventListener("click",e=>{e.preventDefault();openSettings();}));
+  document.querySelectorAll("[onclick=\"openAuth()\"]").forEach(b=>b.addEventListener("click",e=>{e.preventDefault();openAuth();}));
+});
 </script>
 
 <script>
