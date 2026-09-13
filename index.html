@@ -63,6 +63,17 @@ footer{border-top:1px solid var(--line);padding:28px 18px;color:var(--muted);tex
 .progress{height:8px;background:var(--card2);border-radius:99px;overflow:hidden;margin-top:8px}.progress i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
 .hidden{display:none!important}
 
+
+/* Professional moderation / community polish */
+.moderationNotice{
+  margin-top:8px;padding:10px 12px;border:1px solid rgba(225,29,72,.35);
+  background:rgba(225,29,72,.08);border-radius:10px;color:#ffd7df;font-size:13px;
+}
+.commentActions{display:flex;justify-content:flex-end;gap:8px;margin-top:6px}
+.commentBlocked{padding:10px 12px;border-radius:10px;background:rgba(225,29,72,.08);border:1px solid rgba(225,29,72,.25);color:#ffd7df}
+.feedCard{transition:transform .18s ease,box-shadow .18s ease}
+.feedCard:hover{transform:translateY(-2px);box-shadow:0 14px 35px rgba(0,0,0,.22)}
+.socialBtn:disabled{opacity:.55;cursor:not-allowed;transform:none}
 </style>
 
 <script type="application/ld+json">
@@ -199,7 +210,7 @@ footer{border-top:1px solid var(--line);padding:28px 18px;color:var(--muted);tex
 <!-- Community post -->
 <div id="communityModal" class="modal hidden" onclick="if(event.target===this)closeModal('communityModal')">
 <div class="modalBox"><div class="modalTop"><h2>＋ Community Post</h2><button class="close" onclick="closeModal('communityModal')">×</button></div>
-<div class="form"><label>Post text<textarea id="cText" placeholder="What do you want to share?"></textarea></label>
+<div class="form"><label>Post text<textarea id="cText" maxlength="2000" placeholder="What do you want to share?"></textarea><div class="muted" style="font-size:12px">Keep posts respectful. Offensive language may be blocked.</div></label>
 <div class="twoCol"><label>Photo <input id="cPhoto" type="file" accept="image/*"></label><label>Video <input id="cVideo" type="file" accept="video/*"></label></div>
 <button class="btn" onclick="publishCommunityPost()">Publish</button></div></div></div>
 
@@ -253,7 +264,7 @@ function showPage(id){
  if(id==="videos")renderVideos(); if(id==="home")renderHome(); window.scrollTo({top:0,behavior:"smooth"});
 }
 function card(p){
- const thumb=p.thumbnailUrl||p.thumb||"";
+ const thumb=p.thumbnailUrl||p.thumbUrl||p.thumb||"";
  const desc=p.description||p.desc||"Smart Buwaba video";
  const video=p.videoUrl||p.video||"";
  const liked=likedPosts.has(String(p.id));
@@ -273,7 +284,7 @@ function card(p){
 function renderHome(){ $("homeGrid").innerHTML=posts.slice().reverse().slice(0,4).map(card).join("")||empty(); $("countStat").textContent=posts.length }
 function renderVideos(){
  const q=($("search").value||"").toLowerCase();
- let arr=posts.slice().reverse().filter(p=>(category==="All"||(p.category||"Other")==category)&&((p.title+" "+(p.desc||"")).toLowerCase().includes(q)));
+ let arr=posts.slice().reverse().filter(p=>(category==="All"||(p.category||"Other")==category)&&((p.title+" "+(p.description||p.desc||"")).toLowerCase().includes(q)));
  $("videoGrid").innerHTML=arr.map(card).join("")||empty();
 }
 function empty(){return `<div class="empty" style="grid-column:1/-1">No posts found yet.<br><button class="btn" style="margin-top:12px" onclick="openAddPost()">＋ Add your first post</button></div>`}
@@ -321,7 +332,16 @@ function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&l
 async function loadPosts(){
  try{
    const snap=await db.collection("videos").get();
-   posts=snap.docs.map(d=>({id:d.id,...d.data(),category:d.data().category||"Other",likeCount:d.data().likeCount||0,commentCount:d.data().commentCount||0,viewCount:d.data().viewCount||0}));
+   posts=snap.docs.map(d=>{
+ const data=d.data();
+ return {
+  id:d.id,...data,
+  category:data.category||"Other",
+  likeCount:data.likeCount ?? (Array.isArray(data.likes)?data.likes.length:0),
+  commentCount:data.commentCount ?? 0,
+  viewCount:data.viewCount ?? 0
+ };
+});
    posts.sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
  }catch(e){
    console.error(e);posts=[];alert("Could not load videos from Firestore. Check Firestore Rules.\n\n"+e.message);
@@ -371,7 +391,42 @@ function downloadPost(id){
  if(yt){alert("This is a YouTube video. Smart Buwaba does not download it directly.");return}
  const a=document.createElement("a");a.href=url;a.download=(p.title||"smart-buwaba-video").replace(/[^a-z0-9-_]+/gi,"-")+".mp4";a.target="_blank";document.body.appendChild(a);a.click();a.remove();
 }
-async function openComments(id){
+async 
+/* Smart Buwaba professional text moderation.
+   This is a first-line client-side filter; Firebase Rules/server-side moderation
+   should be added later for stronger enforcement. */
+const SB_BLOCKED_WORDS = [
+  "fuck","fucking","motherfucker","shit","bullshit","bitch","asshole",
+  "bastard","dickhead","piss off","stupid idiot"
+];
+
+function normalizeModerationText(text){
+  return String(text||"")
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .replace(/[@4]/g,"a")
+    .replace(/[3]/g,"e")
+    .replace(/[1!|]/g,"i")
+    .replace(/[0]/g,"o")
+    .replace(/[$5]/g,"s")
+    .replace(/[^a-z0-9\s]/g," ")
+    .replace(/\s+/g," ")
+    .trim();
+}
+
+function moderateText(text){
+  const clean=normalizeModerationText(text);
+  if(!clean) return {ok:true};
+  const hit=SB_BLOCKED_WORDS.find(w=>new RegExp("\\\\b"+w.replace(/[.*+?^${}()|[\\]\\\\]/g,"\\\\$&")+"\\\\b","i").test(clean));
+  return hit ? {ok:false,word:hit} : {ok:true};
+}
+
+function moderationMessage(){
+  return `<div class="moderationNotice">⚠️ Please keep Smart Buwaba respectful. Insults or abusive language are not allowed.</div>`;
+}
+
+function openComments(id){
  currentCommentVideoId=String(id);
  const list=$("commentList");list.innerHTML=`<div class="muted">Loading comments...</div>`;
  $("commentsModal").classList.remove("hidden");
@@ -417,8 +472,8 @@ loadPosts();
 
 /* ===== SMART BUWABA V2 ===== */
 const storage = firebase.storage();
-const ADMIN_EMAIL = "CHANGE_ADMIN_EMAIL@example.com"; // Set your admin email before publishing.
-let currentUser = null, activeChatUser = null;
+const ADMIN_EMAIL = "mmuhammadallie@gmail.com"; // Set your admin email before publishing.
+let activeChatUser = null;
 
 function safeText(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
 function isAdmin(){ return !!currentUser && currentUser.email && currentUser.email.toLowerCase()===ADMIN_EMAIL.toLowerCase(); }
@@ -447,8 +502,19 @@ async function signIn(){
 async function signOut(){await firebase.auth().signOut();closeModal("authModal");notify("Signed out.");}
 firebase.auth().onAuthStateChanged(async u=>{
  currentUser=u;
- $("userLabel").textContent=u?(u.displayName||u.email.split("@")[0]):"Sign in";
- if(u){try{await db.collection("users").doc(u.uid).set({uid:u.uid,name:u.displayName||u.email.split("@")[0],email:u.email},{merge:true})}catch(e){}}
+ if($("userLabel")){
+   $("userLabel").textContent =
+     u ? (u.displayName || u.email?.split("@")[0] || "Smart Buwaba user") : "Sign in";
+ }
+ if(u){
+   try{
+     await db.collection("users").doc(u.uid).set({
+       uid:u.uid,
+       name:u.displayName || u.email?.split("@")[0] || "Smart Buwaba user",
+       email:u.email || ""
+     },{merge:true});
+   }catch(e){}
+ }
 });
 
 function openCommunityPost(){
