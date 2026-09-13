@@ -418,7 +418,7 @@ function normalizeModerationText(text){
 function moderateText(text){
   const clean=normalizeModerationText(text);
   if(!clean) return {ok:true};
-  const hit=SB_BLOCKED_WORDS.find(w=>new RegExp("\\\\b"+w.replace(/[.*+?^${}()|[\\]\\\\]/g,"\\\\$&")+"\\\\b","i").test(clean));
+  const hit=SB_BLOCKED_WORDS.find(w=>clean.includes(w));
   return hit ? {ok:false,word:hit} : {ok:true};
 }
 
@@ -426,7 +426,7 @@ function moderationMessage(){
   return `<div class="moderationNotice">⚠️ Please keep Smart Buwaba respectful. Insults or abusive language are not allowed.</div>`;
 }
 
-function openComments(id){
+async function openComments(id){
  currentCommentVideoId=String(id);
  const list=$("commentList");list.innerHTML=`<div class="muted">Loading comments...</div>`;
  $("commentsModal").classList.remove("hidden");
@@ -437,12 +437,20 @@ function openComments(id){
  }catch(e){list.innerHTML=`<div class="empty">Comments are not available yet. Check Firestore Rules.</div>`;console.error(e)}
 }
 async function sendComment(){
- const text=$("commentText").value.trim();if(!text||!currentCommentVideoId)return;
+ const text=$("commentText").value.trim();
+ if(!text||!currentCommentVideoId)return;
+ if(!currentUser)return openAuth();
+ if(text.length>500)return alert("Comment is too long. Please keep it under 500 characters.");
+ const moderation=moderateText(text);
+ if(!moderation.ok)return alert("Please rewrite your comment respectfully. Abusive language is not allowed on Smart Buwaba.");
+ const btn=$("postCommentBtn"); if(btn){btn.disabled=true;btn.textContent="Posting...";}
  try{
-   await db.collection("comments").add({videoId:currentCommentVideoId,text,authorId:currentUser?currentUser.uid:"",authorName:"Smart Buwaba user",date:new Date().toISOString()});
-   const p=posts.find(x=>String(x.id)===currentCommentVideoId);if(p){p.commentCount=(p.commentCount||0)+1;await db.collection("videos").doc(currentCommentVideoId).update({commentCount:p.commentCount});}
+   await db.collection("comments").add({videoId:currentCommentVideoId,text,authorId:currentUser.uid,authorName:currentUser.displayName||currentUser.email?.split("@")[0]||"Smart Buwaba user",date:new Date().toISOString()});
+   const p=posts.find(x=>String(x.id)===currentCommentVideoId);
+   if(p){p.commentCount=(p.commentCount||0)+1;await db.collection("videos").doc(currentCommentVideoId).update({commentCount:p.commentCount});}
    $("commentText").value="";notify("Your comment was posted.");await openComments(currentCommentVideoId);renderHome();renderVideos();
  }catch(e){alert("Comment could not be saved. Check Firestore Rules.");console.error(e)}
+ finally{if(btn){btn.disabled=false;btn.textContent="Post comment";}}
 }
 async function toggleFollow(uid){
  const key=String(uid);if(!key||key==="undefined")return;
