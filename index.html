@@ -306,7 +306,7 @@ main{max-width:1280px;padding:22px 18px 95px}.appHero{min-height:480px;border:1p
 <div class="settingRow"><div><strong>Autoplay videos</strong><div class="muted">Play direct videos when they enter the screen.</div></div><label class="switch"><input id="autoPlaySwitch" type="checkbox" checked onchange="saveAppSetting('autoplay',this.checked)"><span class="slider"></span></label></div>
 <div class="settingRow"><div><strong>Notifications</strong><div class="muted">Allow Smart Buwaba notifications inside the app.</div></div><label class="switch"><input id="notifySwitch" type="checkbox" checked onchange="saveAppSetting('notifications',this.checked)"><span class="slider"></span></label></div>
 <div class="settingRow"><div><strong>Data saver</strong><div class="muted">Reduce automatic video playback on slower connections.</div></div><label class="switch"><input id="dataSaverSwitch" type="checkbox" onchange="saveAppSetting('dataSaver',this.checked)"><span class="slider"></span></label></div>
-<div class="settingsGroup"><h3>☁️ Media Upload</h3><div class="muted">Firebase Storage now requires Blaze. To let Smart Buwaba upload photos/videos without Firebase Storage, configure a Cloudinary unsigned upload preset.</div><input id="cloudNameInput" class="settingsInput" placeholder="Cloudinary Cloud name"><input id="uploadPresetInput" class="settingsInput" placeholder="Cloudinary unsigned upload preset"><div class="tinyHelp">These values stay in this browser. Create an unsigned upload preset in Cloudinary, then save them here. Direct video URLs still work without this setup.</div><button class="btn redWhiteBtn" style="margin-top:10px" onclick="saveMediaSettings()">Save Media Upload Settings</button></div>
+<div class="settingsGroup"><h3>☁️ Media Upload</h3><div class="muted">Firebase Storage now requires Blaze. To let Smart Buwaba upload photos/videos without Firebase Storage, configure a Cloudinary unsigned upload preset.</div><input id="cloudNameInput" class="settingsInput" placeholder="Cloudinary Cloud name"><input id="uploadPresetInput" class="settingsInput" placeholder="Cloudinary unsigned upload preset"><div class="tinyHelp">Cloudinary is already configured for this Smart Buwaba build. Cloud name: ehwhaqzt • Upload preset: smart buwaba upload. You can leave these values as they are. Direct video URLs also work.</div><button class="btn redWhiteBtn" style="margin-top:10px" onclick="saveMediaSettings()">Save Media Upload Settings</button></div>
 <div class="settingsGroup"><h3>🔐 Privacy & Account</h3><div class="muted">Your account controls login, chat and your creator profile. Sign out from Account.</div><div class="actions" style="margin-top:10px"><button class="btn secondary" onclick="openAuth();closeModal('settingsModal')">Open Account</button><button class="btn secondary" onclick="openNotifications();closeModal('settingsModal')">Notifications</button></div></div>
 <div class="settingRow"><div><strong>Reset local preferences</strong><div class="muted">Clear likes, follows, favorites and local app settings on this device.</div></div><button class="btn secondary" onclick="resetLocalPreferences()">Reset</button></div>
 <div style="margin-top:18px" class="note">Smart Buwaba • Videos • Shorts • Films • Favorites • Chat • Creator profiles • Settings.</div>
@@ -505,8 +505,10 @@ async function renderProfile(){
  $('profileFavoritesGrid').innerHTML=fav.length?fav.map(miniVideoCard).join(''):'<div class="favoriteEmpty" style="grid-column:1/-1">Your Favorites will appear here.</div>';
 }
 function saveAppSetting(k,v){localStorage.setItem('sb_setting_'+k,v?'1':'0')}
-function saveMediaSettings(){localStorage.setItem('sb_cloud_name',($('cloudNameInput')?.value||'').trim());localStorage.setItem('sb_upload_preset',($('uploadPresetInput')?.value||'').trim());notify('Media upload settings saved.');alert('Saved. You can now upload photos/videos using the configured media provider.');}
-function loadAppSettings(){const a=localStorage.getItem('sb_setting_autoplay');const n=localStorage.getItem('sb_setting_notifications');const d=localStorage.getItem('sb_setting_dataSaver');if($('autoPlaySwitch'))$('autoPlaySwitch').checked=a!=='0';if($('notifySwitch'))$('notifySwitch').checked=n!=='0';if($('dataSaverSwitch'))$('dataSaverSwitch').checked=d==='1';if($('cloudNameInput'))$('cloudNameInput').value=localStorage.getItem('sb_cloud_name')||'';if($('uploadPresetInput'))$('uploadPresetInput').value=localStorage.getItem('sb_upload_preset')||''}
+const DEFAULT_CLOUD_NAME='ehwhaqzt'; const DEFAULT_UPLOAD_PRESET='smart buwaba upload';
+function saveMediaSettings(){localStorage.setItem('sb_cloud_name',($('cloudNameInput')?.value||DEFAULT_CLOUD_NAME).trim());localStorage.setItem('sb_upload_preset',($('uploadPresetInput')?.value||DEFAULT_UPLOAD_PRESET).trim());notify('Media upload settings saved.');alert('Saved. You can now upload photos/videos.');}
+function getCloudinaryConfig(){return {cloudName:(localStorage.getItem('sb_cloud_name')||DEFAULT_CLOUD_NAME).trim(),preset:(localStorage.getItem('sb_upload_preset')||DEFAULT_UPLOAD_PRESET).trim()};}
+function loadAppSettings(){const a=localStorage.getItem('sb_setting_autoplay');const n=localStorage.getItem('sb_setting_notifications');const d=localStorage.getItem('sb_setting_dataSaver');if($('autoPlaySwitch'))$('autoPlaySwitch').checked=a!=='0';if($('notifySwitch'))$('notifySwitch').checked=n!=='0';if($('dataSaverSwitch'))$('dataSaverSwitch').checked=d==='1';if($('cloudNameInput'))$('cloudNameInput').value=localStorage.getItem('sb_cloud_name')||DEFAULT_CLOUD_NAME;if($('uploadPresetInput'))$('uploadPresetInput').value=localStorage.getItem('sb_upload_preset')||DEFAULT_UPLOAD_PRESET}
 function resetLocalPreferences(){['sb_likes','sb_follows','sb_favorites','sb_notifications','sb_cloud_name','sb_upload_preset','sb_setting_autoplay','sb_setting_notifications','sb_setting_dataSaver'].forEach(k=>localStorage.removeItem(k));location.reload()}
 
 async function loadPosts(){
@@ -758,32 +760,32 @@ function uploadToStorageService(storageService,file,path,label,timeoutMs=15000){
 }
 
 async function uploadToCloudinary(file,label){
- const cloudName=localStorage.getItem('sb_cloud_name')||'';
- const preset=localStorage.getItem('sb_upload_preset')||'';
- if(!cloudName||!preset) throw new Error('Cloudinary upload is not configured. Open Settings → Media Upload and add Cloud name + unsigned upload preset.');
- const status=$('publishStatus'); if(status)status.textContent=(label||'Uploading file')+' — uploading to Smart Buwaba media...';
- const fd=new FormData(); fd.append('file',file); fd.append('upload_preset',preset);
+ const cfg=getCloudinaryConfig();
+ if(!cfg.cloudName||!cfg.preset) throw new Error('Cloudinary upload is not configured.');
+ const status=$('publishStatus'); const progress=$('uploadProgress');
+ if(status)status.textContent=(label||'Uploading file')+' — connecting to media server...';
+ if(progress){progress.classList.remove('hidden');const bar=progress.querySelector('i');if(bar)bar.style.width='0%';}
  const resource=file.type&&file.type.startsWith('video/')?'video':'auto';
- const res=await fetch(`https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudName)}/${resource}/upload`,{method:'POST',body:fd});
- const data=await res.json();
- if(!res.ok||!data.secure_url) throw new Error(data.error?.message||'Cloudinary upload failed. Check Cloud name and unsigned upload preset.');
+ const endpoint=`https://api.cloudinary.com/v1_1/${encodeURIComponent(cfg.cloudName)}/${resource}/upload`;
+ const fd=new FormData(); fd.append('file',file); fd.append('upload_preset',cfg.preset);
+ let res;
+ try{res=await fetch(endpoint,{method:'POST',body:fd});}
+ catch(err){throw new Error('Could not connect to Cloudinary. Check your internet connection, Cloudinary Cloud name, and upload preset.');}
+ let data={}; try{data=await res.json();}catch(e){}
+ if(!res.ok||!data.secure_url){
+   const msg=data.error?.message||`Cloudinary returned HTTP ${res.status}`;
+   throw new Error(msg);
+ }
+ if(progress){const bar=progress.querySelector('i');if(bar)bar.style.width='100%';}
+ if(status)status.textContent=(label||'Uploading file')+' — upload complete.';
  return data.secure_url;
 }
 async function uploadFile(file,path,label){
  if(!file)return '';
  if(file.size > 199*1024*1024) throw new Error('This file is too large. Please use a video smaller than 199 MB.');
- const cloudName=localStorage.getItem('sb_cloud_name')||'';
- const preset=localStorage.getItem('sb_upload_preset')||'';
- if(cloudName&&preset){
-   try{return await uploadToCloudinary(file,label)}catch(e){console.warn('Cloudinary upload failed:',e.message);}
- }
- // Firebase Storage remains a fallback for projects that later enable Blaze.
- if(window.firebase&&firebase.storage){
-   const services=[]; if(storage)services.push({name:'current',service:storage}); if(legacyStorage)services.push({name:'legacy',service:legacyStorage});
-   let lastError=null;
-   for(const item of services){try{return await uploadToStorageService(item.service,file,path,label,15000)}catch(e){lastError=e;}}
- }
- throw new Error('Media upload is not configured. Open Settings → Media Upload and enter your Cloudinary Cloud name and unsigned upload preset. This lets Smart Buwaba upload photos/videos without Firebase Storage billing.');
+ // Cloudinary is the primary browser upload service. Firebase Storage is intentionally not used here,
+ // so a Blaze billing requirement cannot block computer photo/video posts.
+ return await uploadToCloudinary(file,label);
 }
 let publishStatus=null;
 async function savePostV2(){
@@ -816,7 +818,7 @@ async function savePostV2(){
  }catch(e){
   console.error("Smart Buwaba publish error:",e);
   const code=e&&e.code?"\nCode: "+e.code:"";
-  alert("Could not publish the video.\n\n"+(e&&e.message?e.message:"Unknown error")+code+"\n\nIf you selected a video file, the website tried both Firebase Storage bucket formats. If you used a Video URL only, check Firestore Rules.");
+  alert("Could not publish the video.\n\n"+(e&&e.message?e.message:"Unknown error")+code+"\n\nComputer photos/videos use Cloudinary. Check that the Cloud name is ehwhaqzt and the unsigned preset is smart buwaba upload, then try again.");
   if(publishStatus)publishStatus.textContent="Publish failed — check the error message.";
  }finally{
   if(publishBtn){publishBtn.disabled=false;publishBtn.textContent="Publish Post";}
