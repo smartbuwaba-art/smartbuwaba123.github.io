@@ -1,13 +1,13 @@
 {
-  "name": "Smart Buwaba TV",
+  "name": "Smart Buwaba App",
   "short_name": "Smart Buwaba",
-  "description": "Smart Buwaba TV - videos, community, chat and more.",
+  "description": "Smart Buwaba App - videos, community, chat and more.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#0b1020",
-  "theme_color": "#111827",
+  "background_color": "#03070b",
+  "theme_color": "#061018",
   "icons": [
     {"src":"logo.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
     {"src":"logo.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}

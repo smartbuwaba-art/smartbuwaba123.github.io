@@ -1,4 +1,4 @@
-const CACHE = 'smart-buwaba-v6-final2-final-fixed-3';
+const CACHE = 'smart-buwaba-app-v7-neon';
 const APP_SHELL = ['./','./index.html','./manifest.webmanifest','./logo.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
