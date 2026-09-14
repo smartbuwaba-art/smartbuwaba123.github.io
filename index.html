@@ -491,7 +491,18 @@ loadPosts();
 
 /* ===== SMART BUWABA V2 ===== */
 const storage = firebase.storage();
-const ADMIN_EMAIL = "mmuhammadallie@gmail.com"; // Set your admin email before publishing.
+
+/* Smart Buwaba Storage compatibility:
+   Firebase projects can use either the newer .firebasestorage.app bucket name
+   or the older .appspot.com bucket name. We try the configured bucket first,
+   then the legacy bucket if the first one does not start uploading. */
+let legacyStorage = null;
+try {
+  const legacyConfig = {...firebaseConfig, storageBucket:"smartbuwaba-40422.appspot.com"};
+  const legacyApp = firebase.apps.find(a => a.name === "smart-buwaba-legacy-storage") || firebase.initializeApp(legacyConfig,"smart-buwaba-legacy-storage");
+  legacyStorage = legacyApp.storage();
+} catch(e) { console.warn("Legacy Storage bucket unavailable:", e.message); }
+
 let activeChatUser = null;
 
 function safeText(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
@@ -542,59 +553,59 @@ function openCommunityPost(){
  $("communityModal").classList.remove("hidden");
 }
 
-function uploadFile(file,path,label){
+function uploadToStorageService(storageService,file,path,label,timeoutMs=15000){
  return new Promise((resolve,reject)=>{
-  if(!file)return resolve("");
-  if(file.size > 199 * 1024 * 1024){ reject(new Error("This file is too large. Please use a video smaller than 199 MB.")); return; }
-  if(!window.firebase || !firebase.storage){reject(new Error("Firebase Storage SDK is not loaded. Refresh the page and try again."));return;}
-  if(!firebase.app().options.storageBucket){reject(new Error("Firebase Storage bucket is missing from Firebase configuration."));return;}
-  const ref=storage.ref().child(path);
-  const progress=$("uploadProgress");
-  const status=$("publishStatus");
+  if(!storageService) return reject(new Error("Storage service is unavailable."));
+  const ref=storageService.ref().child(path);
+  const progress=$("uploadProgress"), status=$("publishStatus");
   if(progress){progress.classList.remove("hidden"); const bar=progress.querySelector("i"); if(bar)bar.style.width="0%";}
-  if(status){status.style.display="block";status.textContent=(label||"Uploading file")+" — connecting to Firebase Storage...";}
-  let task;
-  try{
-    task=ref.put(file,{contentType:file.type||"application/octet-stream",cacheControl:"public,max-age=31536000"});
-  }catch(e){reject(e);return;}
-  let finished=false;
-  let lastBytes=0;
-  let started=false;
-  const timer=setTimeout(()=>{
+  if(status){status.style.display="block";status.textContent=(label||"Uploading file")+" — connecting...";}
+  let task, finished=false, timer;
+  try { task=ref.put(file,{contentType:file.type||"application/octet-stream",cacheControl:"public,max-age=31536000"}); }
+  catch(e){ return reject(e); }
+  timer=setTimeout(()=>{
     if(finished)return;
     try{task.cancel();}catch(e){}
-    const extra = lastBytes===0
-      ? "Upload did not receive any bytes. Make sure Firebase Storage is enabled, the Storage Rules are published, and your internet connection is working."
-      : "Upload is taking too long. Check your internet connection.";
-    reject(new Error(extra));
-  },90000);
+    reject(Object.assign(new Error("Upload did not start receiving data from this Firebase Storage bucket."),{code:"storage/no-bytes"}));
+  },timeoutMs);
   task.on("state_changed",snap=>{
-    started=true;
-    lastBytes=snap.bytesTransferred||0;
     const pct=snap.totalBytes?Math.floor((snap.bytesTransferred/snap.totalBytes)*100):0;
-    if(progress){const bar=progress.querySelector("i"); if(bar)bar.style.width=pct+"%";}
+    if(progress){const bar=progress.querySelector("i");if(bar)bar.style.width=pct+"%";}
     if(status)status.textContent=(label||"Uploading file")+" — "+pct+"%";
   },err=>{
-    finished=true; clearTimeout(timer);
-    let msg=err && err.code ? (err.code+": "+err.message) : (err?.message||"Upload failed");
-    if(err?.code==="storage/unauthorized") msg+=" | Storage Rules denied this upload.";
-    if(err?.code==="storage/bucket-not-found") msg+=" | Firebase Storage bucket was not found. Enable Storage for this Firebase project.";
-    if(err?.code==="storage/retry-limit-exceeded") msg+=" | The connection timed out. Check your internet.";
-    if(status)status.textContent="Upload failed — "+msg;
-    reject(new Error(msg));
+    finished=true;clearTimeout(timer);reject(err);
   },async()=>{
     try{
-      if(status)status.textContent=(label||"Uploading file")+" — 100% (finishing...)";
       const url=await ref.getDownloadURL();
-      finished=true; clearTimeout(timer);
-      resolve(url);
-    }catch(e){
-      finished=true; clearTimeout(timer);
-      if(status)status.textContent="Could not get file URL — "+(e?.message||e);
-      reject(e);
-    }
+      finished=true;clearTimeout(timer);resolve(url);
+    }catch(e){finished=true;clearTimeout(timer);reject(e);}
   });
  });
+}
+
+async function uploadFile(file,path,label){
+ if(!file)return "";
+ if(file.size > 199*1024*1024) throw new Error("This file is too large. Please use a video smaller than 199 MB.");
+ if(!window.firebase || !firebase.storage) throw new Error("Firebase Storage SDK is not loaded. Refresh the page.");
+ const status=$("publishStatus");
+ if(status){status.style.display="block";status.textContent=(label||"Uploading file")+" — trying Firebase Storage...";}
+ const services=[];
+ if(storage)services.push({name:"current",service:storage});
+ if(legacyStorage)services.push({name:"legacy",service:legacyStorage});
+ let lastError=null;
+ for(const item of services){
+   try{
+     if(status)status.textContent=(label||"Uploading file")+" — connecting to "+(item.name==="legacy"?"backup":"Firebase")+" Storage...";
+     const url=await uploadToStorageService(item.service,file,path,label,15000);
+     if(status)status.textContent=(label||"Uploading file")+" — 100%";
+     return url;
+   }catch(e){
+     lastError=e;
+     console.warn("Storage upload attempt failed:",item.name,e?.code,e?.message);
+   }
+ }
+ const code=lastError?.code?" ("+lastError.code+")":"";
+ throw new Error("Firebase Storage upload could not start"+code+". Make sure Storage is initialized in Firebase Console and that the Storage bucket shown there matches the website configuration. Also make sure Storage Rules are published.");
 }
 
 let publishStatus=null;
@@ -628,7 +639,7 @@ async function savePostV2(){
  }catch(e){
   console.error("Smart Buwaba publish error:",e);
   const code=e&&e.code?"\nCode: "+e.code:"";
-  alert("Could not publish the video.\n\n"+(e&&e.message?e.message:"Unknown error")+code+"\n\nIf you selected a video file, check Firebase Storage. If you used a Video URL only, check Firestore Rules.");
+  alert("Could not publish the video.\n\n"+(e&&e.message?e.message:"Unknown error")+code+"\n\nIf you selected a video file, the website tried both Firebase Storage bucket formats. If you used a Video URL only, check Firestore Rules.");
   if(publishStatus)publishStatus.textContent="Publish failed — check the error message.";
  }finally{
   if(publishBtn){publishBtn.disabled=false;publishBtn.textContent="Publish Post";}
