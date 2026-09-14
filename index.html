@@ -132,6 +132,7 @@ main{max-width:1240px;padding:22px 18px 80px}
 .moderationNotice,.commentBlocked{background:rgba(0,240,90,.05);border-color:rgba(0,240,90,.25);color:#bfffd5}.comment{background:#0a1c24}.socialBtn{background:#081b23;border-color:#0a4658}.socialBtn.liked,.socialBtn.following{background:rgba(0,240,90,.11);border-color:var(--accent);color:#caffdc}
 .videoFrame,.player{box-shadow:0 0 0 1px #08445a}.feedMedia{box-shadow:0 0 0 1px rgba(22,168,255,.2)}
 footer{border-color:#08384a;background:rgba(2,7,11,.55)}
+.aiTopBar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-bottom:12px;border-bottom:1px solid #08445a}.aiIdentity{display:flex;align-items:center;gap:10px}.aiOrb{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;font-weight:1000;color:#001b0a;background:linear-gradient(135deg,#00f05a,#168cff);box-shadow:0 0 22px rgba(0,240,90,.16)}.aiStatus{font-size:11px;color:#7f9aa5;margin-top:2px}.aiDot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#00f05a;box-shadow:0 0 10px #00f05a;margin-right:5px}.aiModelBadge{font-size:10px;padding:7px 10px;border:1px solid #0a526a;border-radius:999px;color:#a9d7e8;background:#061820}.aiQuick{display:flex;gap:7px;overflow:auto;padding:9px 0;scrollbar-width:none}.aiQuick::-webkit-scrollbar{display:none}.aiQuick button{flex:0 0 auto;background:#061820;border:1px solid #0a4658;color:#b8dbe7;border-radius:999px;padding:7px 10px;font-size:11px;cursor:pointer}.aiQuick button:hover{border-color:#00f05a;color:#d7ffe6}.aiComposer textarea{resize:none;min-height:42px;max-height:130px;line-height:1.45;padding:11px 12px;background:#020a0f;border:1px solid #0a4658;color:#fff;border-radius:12px;outline:none;font:inherit}.aiComposer textarea:focus{border-color:#16a8ff;box-shadow:0 0 0 3px rgba(22,168,255,.08)}.aiComposer{align-items:flex-end}.aiComposer .btn{min-height:42px}.aiFooter{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:8px;color:#66818d;font-size:10px}.aiMsg{white-space:pre-wrap;line-height:1.55}.aiMsg.aiThinking{opacity:.7}.aiMsg.error{border:1px solid rgba(255,90,90,.25);background:rgba(255,70,70,.06)}
 
 /* Phone-style app presentation */
 @media(max-width:700px){
@@ -247,10 +248,14 @@ footer{border-color:#08384a;background:rgba(2,7,11,.55)}
 </section>
 
 <section id="ai" class="page hidden">
-<div class="sectionHead"><div><h2>🤖 Smart Buwaba AI</h2><div class="muted">Your creative assistant for captions, ideas and website help.</div></div></div>
-<div class="aiBox"><div id="aiMessages" class="aiMessages"><div class="aiMsg"><strong>Smart Buwaba AI</strong><br>Moni bro! Nditha kukuthandiza ndi captions, video ideas, post ideas, kapena kufotokoza momwe website imagwirira ntchito.</div></div>
-<div class="chatInput"><input id="aiText" placeholder="Ask Smart Buwaba AI..." onkeydown="if(event.key==='Enter')askAI()"><button class="btn" onclick="askAI()">Ask</button></div>
-<div class="note" style="margin-top:10px">AI mode is currently local/offline. You can connect a secure AI backend later without exposing an API key in this website.</div></div>
+<div class="sectionHead"><div><h2>🤖 Smart Buwaba AI</h2><div class="muted">Smart conversational AI for ideas, coding, videos, school, writing and everyday questions.</div></div><div class="actions"><button class="btn secondary" onclick="resetAIChat()">＋ New Chat</button></div></div>
+<div class="aiBox" id="aiBox">
+  <div class="aiTopBar"><div class="aiIdentity"><div class="aiOrb">SB</div><div><strong>Smart Buwaba AI</strong><div id="aiStatus" class="aiStatus"><span class="aiDot"></span> Ready</div></div></div><div class="aiModelBadge">Gemini • Smart Mode</div></div>
+  <div id="aiMessages" class="aiMessages"><div class="aiMsg"><strong>Smart Buwaba AI</strong><br>Moni bro! 🤖 Ndili pano. Ndingalankhule nawe mu Chichewa kapena English, ndikuthandiza pa coding, website, ideas, videos, school, writing ndi mafunso ena. Funsa chilichonse.</div></div>
+  <div class="aiQuick"><button onclick="aiQuickAsk('Ndithandize kupanga idea ya video ya Smart Buwaba')">🎬 Video idea</button><button onclick="aiQuickAsk('Ndithandize kupanga website yanga')">💻 Website</button><button onclick="aiQuickAsk('Ndifotokozere izi mophweka')">🧠 Explain</button><button onclick="aiQuickAsk('Ndilembereni caption yabwino')">✍️ Caption</button></div>
+  <div class="chatInput aiComposer"><textarea id="aiText" rows="1" placeholder="Lankhulani ndi Smart Buwaba AI..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();askAI()}"></textarea><button id="aiAskBtn" class="btn" onclick="askAI()">Send ➤</button></div>
+  <div class="aiFooter"><span>🔒 API key stays on the secure Firebase server.</span><span id="aiModeText">Local fallback enabled</span></div>
+</div>
 </section>
 
 </main>
@@ -853,48 +858,73 @@ async function postCameraMedia(){
   notify("Camera post published!");showPage("feed");loadFeed();
  }catch(e){alert("Camera post failed: "+e.message);console.error(e)}
 }
-function askAI(){
- const input=$("aiText"),q=input.value.trim();if(!q)return;
- addAI(q,"user");input.value="";
+const SB_AI_ENDPOINT = "https://us-central1-smartbuwaba-40422.cloudfunctions.net/smartBuwabaAI";
+let aiBusy = false;
+
+function setAIStatus(text, busy=false){
+  const el=$("aiStatus");
+  if(el) el.innerHTML=`<span class="aiDot" style="${busy?'background:#16a8ff;box-shadow:0 0 10px #16a8ff':'"'}"></span>${safeText(text)}`;
+}
+function addAI(text,who){
+ const box=$("aiMessages");
+ if(!box)return;
+ box.insertAdjacentHTML("beforeend",`<div class="aiMsg ${who==="user"?"user":""}">${safeText(text)}</div>`);
+ box.scrollTop=box.scrollHeight;
+}
+function addAIThinking(){
+ const box=$("aiMessages");
+ const id="aiThinking_"+Date.now();
+ box.insertAdjacentHTML("beforeend",`<div id="${id}" class="aiMsg aiThinking"><strong>Smart Buwaba AI</strong><br>Ndikuganiza… 🤖</div>`);
+ box.scrollTop=box.scrollHeight;
+ return id;
+}
+function removeAIThinking(id){$(id)?.remove()}
+function aiQuickAsk(q){$("aiText").value=q;askAI()}
+async function resetAIChat(){
+ localStorage.removeItem("smartBuwabaAIInteraction");
+ try{
+   const u=window.firebase?.auth?.().currentUser;
+   if(u){const token=await u.getIdToken();await fetch("https://us-central1-smartbuwaba-40422.cloudfunctions.net/resetSmartBuwabaAI",{method:"POST",headers:{"Authorization":"Bearer "+token}});}
+ }catch(e){console.warn("AI reset server call failed",e)}
+ const box=$("aiMessages");
+ if(box)box.innerHTML='<div class="aiMsg"><strong>Smart Buwaba AI</strong><br>Chat yatsopano yayamba. Moni bro! 🤖 Funsa chilichonse.</div>';
+ setAIStatus("Ready");
+ notify("New AI chat started.");
+}
+function localAI(q){
  const l=q.toLowerCase();
- const greetings=["Moni bro 😎","Eya bro 🔥","Moni! Smart Buwaba AI pano.","Eya! Ndili pano kukuthandiza."];
- const intro=greetings[Math.floor(Math.random()*greetings.length)];
- let a="";
- if(/^(hi|hello|hey|moni|salaam|salam|assalam)/.test(l)){
-   a=intro+" Ndine Smart Buwaba AI. Funsa funso lililonse lokhudza Smart Buwaba, ma video, ma post, ideas, website kapena creative work.";
- }else if(l.includes("who")&&l.includes("muhammad") || l.includes("owner") || l.includes("mwini") || l.includes("smart buwaba ndi ndani")){
-   a="Smart Buwaba TV ndi brand ya Muhammad Allie, wachinyamata wakumangochi, Malawi, yemwe ali kumbuyo kwa Smart Buwaba ndi ntchito zake za videos, films, comedy ndi creativity.";
- }else if(l.includes("who are you")||l.includes("ndani iwe")){
-   a="Ndine Smart Buwaba AI 🤖, creative assistant wa Smart Buwaba. Ndingayankhe mafunso osiyanasiyana, kukupatsani ideas, captions, komanso kukuthandizani kumvetsa website.";
- }else if(l.includes("caption")){
-   const caps=[
-    "Caption idea: “Dream it. Create it. Achieve it. 🔥🎬 #SmartBuwabaTV”",
-    "Caption idea: “New content, new energy. Smart Buwaba TV 🎥🔥”",
-    "Caption idea: “From an idea to the screen — this is Smart Buwaba. 🎬✨”"
-   ];
-   a=caps[Math.floor(Math.random()*caps.length)];
- }else if(l.includes("idea")||l.includes("video")||l.includes("film")){
-   const ideas=[
-    "Video idea: pangani comedy ya masekondi 30–60 yokhala ndi hook yamphamvu koyambirira, vuto pakati, kenako punchline kumapeto.",
-    "Film idea: yambani ndi scene yomwe imadzutsa funso, pangani conflict pakati, kenako ending yomwe imasiya anthu akufuna sequel.",
-    "Content idea: pangani “Behind the Scenes” ya Smart Buwaba — show preparation, acting, camera work ndi final clip."
-   ];
-   a=ideas[Math.floor(Math.random()*ideas.length)];
- }else if(l.includes("website")||l.includes("upload")||l.includes("publish")){
-   a="Pa Smart Buwaba TV tili ndi Videos, Community Feed, Chat, Camera, Account, Settings ndi Smart Buwaba AI. Official TV videos zimapangidwa ndi admin account, ndipo community users angapange community posts.";
- }else if(l.includes("malawi")||l.includes("mangochi")){
-   a="Smart Buwaba ikuchokera ku Malawi, ndipo brand yake ikuyang'ana pa creativity, videos, films, comedy ndi digital entertainment.";
- }else if(l.includes("how")||l.includes("bwanji")||l.includes("nding")){
-   a="Nditha kukuthandizani step-by-step bro. Funsani funso limodzi kapena angapo — monga website, video ideas, captions, account, posting kapena Smart Buwaba.";
- }else{
-   const general=[
-    "Funso labwino bro. Ndingakuthandizeni ndi Smart Buwaba, videos, business ideas, captions, website kapena creative projects. Fotokozani zomwe mukufuna.",
-    "Eya, ndikumvetsa. Smart Buwaba AI ingayankhe mafunso osiyanasiyana; yesani kufunsa mwatsatanetsatane kuti ndikupatseni yankho lenileni.",
-    "Ndili pano bro 🤖. Funso limenelo silili mu zomwe ndakonzekera kwambiri pano, koma ndingayesebe kukuthandizani ngati mufotokoza pang'ono."
-   ];
-   a=general[Math.floor(Math.random()*general.length)];
- }
- setTimeout(()=>addAI(a,"ai"),220);
+ if(/^(hi|hello|hey|moni|salaam|salam|assalam)/.test(l)) return "Moni bro 😎🔥 Ndine Smart Buwaba AI. Ndili pano kukuthandiza. Lankhula nane mu Chichewa kapena English.";
+ if(l.includes("who are you")||l.includes("ndani iwe")) return "Ndine Smart Buwaba AI 🤖 — assistant wa Smart Buwaba. Ndingakuthandize pa coding, website, videos, writing, ideas, school ndi mafunso ena.";
+ if(l.includes("caption")) return "Caption idea: “Dream it. Create it. Achieve it. 🔥🎬 #SmartBuwaba #SmartBuwabaTV”";
+ if(l.includes("video")||l.includes("film")||l.includes("idea")) return "Idea: pangani video yokhala ndi hook yamphamvu mu masekondi 3 oyambirira, vutolo pakati, kenako payoff/punchline kumapeto. Ngati mukufuna, ndingakupangireni script yonse.";
+ if(l.includes("website")||l.includes("code")||l.includes("coding")) return "Eya bro 💻. Nditha kukuthandizani step-by-step pa HTML, CSS, JavaScript, Firebase ndi kukonza bugs. Tumizani code kapena fotokozani cholakwika.";
+ return "Ndili pano bro 🤖. AI server sinalumikizidwe pano, koma local assistant ikugwirabe ntchito. Mukalumikiza Firebase AI backend yomwe ili mu ZIP iyi, ndiyamba kuyankha ngati conversational AI yeniyeni.";
+}
+async function askAI(){
+ const input=$("aiText"),q=input.value.trim();if(!q||aiBusy)return;
+ addAI(q,"user");input.value="";input.style.height="auto";
+ const btn=$("aiAskBtn"),thinking=addAIThinking();aiBusy=true;setAIStatus("Thinking…",true);if(btn){btn.disabled=true;btn.textContent="…"}
+ try{
+   let idToken=null;
+   if(window.firebase?.auth){
+     const u=firebase.auth().currentUser;
+     if(u) idToken=await u.getIdToken();
+   }
+   if(!idToken){
+     removeAIThinking(thinking);addAI(localAI(q),"ai");setAIStatus("Local fallback");
+     return;
+   }
+   const r=await fetch(SB_AI_ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+idToken},body:JSON.stringify({message:q})});
+   const data=await r.json().catch(()=>({}));
+   if(!r.ok)throw new Error(data.error||`AI server error (${r.status})`);
+   removeAIThinking(thinking);addAI(data.reply||"Sorry bro, palibe yankho.","ai");
+   if(data.interactionId)localStorage.setItem("smartBuwabaAIInteraction",data.interactionId);
+   $("aiModeText").textContent="Online AI • secure Firebase backend";setAIStatus("Online");
+ }catch(e){
+   console.error("Smart Buwaba AI error:",e);removeAIThinking(thinking);
+   addAI("Online AI yalephera kulumikizana. Ndayamba local fallback:\n\n"+localAI(q),"ai");
+   setAIStatus("Offline fallback");
+ }finally{aiBusy=false;if(btn){btn.disabled=false;btn.textContent="Send ➤"}}
 }
 
 const oldShowPage=window.showPage;
