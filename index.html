@@ -234,8 +234,8 @@ main{max-width:1280px;padding:22px 18px 95px}.appHero{min-height:480px;border:1p
 <section id="ai" class="page hidden">
 <div class="sectionHead"><div><h2>🤖 Smart Buwaba AI</h2><div class="muted">Your creative assistant for captions, ideas and website help.</div></div></div>
 <div class="aiBox"><div id="aiMessages" class="aiMessages"><div class="aiMsg"><strong>Smart Buwaba AI</strong><br>Moni bro! Nditha kukuthandiza ndi captions, video ideas, post ideas, kapena kufotokoza momwe website imagwirira ntchito.</div></div>
-<div class="chatInput"><input id="aiText" placeholder="Ask Smart Buwaba AI..." onkeydown="if(event.key==='Enter')askAI()"><button class="btn" onclick="askAI()">Ask</button></div>
-<div class="note" style="margin-top:10px">AI mode is currently local/offline. You can connect a secure AI backend later without exposing an API key in this website.</div></div>
+<div class="actions" style="margin:10px 0;flex-wrap:wrap"><button class="btn secondary" onclick="aiQuick('Write a strong caption for my new video')">✍️ Caption</button><button class="btn secondary" onclick="aiQuick('Give me 5 viral video ideas')">🎥 Video Ideas</button><button class="btn secondary" onclick="aiQuick('Write hashtags for my post')">#️⃣ Hashtags</button><button class="btn secondary" onclick="startAISpeech()">🎤 Voice</button><button class="btn secondary" onclick="toggleAISpeech()">🔊 Voice Reply</button></div><div class="chatInput"><input id="aiText" placeholder="Ask Smart Buwaba AI..." onkeydown="if(event.key==='Enter')askAI()"><button class="btn secondary" onclick="startAISpeech()">🎤</button><button class="btn" onclick="askAI()">Ask ➤</button></div>
+<div class="note" style="margin-top:10px">Smart Buwaba AI works with a smart local assistant now. Voice input/replies use your browser. A secure AI backend can be connected later without putting an API secret in the app.</div></div>
 </section>
 
 </main>
@@ -309,7 +309,7 @@ main{max-width:1280px;padding:22px 18px 95px}.appHero{min-height:480px;border:1p
 <div class="settingsGroup"><h3>☁️ Media Upload</h3><div class="muted">Firebase Storage now requires Blaze. To let Smart Buwaba upload photos/videos without Firebase Storage, configure a Cloudinary unsigned upload preset.</div><input id="cloudNameInput" class="settingsInput" placeholder="Cloudinary Cloud name"><input id="uploadPresetInput" class="settingsInput" placeholder="Cloudinary unsigned upload preset"><div class="tinyHelp">Cloudinary is already configured for this Smart Buwaba build. Cloud name: ehwhaqzt • Upload preset: smart buwaba upload. You can leave these values as they are. Direct video URLs also work.</div><button class="btn redWhiteBtn" style="margin-top:10px" onclick="saveMediaSettings()">Save Media Upload Settings</button></div>
 <div class="settingsGroup"><h3>🔐 Privacy & Account</h3><div class="muted">Your account controls login, chat and your creator profile. Sign out from Account.</div><div class="actions" style="margin-top:10px"><button class="btn secondary" onclick="openAuth();closeModal('settingsModal')">Open Account</button><button class="btn secondary" onclick="openNotifications();closeModal('settingsModal')">Notifications</button></div></div>
 <div class="settingRow"><div><strong>Reset local preferences</strong><div class="muted">Clear likes, follows, favorites and local app settings on this device.</div></div><button class="btn secondary" onclick="resetLocalPreferences()">Reset</button></div>
-<div style="margin-top:18px" class="note">Smart Buwaba • Videos • Shorts • Films • Favorites • Chat • Creator profiles • Settings.</div>
+<div class="settingsGroup"><h3>🤖 AI Assistant</h3><div class="muted">Voice and creative tools are enabled. If you later deploy a secure AI backend, it can be connected here without exposing a secret key.</div><input id="aiBackendInput" class="settingsInput" placeholder="Secure AI backend URL (optional)"><button class="btn secondary" style="margin-top:10px" onclick="saveAIBackend()">Save AI Backend</button></div><div style="margin-top:18px" class="note">Smart Buwaba • Videos • Shorts • Films • Favorites • Chat • Creator profiles • AI • Settings.</div>
 </div></div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
@@ -508,7 +508,7 @@ function saveAppSetting(k,v){localStorage.setItem('sb_setting_'+k,v?'1':'0')}
 const DEFAULT_CLOUD_NAME='ehwhaqzt'; const DEFAULT_UPLOAD_PRESET='smart buwaba upload';
 function saveMediaSettings(){localStorage.setItem('sb_cloud_name',($('cloudNameInput')?.value||DEFAULT_CLOUD_NAME).trim());localStorage.setItem('sb_upload_preset',($('uploadPresetInput')?.value||DEFAULT_UPLOAD_PRESET).trim());notify('Media upload settings saved.');alert('Saved. You can now upload photos/videos.');}
 function getCloudinaryConfig(){return {cloudName:(localStorage.getItem('sb_cloud_name')||DEFAULT_CLOUD_NAME).trim(),preset:(localStorage.getItem('sb_upload_preset')||DEFAULT_UPLOAD_PRESET).trim()};}
-function loadAppSettings(){const a=localStorage.getItem('sb_setting_autoplay');const n=localStorage.getItem('sb_setting_notifications');const d=localStorage.getItem('sb_setting_dataSaver');if($('autoPlaySwitch'))$('autoPlaySwitch').checked=a!=='0';if($('notifySwitch'))$('notifySwitch').checked=n!=='0';if($('dataSaverSwitch'))$('dataSaverSwitch').checked=d==='1';if($('cloudNameInput'))$('cloudNameInput').value=localStorage.getItem('sb_cloud_name')||DEFAULT_CLOUD_NAME;if($('uploadPresetInput'))$('uploadPresetInput').value=localStorage.getItem('sb_upload_preset')||DEFAULT_UPLOAD_PRESET}
+function loadAppSettings(){if($('aiBackendInput'))$('aiBackendInput').value=localStorage.getItem('sb_ai_backend')||'';const a=localStorage.getItem('sb_setting_autoplay');const n=localStorage.getItem('sb_setting_notifications');const d=localStorage.getItem('sb_setting_dataSaver');if($('autoPlaySwitch'))$('autoPlaySwitch').checked=a!=='0';if($('notifySwitch'))$('notifySwitch').checked=n!=='0';if($('dataSaverSwitch'))$('dataSaverSwitch').checked=d==='1';if($('cloudNameInput'))$('cloudNameInput').value=localStorage.getItem('sb_cloud_name')||DEFAULT_CLOUD_NAME;if($('uploadPresetInput'))$('uploadPresetInput').value=localStorage.getItem('sb_upload_preset')||DEFAULT_UPLOAD_PRESET}
 function resetLocalPreferences(){['sb_likes','sb_follows','sb_favorites','sb_notifications','sb_cloud_name','sb_upload_preset','sb_setting_autoplay','sb_setting_notifications','sb_setting_dataSaver'].forEach(k=>localStorage.removeItem(k));location.reload()}
 
 async function loadPosts(){
@@ -944,9 +944,24 @@ async function postCameraMedia(){
   notify("Camera post published!");showPage("feed");loadFeed();
  }catch(e){alert("Camera post failed: "+e.message);console.error(e)}
 }
-function askAI(){
+let aiSpeakReply=true;
+function aiQuick(q){$('aiText').value=q;askAI()}
+function toggleAISpeech(){aiSpeakReply=!aiSpeakReply;notify(aiSpeakReply?'AI voice replies ON 🔊':'AI voice replies OFF');}
+function startAISpeech(){
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SR)return alert('Voice input is not supported by this browser. Try Chrome or Edge.');
+ const r=new SR(); r.lang='en-US'; r.interimResults=false; r.maxAlternatives=1;
+ r.onstart=()=>notify('Listening... 🎤');
+ r.onresult=e=>{$('aiText').value=e.results[0][0].transcript;askAI()};
+ r.onerror=e=>alert('Voice input failed: '+(e.error||'unknown error')); r.start();
+}
+function speakAI(text){if(!aiSpeakReply||!('speechSynthesis' in window))return; window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=/[က-႟]/.test(text)?'en-US':'en-US';u.rate=.95;window.speechSynthesis.speak(u)}
+function saveAIBackend(){localStorage.setItem('sb_ai_backend',($('aiBackendInput')?.value||'').trim());notify('AI backend setting saved.');alert('AI backend saved. Keep API secrets on the server, never inside this website.');}
+async function askRemoteAI(q){const endpoint=(localStorage.getItem('sb_ai_backend')||'').trim();if(!endpoint)return null;const res=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q,language:'Chichewa/English',app:'Smart Buwaba'})});if(!res.ok)throw new Error('AI backend returned '+res.status);const data=await res.json();return data.reply||data.message||data.text||null;}
+async function askAI(){
  const input=$("aiText"),q=input.value.trim();if(!q)return;
  addAI(q,"user");input.value="";
+ try{const remote=await askRemoteAI(q);if(remote){addAI(remote,"ai");speakAI(remote);return;}}catch(e){console.warn("Remote AI unavailable, using local assistant",e)}
  const l=q.toLowerCase();
  const greetings=["Moni bro 😎","Eya bro 🔥","Moni! Smart Buwaba AI pano.","Eya! Ndili pano kukuthandiza."];
  const intro=greetings[Math.floor(Math.random()*greetings.length)];
@@ -985,7 +1000,7 @@ function askAI(){
    ];
    a=general[Math.floor(Math.random()*general.length)];
  }
- setTimeout(()=>addAI(a,"ai"),220);
+ setTimeout(()=>{addAI(a,"ai");speakAI(a)},220);
 }
 
 const oldShowPage=window.showPage;
