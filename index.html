@@ -141,6 +141,10 @@ main{max-width:1280px;padding:22px 18px 95px}.appHero{min-height:480px;border:1p
 .messageImage{display:block;max-width:260px;width:100%;border-radius:12px;margin-top:2px;cursor:pointer}
 .chatUserPreview .unreadBadge{float:right;background:#00f56a;color:#031018;border-radius:999px;padding:2px 7px;font-weight:900}
 .chatUserPreview.offline{color:#657783}
+
+.videoEditorBox{margin-top:12px;padding:14px;border:1px solid #153445;border-radius:16px;background:linear-gradient(180deg,#07131b,#061018)}
+.editorTitle{font-weight:900;color:var(--accent);margin-bottom:5px}.editorControls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}.editorControls label{font-size:12px;color:#9eb0ba}.editorControls input{display:block;width:100%;margin-top:6px}.voiceRecordBar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid #153445;background:#061019}.voiceRecordBar span{color:#ff6577;font-weight:800;flex:1}.messageAudio{width:240px;max-width:100%;height:38px}.messageImage{max-width:240px;max-height:260px;border-radius:12px;display:block;cursor:pointer}.messageVideo{max-width:260px;max-height:300px;border-radius:12px;display:block}.chatIconBtn.recording{border-color:#ff6577;color:#ff6577;box-shadow:0 0 18px rgba(255,101,119,.18)}
+@media(max-width:700px){.editorControls{grid-template-columns:1fr}.voiceRecordBar{position:sticky;bottom:70px;z-index:20}}
 </style>
 </head>
 <body>
@@ -215,7 +219,7 @@ main{max-width:1280px;padding:22px 18px 95px}.appHero{min-height:480px;border:1p
 <div id="feedList" style="max-width:760px;margin:16px auto"></div>
 </section>
 
-<section id="chat" class="page hidden"><div class="sectionHead"><div><h2>💬 Smart Buwaba Chat</h2><div class="muted">Chat with your friends, share moments and stay connected.</div></div></div><div class="chatPageShell"><div class="chatWrap"><aside class="chatUsers" id="chatPeoplePanel"><div class="chatPeopleHead"><strong>People</strong><span class="muted" id="chatPeopleCount"></span></div><input class="chatSearch" id="chatSearch" placeholder="🔎 Search people..." oninput="filterChatPeople(this.value)"><div id="chatUsers"></div></aside><div class="chatPanel"><div class="chatHeader"><button class="chatIconBtn mobileOnlyChat" onclick="toggleChatPeople()">☰</button><div class="chatAvatar" id="chatAvatar">SB<span class="onlineDot"></span></div><div class="chatHeaderInfo"><div class="chatHeaderName" id="chatTitle">Select a person</div><div class="chatHeaderStatus" id="chatStatus">Choose someone to start chatting</div></div><div class="chatHeaderActions"><button class="chatIconBtn" title="Voice call">☎</button><button class="chatIconBtn" title="Video call">▣</button><button class="chatIconBtn" title="More">⋮</button></div></div><div class="chatWallpaperBar" id="chatWallpaperBar"><span class="wallLabel">Wallpaper</span><button type="button" class="wallDot active" data-wallpaper="assets/chat-photo-4.jpg" style="background-image:url('assets/chat-photo-4.jpg')" title="My photo" aria-label="Use my photo"></button><button type="button" class="wallDot" data-wallpaper="assets/chat-photo-1.jpg" style="background-image:url('assets/chat-photo-1.jpg')" title="Beach photo" aria-label="Use beach photo"></button><button type="button" class="wallDot" data-wallpaper="assets/chat-photo-2.jpg" style="background-image:url('assets/chat-photo-2.jpg')" title="Beach portrait" aria-label="Use beach portrait"></button><button type="button" class="wallDot" data-wallpaper="assets/chat-photo-3.jpg" style="background-image:url('assets/chat-photo-3.jpg')" title="Lifestyle photo" aria-label="Use lifestyle photo"></button><button type="button" class="wallDot" data-wallpaper="assets/chat-sunset-flowers.jpg" style="background-image:url('assets/chat-sunset-flowers.jpg')" title="Sunset & flowers" aria-label="Use sunset and flowers"></button><button type="button" class="wallChooseBtn" onclick="document.getElementById('chatWallpaperFile').click()">＋ Choose photo</button><input id="chatWallpaperFile" type="file" accept="image/*" hidden></div><div id="chatMessages" class="chatMessages"><div class="chatEmpty"><div><div class="chatEmptyLogo">👑</div><strong>Smart Buwaba Chat</strong><div class="muted">Select a person from the left to begin.</div></div></div></div><div id="chatTyping" class="chatTyping"></div><div class="chatInput"><button class="chatIconBtn chatAttach" title="Send photo" onclick="document.getElementById('chatImageFile').click()">📎</button><input id="chatImageFile" type="file" accept="image/*" hidden><input id="chatText" placeholder="Write a message..." oninput="chatTypingChanged()" onkeydown="if(event.key==='Enter')sendChat()"><button class="btn chatSend" onclick="sendChat()">Send ➤</button></div></div></div></div></section><section id="camera" class="page hidden">
+<section id="chat" class="page hidden"><div class="sectionHead"><div><h2>💬 Smart Buwaba Chat</h2><div class="muted">Chat with your friends, share moments and stay connected.</div></div></div><div class="chatPageShell"><div class="chatWrap"><aside class="chatUsers" id="chatPeoplePanel"><div class="chatPeopleHead"><strong>People</strong><span class="muted" id="chatPeopleCount"></span></div><input class="chatSearch" id="chatSearch" placeholder="🔎 Search people..." oninput="filterChatPeople(this.value)"><div id="chatUsers"></div></aside><div class="chatPanel"><div class="chatHeader"><button class="chatIconBtn mobileOnlyChat" onclick="toggleChatPeople()">☰</button><div class="chatAvatar" id="chatAvatar">SB<span class="onlineDot"></span></div><div class="chatHeaderInfo"><div class="chatHeaderName" id="chatTitle">Select a person</div><div class="chatHeaderStatus" id="chatStatus">Choose someone to start chatting</div></div><div class="chatHeaderActions"><button class="chatIconBtn" title="Voice call">☎</button><button class="chatIconBtn" title="Video call">▣</button><button class="chatIconBtn" title="More">⋮</button></div></div><div class="chatWallpaperBar" id="chatWallpaperBar"><span class="wallLabel">Wallpaper</span><button type="button" class="wallDot active" data-wallpaper="assets/chat-photo-4.jpg" style="background-image:url('assets/chat-photo-4.jpg')" title="My photo" aria-label="Use my photo"></button><button type="button" class="wallDot" data-wallpaper="assets/chat-photo-1.jpg" style="background-image:url('assets/chat-photo-1.jpg')" title="Beach photo" aria-label="Use beach photo"></button><button type="button" class="wallDot" data-wallpaper="assets/chat-photo-2.jpg" style="background-image:url('assets/chat-photo-2.jpg')" title="Beach portrait" aria-label="Use beach portrait"></button><button type="button" class="wallDot" data-wallpaper="assets/chat-photo-3.jpg" style="background-image:url('assets/chat-photo-3.jpg')" title="Lifestyle photo" aria-label="Use lifestyle photo"></button><button type="button" class="wallDot" data-wallpaper="assets/chat-sunset-flowers.jpg" style="background-image:url('assets/chat-sunset-flowers.jpg')" title="Sunset & flowers" aria-label="Use sunset and flowers"></button><button type="button" class="wallChooseBtn" onclick="document.getElementById('chatWallpaperFile').click()">＋ Choose photo</button><input id="chatWallpaperFile" type="file" accept="image/*" hidden></div><div id="chatMessages" class="chatMessages"><div class="chatEmpty"><div><div class="chatEmptyLogo">👑</div><strong>Smart Buwaba Chat</strong><div class="muted">Select a person from the left to begin.</div></div></div></div><div id="chatTyping" class="chatTyping"></div><div class="chatInput"><button class="chatIconBtn chatAttach" title="Send photo" onclick="document.getElementById('chatImageFile').click()">📎</button><input id="chatImageFile" type="file" accept="image/*" hidden><button class="chatIconBtn" id="chatRecordBtn" title="Record voice" onclick="toggleVoiceRecording()">🎙️</button><input id="chatText" placeholder="Write a message..." oninput="chatTypingChanged()" onkeydown="if(event.key==='Enter')sendChat()"><button class="btn chatSend" onclick="sendChat()">Send ➤</button></div><div id="voiceRecordBar" class="voiceRecordBar hidden"><span id="voiceRecordStatus">● Recording…</span><button class="btn secondary" onclick="stopVoiceRecording(true)">Send voice</button><button class="chatIconBtn" onclick="stopVoiceRecording(false)">✕</button></div></div></div></div></section><section id="camera" class="page hidden">
 <div class="sectionHead"><div><h2>📷 Smart Buwaba Camera</h2><div class="muted">Take a photo or record a video, preview it, then post it to the community.</div></div></div>
 <div class="panel" style="max-width:820px;margin:auto">
 <video id="cameraPreview" autoplay playsinline muted style="width:100%;max-height:520px;object-fit:cover;border-radius:14px;background:#000"></video>
@@ -244,7 +248,7 @@ main{max-width:1280px;padding:22px 18px 95px}.appHero{min-height:480px;border:1p
 <footer><div><strong>SMART BUWABA</strong> • Dream • Create • Achieve</div><div class="socials" style="margin-top:12px"><a href="#" onclick="return false">TikTok</a><a href="#" onclick="return false">Facebook</a><a href="#" onclick="return false">YouTube</a></div><div style="margin-top:12px;font-size:12px">© <span id="year"></span> Smart Buwaba</div></footer>
 
 <!-- Add Post -->
-<div id="postModal" class="modal hidden" onclick="if(event.target===this)closeModal('postModal')"><div class="modalBox"><div class="modalTop"><h2>＋ Add New Post</h2><button class="close" onclick="closeModal('postModal')">×</button></div><div class="form">
+<div id="postModal" class="modal hidden" onclick="if(event.target===this)closeModal('postModal')"><div class="modalBox"><div class="modalTop"><h2>＋ Create Video Post</h2><button class="close" onclick="closeModal('postModal')">×</button></div><div class="form">
 <label>Title<input id="pTitle" placeholder="e.g. My New Film"></label>
 <label>Category<select id="pCategory"><option>Film</option><option>Comedy</option><option>Music</option><option>Other</option></select></label>
 <label>Description<textarea id="pDesc" placeholder="Tell people about this video..."></textarea></label>
@@ -252,10 +256,20 @@ main{max-width:1280px;padding:22px 18px 95px}.appHero{min-height:480px;border:1p
 <label>Video URL (optional)<input id="pVideo" placeholder="https://...mp4 or video link"></label>
 <label>Or upload a video file <input id="pVideoFile" type="file" accept="video/*"></label>
 <label>Thumbnail file (optional) <input id="pThumbFile" type="file" accept="image/*"></label>
-<div id="publishStatus" class="note" style="display:none">Preparing...</div>
-<div id="uploadProgress" class="progress hidden"><i></i></div><div id="publishStatus" class="note" style="display:none">Preparing your post...</div>
-<div class="note">Upload files go to Firebase Storage; post information goes to Firestore. Sign in first.</div>
-<button class="btn" onclick="savePost()">Publish Post</button><div class="publishStatus muted" style="font-size:12px;text-align:center"></div>
+<div id="uploadProgress" class="progress hidden"><i></i></div>
+<div class="videoEditorBox" id="videoEditorBox">
+  <div class="editorTitle">✂️ Video Editor</div>
+  <div class="muted">Choose a video, set the start/end points, then optionally create a trimmed copy before publishing.</div>
+  <video id="editorPreview" controls playsinline style="width:100%;max-height:320px;border-radius:14px;background:#000;margin-top:10px"></video>
+  <div class="editorControls">
+    <label>Start (seconds)<input id="trimStart" type="number" min="0" step="0.1" value="0"></label>
+    <label>End (seconds)<input id="trimEnd" type="number" min="0" step="0.1" value="0"></label>
+  </div>
+  <div class="actions"><button type="button" class="btn secondary" onclick="setTrimStartFromVideo()">Set start here</button><button type="button" class="btn secondary" onclick="setTrimEndFromVideo()">Set end here</button><button type="button" class="btn" onclick="makeTrimmedVideo()">✂️ Make trimmed video</button></div>
+  <div id="editorStatus" class="tinyHelp"></div>
+</div>
+<div class="note">Any signed-in user can publish videos. Photos/text posts are available in Community Feed too.</div>
+<button class="btn" onclick="savePost()">Publish Video</button><div class="publishStatus muted" style="font-size:12px;text-align:center"></div>
 </div></div></div>
 
 
@@ -1009,12 +1023,7 @@ window.showPage=function(id){oldShowPage(id);if(id==="feed")loadFeed();if(id==="
 
 const _openAddPost = window.openAddPost;
 window.openAddPost = function(){
- if(!isAdmin()){
-   openAuth();
-   if(!isRealAccount()) notify("Sign in with the Smart Buwaba admin account to publish official Smart Buwaba videos.");
-   else alert("Only the Smart Buwaba admin account can publish official Smart Buwaba videos.\n\nAdmin: mmuhammadallie@gmail.com");
-   return;
- }
+ if(!isRealAccount()){ openAuth(); notify("Sign in to create a video post."); return; }
  _openAddPost();
 };
 
@@ -1136,5 +1145,152 @@ if ('serviceWorker' in navigator) {
  firebase.auth().onAuthStateChanged(u=>{if(u&&isRealAccount())startPresence();else stopPresence();});
 })();
 </script>
+
+<script id="smart-buwaba-v19-social-upgrade">
+(function(){
+  // ----- Creator video posting for every signed-in user -----
+  let editorSourceUrl='';
+  let selectedVideoFile=null;
+  let trimmedVideoFile=null;
+  let voiceRecorder=null, voiceChunks=[], voiceStream=null;
+
+  function real(){ return typeof isRealAccount==='function' && isRealAccount(); }
+  function el(id){ return document.getElementById(id); }
+  function cleanName(name){ return String(name||'video').replace(/[^a-zA-Z0-9._-]/g,'_'); }
+
+  window.openAddPost=function(){
+    if(!real()){ openAuth(); notify('Sign in to create a video post.'); return; }
+    el('postModal')?.classList.remove('hidden');
+    el('pTitle')?.focus();
+  };
+
+  const vf=el('pVideoFile');
+  if(vf){ vf.addEventListener('change',function(){
+    const f=this.files?.[0]; selectedVideoFile=f||null; trimmedVideoFile=null;
+    const v=el('editorPreview'); if(editorSourceUrl){URL.revokeObjectURL(editorSourceUrl);editorSourceUrl='';}
+    if(!f||!v)return;
+    editorSourceUrl=URL.createObjectURL(f); v.src=editorSourceUrl; v.load();
+    v.onloadedmetadata=function(){
+      el('trimStart').value='0'; el('trimEnd').value=(Number(v.duration)||0).toFixed(1);
+      el('editorStatus').textContent=`Video ready • ${(v.duration||0).toFixed(1)} seconds`;
+    };
+  }); }
+  window.setTrimStartFromVideo=function(){ const v=el('editorPreview');if(v)el('trimStart').value=(v.currentTime||0).toFixed(1); };
+  window.setTrimEndFromVideo=function(){ const v=el('editorPreview');if(v)el('trimEnd').value=(v.currentTime||0).toFixed(1); };
+
+  window.makeTrimmedVideo=async function(){
+    const v=el('editorPreview'); if(!v||!selectedVideoFile)return alert('Choose a video file first.');
+    if(!v.captureStream || !window.MediaRecorder)return alert('Your browser does not support browser video trimming. You can still publish the original video.');
+    const start=Math.max(0,Number(el('trimStart').value)||0), end=Math.min(Number(v.duration)||0,Number(el('trimEnd').value)||0);
+    if(end<=start+0.2)return alert('End time must be after start time.');
+    const oldTime=v.currentTime, oldMuted=v.muted;
+    try{
+      v.pause(); v.currentTime=start; await new Promise(r=>{const h=()=>{v.removeEventListener('seeked',h);r();};v.addEventListener('seeked',h);});
+      const stream=v.captureStream();
+      const mime=['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'].find(x=>MediaRecorder.isTypeSupported(x));
+      const rec=new MediaRecorder(stream,mime?{mimeType:mime}:undefined), chunks=[];
+      rec.ondataavailable=e=>{if(e.data?.size)chunks.push(e.data)};
+      rec.start(250); v.muted=false; await v.play();
+      await new Promise(resolve=>setTimeout(resolve,(end-start)*1000));
+      v.pause(); rec.stop(); await new Promise(r=>rec.onstop=r);
+      trimmedVideoFile=new File([new Blob(chunks,{type:rec.mimeType||'video/webm'})],cleanName(selectedVideoFile.name).replace(/\.[^.]+$/,'')+'-trimmed.webm',{type:rec.mimeType||'video/webm'});
+      el('editorStatus').textContent=`Trimmed copy ready • ${start.toFixed(1)}s → ${end.toFixed(1)}s • publish will use the trimmed video.`;
+    }catch(e){console.error(e);alert('Could not make the trimmed copy. You can publish the original video instead.');}
+    finally{v.muted=oldMuted;try{v.currentTime=oldTime}catch(e){}}
+  };
+
+  window.savePost=async function(){
+    if(!real()){openAuth();return;}
+    const title=el('pTitle').value.trim(), desc=el('pDesc').value.trim();
+    if(!title)return alert('Add a title.');
+    if(typeof moderateText==='function'&&!moderateText(title+' '+desc).ok)return alert('Please keep Smart Buwaba respectful.');
+    let video=el('pVideo').value.trim(), thumb=el('pThumb').value.trim();
+    const file=trimmedVideoFile || el('pVideoFile').files?.[0] || null, tf=el('pThumbFile').files?.[0] || null;
+    if(!video&&!file)return alert('Add a video URL or choose a video file.');
+    const btn=document.querySelector('#postModal .btn:last-of-type'); if(btn){btn.disabled=true;btn.textContent='Publishing…';}
+    try{
+      if(file) video=await uploadFile(file,`videos/${currentUser.uid}/${Date.now()}_${cleanName(file.name)}`,'Uploading video');
+      if(tf) thumb=await uploadFile(tf,`thumbnails/${currentUser.uid}/${Date.now()}_${cleanName(tf.name)}`,'Uploading thumbnail');
+      const post={title,category:el('pCategory').value,description:desc,videoUrl:video,thumbUrl:thumb,ownerId:currentUser.uid,ownerName:currentUser.displayName||currentUser.email?.split('@')[0]||'Smart Buwaba user',date:new Date().toISOString(),likes:[],likeCount:0,commentCount:0,viewCount:0,type:'video'};
+      const ref=await db.collection('videos').add(post); posts.push({...post,id:ref.id});
+      ['pTitle','pDesc','pThumb','pVideo'].forEach(x=>el(x).value=''); el('pVideoFile').value=''; el('pThumbFile').value=''; trimmedVideoFile=null; selectedVideoFile=null;
+      closeModal('postModal'); renderHome(); renderVideos(); notify('Video post published successfully.');
+    }catch(e){console.error(e);alert('Could not publish the video.\n\n'+(e?.message||'Unknown error'));}
+    finally{if(btn){btn.disabled=false;btn.textContent='Publish Video';}}
+  };
+
+  // ----- WhatsApp-style voice notes -----
+  window.toggleVoiceRecording=async function(){
+    if(voiceRecorder && voiceRecorder.state==='recording'){ stopVoiceRecording(true); return; }
+    if(!real()||!activeChatUser){ if(!real())openAuth(); else alert('Select a person first.'); return; }
+    if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder)return alert('Voice recording is not supported in this browser.');
+    try{
+      voiceStream=await navigator.mediaDevices.getUserMedia({audio:true}); voiceChunks=[];
+      const mime=['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus'].find(x=>MediaRecorder.isTypeSupported(x));
+      voiceRecorder=new MediaRecorder(voiceStream,mime?{mimeType:mime}:undefined);
+      voiceRecorder.ondataavailable=e=>{if(e.data?.size)voiceChunks.push(e.data)};
+      voiceRecorder.onstop=async()=>{
+        const send=voiceRecorder.__send; const blob=new Blob(voiceChunks,{type:voiceRecorder.mimeType||'audio/webm'});
+        voiceStream?.getTracks().forEach(t=>t.stop()); voiceStream=null;
+        el('voiceRecordBar')?.classList.add('hidden'); el('chatRecordBtn')?.classList.remove('recording');
+        if(send && blob.size){
+          try{ el('chatTyping').textContent='Uploading voice note…'; const file=new File([blob],`voice-${Date.now()}.webm`,{type:blob.type}); const url=await uploadFile(file,`chat/${currentUser.uid}/${Date.now()}-voice.webm`,'Uploading voice note'); await sendMessageData({text:'',audioUrl:url,mediaType:'audio'}); }
+          catch(e){alert('Voice note could not be sent.\n\n'+(e?.message||'Unknown error'));}
+          finally{el('chatTyping').textContent='';}
+        }
+        voiceRecorder=null; voiceChunks=[];
+      };
+      voiceRecorder.start(250); el('voiceRecordBar')?.classList.remove('hidden'); el('chatRecordBtn')?.classList.add('recording'); el('voiceRecordStatus').textContent='● Recording voice…';
+    }catch(e){alert('Microphone access failed. Please allow microphone permission and use HTTPS.');console.error(e);}
+  };
+  window.stopVoiceRecording=function(send){if(voiceRecorder&&voiceRecorder.state==='recording'){voiceRecorder.__send=!!send;voiceRecorder.stop();}}
+
+  // Replace the realtime message renderer so text + photos + voice notes work together.
+  if(typeof subscribeMessages!=='undefined'){}
+  const oldLoadMessages=window.loadMessages;
+  window.loadMessages=async function(){
+    if(!activeChatUser||!currentUser)return;
+    const box=el('chatMessages');
+    try{
+      const snap=await db.collection('chats').doc(chatId(currentUser.uid,activeChatUser.uid)).collection('messages').orderBy('createdAt','asc').limitToLast(100).get();
+      if(!snap.docs.length){box.innerHTML='<div class="chatEmpty"><div><div class="chatEmptyLogo">💬</div><strong>Start the conversation</strong><div class="muted">Say hello 👋</div></div></div>';return;}
+      box.innerHTML='<div class="chatDate">Conversation</div>'+snap.docs.map(d=>{const m=d.data(),mine=m.senderId===currentUser.uid;let tm='';try{tm=m.createdAt?.toDate?m.createdAt.toDate().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}):''}catch(e){}
+        let body='';
+        if(m.imageUrl) body+=`<img class="messageImage" src="${safeText(m.imageUrl)}" alt="Shared photo" onclick="window.open('${safeText(m.imageUrl)}','_blank')">`;
+        if(m.audioUrl) body+=`<audio class="messageAudio" controls src="${safeText(m.audioUrl)}"></audio>`;
+        if(m.videoUrl) body+=`<video class="messageVideo" controls playsinline src="${safeText(m.videoUrl)}"></video>`;
+        if(m.text) body+=`<div>${safeText(m.text)}</div>`;
+        return `<div class="bubble ${mine?'mine':''}">${body||'📎'}<span class="bubbleMeta">${tm}${mine?' ✓✓':''}</span></div>`;
+      }).join(''); box.scrollTop=box.scrollHeight;
+    }catch(e){console.error(e);if(typeof oldLoadMessages==='function')return oldLoadMessages();}
+  };
+
+  // Add community comments using the existing top-level comments collection/rules.
+  window.openCommunityComments=async function(id){
+    try{
+      const snap=await db.collection('comments').where('communityPostId','==',String(id)).get();
+      const rows=snap.docs.map(d=>d.data()).sort((a,b)=>{
+        const aa=a.createdAt?.toDate?a.createdAt.toDate().getTime():0, bb=b.createdAt?.toDate?b.createdAt.toDate().getTime():0; return aa-bb;
+      });
+      const existing=rows.map(c=>`${c.authorName||'User'}: ${c.text}`).join('\\n\\n');
+      const text=prompt('Community comments\\n\\n'+(existing||'No comments yet.')+'\\n\\nWrite a new comment:','');
+      if(text?.trim()){
+        if(!real()){openAuth();return;}
+        if(typeof moderateText==='function'&&!moderateText(text).ok)return alert('Please keep your comment respectful.');
+        await db.collection('comments').add({communityPostId:String(id),text:text.trim(),authorId:currentUser.uid,authorName:currentUser.displayName||currentUser.email?.split('@')[0]||'User',createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+        loadFeed();
+      }
+    }catch(e){console.error(e);alert('Comments could not be loaded.\n\n'+(e?.message||'Unknown error'));}
+  };
+
+  // Patch community feed Comment button after every render.
+  const oldLoadFeed=window.loadFeed;
+  window.loadFeed=async function(){ await oldLoadFeed(); document.querySelectorAll('#feedList .feedCard').forEach(card=>{const buttons=card.querySelectorAll('.socialBtn'); if(buttons[1] && buttons[1].textContent.includes('Comment')){const id=card.querySelector('[onclick*="toggleCommunityLike"]')?.getAttribute('onclick')?.match(/'([^']+)'/)?.[1]; if(id)buttons[1].setAttribute('onclick',`openCommunityComments('${id}')`);}}); };
+
+  // Update local AI helper text so it reflects the new creator features.
+  window.__sbV19=true;
+})();
+</script>
+
 </body>
 </html>
