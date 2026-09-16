@@ -1,8 +1,6 @@
 {
-  "name": "smart-buwaba-ai-backend",
-  "private": true,
-  "type": "module",
-  "dependencies": {
-    "openai": "latest"
-  }
+  "name":"smart-buwaba-ai-v23",
+  "private":true,
+  "type":"module",
+  "dependencies":{"openai":"latest"}
 }
