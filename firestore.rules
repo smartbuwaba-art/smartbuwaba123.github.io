@@ -14,9 +14,9 @@ service cloud.firestore {
 
     match /videos/{id} {
       allow read: if true;
-      allow create: if admin();
-      allow update: if signedIn();
-      allow delete: if admin();
+      allow create: if signedIn() && request.resource.data.ownerId == request.auth.uid;
+      allow update: if signedIn() && (resource.data.ownerId == request.auth.uid || admin());
+      allow delete: if signedIn() && (resource.data.ownerId == request.auth.uid || admin());
     }
 
     match /comments/{id} {

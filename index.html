@@ -146,7 +146,7 @@ main{max-width:1280px;padding:22px 18px 95px}.appHero{min-height:480px;border:1p
 .editorTitle{font-weight:900;color:var(--accent);margin-bottom:5px}.editorControls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}.editorControls label{font-size:12px;color:#9eb0ba}.editorControls input{display:block;width:100%;margin-top:6px}.voiceRecordBar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid #153445;background:#061019}.voiceRecordBar span{color:#ff6577;font-weight:800;flex:1}.messageAudio{width:240px;max-width:100%;height:38px}.messageImage{max-width:240px;max-height:260px;border-radius:12px;display:block;cursor:pointer}.messageVideo{max-width:260px;max-height:300px;border-radius:12px;display:block}.chatIconBtn.recording{border-color:#ff6577;color:#ff6577;box-shadow:0 0 18px rgba(255,101,119,.18)}
 @media(max-width:700px){.editorControls{grid-template-columns:1fr}.voiceRecordBar{position:sticky;bottom:70px;z-index:20}}
 </style>
-</head>
+<style id="sb-v21-css">.dangerBtn{border-color:#ff6577!important;color:#ff6577!important}.voiceNote{display:flex;align-items:center;gap:9px;min-width:250px;max-width:100%;padding:7px 9px;border-radius:14px;background:rgba(0,0,0,.14)}.voicePlay{width:34px;height:34px;border-radius:50%;border:0;background:#00f56a;color:#04100a;font-weight:900;cursor:pointer}.voiceWave{display:flex;align-items:center;gap:2px;height:30px;flex:1;min-width:90px}.voiceWave i{display:block;width:3px;border-radius:4px;background:#6ee7a5;opacity:.65}.voiceWave.playing i{animation:sbPulse .8s infinite alternate}.voiceWave.playing i:nth-child(3n){animation-delay:.15s}.voiceWave.playing i:nth-child(4n){animation-delay:.3s}.voiceInfo{display:flex;align-items:center;gap:5px;font-size:11px}.voiceSpeed{background:#07131b;color:#fff;border:1px solid #28404d;border-radius:8px;padding:3px}@keyframes sbPulse{to{transform:scaleY(.45);opacity:1}}.aiImageResult{max-width:100%;border-radius:14px}</style></head>
 <body>
 <div id="sbLoader" class="sbLoader"><div class="sbLoaderInner"><div class="sbLoaderLogo">SB</div><div class="sbLoaderName">SMART <b>BUWABA</b> APP</div><div class="sbLoaderBar"><i></i></div><small class="muted">Loading your world…</small></div></div>
 <header><nav class="nav" id="nav">
@@ -239,6 +239,7 @@ main{max-width:1280px;padding:22px 18px 95px}.appHero{min-height:480px;border:1p
 <div class="sectionHead"><div><h2>🤖 Smart Buwaba AI</h2><div class="muted">Your creative assistant for captions, ideas and website help.</div></div></div>
 <div class="aiBox"><div id="aiMessages" class="aiMessages"><div class="aiMsg"><strong>Smart Buwaba AI</strong><br>Moni bro! Nditha kukuthandiza ndi captions, video ideas, post ideas, kapena kufotokoza momwe website imagwirira ntchito.</div></div>
 <div class="actions" style="margin:10px 0;flex-wrap:wrap"><button class="btn secondary" onclick="aiQuick('Write a strong caption for my new video')">✍️ Caption</button><button class="btn secondary" onclick="aiQuick('Give me 5 viral video ideas')">🎥 Video Ideas</button><button class="btn secondary" onclick="aiQuick('Write hashtags for my post')">#️⃣ Hashtags</button><button class="btn secondary" onclick="startAISpeech()">🎤 Voice</button><button class="btn secondary" onclick="toggleAISpeech()">🔊 Voice Reply</button></div><div class="chatInput"><input id="aiText" placeholder="Ask Smart Buwaba AI..." onkeydown="if(event.key==='Enter')askAI()"><button class="btn secondary" onclick="startAISpeech()">🎤</button><button class="btn" onclick="askAI()">Ask ➤</button></div>
+<div class="videoEditorBox" style="margin-top:12px"><div class="editorTitle">🎨 AI Image Creator</div><div class="muted">Write what you want Smart Buwaba AI to create.</div><div class="chatInput" style="margin-top:10px"><input id="aiImagePrompt" placeholder="e.g. Smart Buwaba logo in neon style"><button class="btn" onclick="generateSBImage()">✨ Create</button></div><div id="aiImageStatus" class="tinyHelp"></div><img id="aiImageResult" class="messageImage hidden" style="max-width:100%;margin-top:10px" alt="AI generated image"></div>
 <div class="note" style="margin-top:10px">Smart Buwaba AI works with a smart local assistant now. Voice input/replies use your browser. A secure AI backend can be connected later without putting an API secret in the app.</div></div>
 </section>
 
@@ -504,7 +505,7 @@ function getFavorites(){return new Set(JSON.parse(localStorage.getItem('sb_favor
 function saveFavorites(set){localStorage.setItem('sb_favorites',JSON.stringify([...set]))}
 function toggleFavorite(id){const set=getFavorites(),k=String(id);if(set.has(k)){set.delete(k);notify('Removed from Favorites.')}else{set.add(k);notify('Added to Favorites.')}saveFavorites(set);renderProfile()}
 function profileTab(name,btn){document.querySelectorAll('.profileTab').forEach(x=>x.classList.remove('active'));btn?.classList.add('active');document.querySelectorAll('.profileSection').forEach(x=>x.classList.remove('active'));const el=document.getElementById('profileTab'+name.charAt(0).toUpperCase()+name.slice(1));if(el)el.classList.add('active');renderProfile()}
-function miniVideoCard(p){const id=String(p.id).replace(/'/g,"\\'");const fav=getFavorites().has(String(p.id));return `<article class="card ${p.category==='Short'?'shortVideoCard':'fullVideoCard'}"><div class="thumb">${p.thumbnailUrl||p.thumbUrl||p.thumb?`<img src="${esc(p.thumbnailUrl||p.thumbUrl||p.thumb)}" alt="">`:'<div class="placeholder"><div class="sbmark">SB</div></div>'}<span class="badge">${esc(p.category||'Other')}</span><button class="play" onclick="playPost('${id}')">▶</button></div><div class="cardBody"><h3>${esc(p.title||'Untitled video')}</h3><div class="meta"><span>👁 ${p.viewCount||0}</span><span>❤️ ${p.likeCount||0}</span></div><div class="socialBar"><button class="socialBtn" onclick="toggleFavorite('${id}')">${fav?'★':'☆'} Favorite</button><button class="socialBtn" onclick="playPost('${id}')">▶ Watch</button></div></div></article>`}
+function miniVideoCard(p){const id=String(p.id).replace(/'/g,"\\'");const fav=getFavorites().has(String(p.id));return `<article class="card ${p.category==='Short'?'shortVideoCard':'fullVideoCard'}"><div class="thumb">${p.thumbnailUrl||p.thumbUrl||p.thumb?`<img src="${esc(p.thumbnailUrl||p.thumbUrl||p.thumb)}" alt="">`:'<div class="placeholder"><div class="sbmark">SB</div></div>'}<span class="badge">${esc(p.category||'Other')}</span><button class="play" onclick="playPost('${id}')">▶</button></div><div class="cardBody"><h3>${esc(p.title||'Untitled video')}</h3><div class="meta"><span>👁 ${p.viewCount||0}</span><span>❤️ ${p.likeCount||0}</span></div><div class="socialBar"><button class="socialBtn" onclick="toggleFavorite('${id}')">${fav?'★':'☆'} Favorite</button><button class="socialBtn" onclick="playPost('${id}')">▶ Watch</button>${p.ownerId===currentUser?.uid?`<button class="socialBtn dangerBtn" onclick="deleteVideoPost('${id}')">🗑️ Delete</button>`:""}</div></div></article>`}
 async function renderProfile(){
  const name=currentUser?.displayName||currentUser?.email?.split('@')[0]||'Your Profile'; const email=currentUser?.email||'Sign in to manage your account.';
  if($('profileName'))$('profileName').textContent=name; if($('profileEmail'))$('profileEmail').textContent=email; if($('profileAvatar'))$('profileAvatar').textContent=(name.trim().split(/\s+/).map(x=>x[0]).join('').slice(0,2)||'SB').toUpperCase();
@@ -861,7 +862,7 @@ async function loadFeed(){
   if(snap.empty){box.innerHTML='<div class="panel"><div class="muted">No community posts yet. Be the first to post.</div></div>';return;}
   box.innerHTML=snap.docs.map(d=>{const p=d.data(),id=d.id,liked=(p.likes||[]).includes(currentUser?.uid);
    let media=p.mediaType==="image"?`<img class="feedMedia" src="${safeText(p.mediaUrl)}" alt="">`:p.mediaType==="video"?`<video class="feedMedia" controls src="${safeText(p.mediaUrl)}"></video>`:"";
-   return `<article class="feedCard"><div class="feedHead"><div class="avatar"></div><div class="feedMeta"><div class="feedName">${safeText(p.ownerName||"User")}</div><div class="feedTime">${p.createdAt?.toDate?p.createdAt.toDate().toLocaleString():"Just now"}</div></div></div><div class="postText">${safeText(p.text)}</div>${media}<div class="actions" style="margin-top:10px"><button class="socialBtn ${liked?"liked":""}" onclick="toggleCommunityLike('${id}')">❤️ ${p.likes?.length||0}</button><button class="socialBtn" onclick="alert('Comments can be added next in the moderation/chat upgrade.')">💬 Comment</button><button class="socialBtn" onclick="sharePost('${id}')">↗ Share</button></div></article>`}).join("");
+   return `<article class="feedCard"><div class="feedHead"><div class="avatar"></div><div class="feedMeta"><div class="feedName">${safeText(p.ownerName||"User")}</div><div class="feedTime">${p.createdAt?.toDate?p.createdAt.toDate().toLocaleString():"Just now"}</div></div></div><div class="postText">${safeText(p.text)}</div>${media}<div class="actions" style="margin-top:10px"><button class="socialBtn ${liked?"liked":""}" onclick="toggleCommunityLike('${id}')">❤️ ${p.likes?.length||0}</button><button class="socialBtn" onclick="alert('Comments can be added next in the moderation/chat upgrade.')">💬 Comment</button><button class="socialBtn" onclick="sharePost('${id}')">↗ Share</button>${p.ownerId===currentUser?.uid?`<button class="socialBtn dangerBtn" onclick="deleteCommunityPost('${id}')">🗑️ Delete</button>`:""}</div></article>`}).join("");
  }catch(e){box.innerHTML='<div class="panel">Could not load community feed. Check Firestore rules/indexes.</div>'}
 }
 async function toggleCommunityLike(id){
@@ -1328,5 +1329,47 @@ if ('serviceWorker' in navigator) {
 })();
 </script>
 
-</body>
+<script id="sb-v21-upgrades">
+(function(){
+  const $=window.el||((id)=>document.getElementById(id));
+  window.deleteVideoPost=async function(id){
+    if(!currentUser||!isRealAccount())return openAuth();
+    const p=(window.posts||[]).find(x=>String(x.id)===String(id));
+    if(!p||p.ownerId!==currentUser.uid)return alert('You can delete only your own video.');
+    if(!confirm('Delete this video? This cannot be undone.'))return;
+    try{await db.collection('videos').doc(String(id)).delete();window.posts=(window.posts||[]).filter(x=>String(x.id)!==String(id));
+      if(typeof renderHome==='function')renderHome(); if(typeof renderVideos==='function')renderVideos(); if(typeof renderProfile==='function')renderProfile(); notify('Video deleted.');
+    }catch(e){console.error(e);alert('Could not delete the video. '+(e?.message||''));}
+  };
+  window.deleteCommunityPost=async function(id){
+    if(!currentUser||!isRealAccount())return openAuth();
+    try{const ref=db.collection('communityPosts').doc(String(id)),snap=await ref.get(); if(!snap.exists)return; const p=snap.data();
+      if(p.ownerId!==currentUser.uid)return alert('You can delete only your own post.');
+      if(!confirm('Delete this post?'))return; await ref.delete(); if(typeof loadFeed==='function')loadFeed(); notify('Post deleted.');
+    }catch(e){console.error(e);alert('Could not delete the post. '+(e?.message||''));}
+  };
+  // Reliable voice notes + optional speech-to-text transcript.
+  let sbVoiceTranscript='';
+  function startVoiceTranscript(){
+    sbVoiceTranscript=''; const SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR)return null;
+    try{const r=new SR(); r.lang='ny-MW'; r.interimResults=true; r.continuous=true; r.onresult=e=>{let out='';for(let i=0;i<e.results.length;i++)out+=e.results[i][0].transcript+' ';sbVoiceTranscript=out.trim();const st=$('voiceRecordStatus');if(st)st.innerHTML='● Recording… <b id="voiceRecordTimer" class="voiceRecordTimer">'+(document.getElementById('voiceRecordTimer')?.textContent||'00:00')+'</b><small style="display:block;color:#9eb0ba;font-weight:500">'+safeText(sbVoiceTranscript.slice(-100))+'</small>';}; r.onerror=()=>{}; r.onend=()=>{}; r.start(); return r;}catch(e){return null;}
+  }
+  let sbSR=null;
+  window.toggleVoiceRecording=async function(){
+    if(window.voiceRecorder&&voiceRecorder.state==='recording'){window.stopVoiceRecording(true);return;}
+    if(!isRealAccount()){openAuth();return;} if(!activeChatUser){alert('Select a person first.');return;}
+    if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){alert('Microphone recording needs Chrome or Edge over HTTPS.');return;}
+    try{
+      window.voiceStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
+      window.voiceChunks=[]; const types=['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/mp4']; const mime=types.find(x=>MediaRecorder.isTypeSupported(x))||'';
+      window.voiceRecorder=mime?new MediaRecorder(voiceStream,{mimeType:mime}):new MediaRecorder(voiceStream); const started=Date.now(); window.voiceStartedAt=started;
+      sbSR=startVoiceTranscript(); voiceRecorder.ondataavailable=e=>{if(e.data?.size)voiceChunks.push(e.data)};
+      voiceRecorder.onstop=async()=>{const seconds=Math.max(1,Math.round((Date.now()-started)/1000)); const send=!!voiceRecorder.__send; try{sbSR?.stop()}catch(e){}; const type=voiceRecorder.mimeType||'audio/webm'; const blob=new Blob(voiceChunks,{type}); voiceStream?.getTracks().forEach(t=>t.stop());voiceStream=null; if(window.stopVoiceTimer)stopVoiceTimer(); $('voiceRecordBar')?.classList.add('hidden');$('chatRecordBtn')?.classList.remove('recording'); if(!send||!blob.size){voiceRecorder=null;voiceChunks=[];return;} try{$('chatTyping').textContent='Uploading voice note…';const ext=type.includes('ogg')?'ogg':type.includes('mp4')?'mp4':'webm';const file=new File([blob],`voice-${Date.now()}.${ext}`,{type});const url=await uploadFile(file,`chat/${currentUser.uid}/${Date.now()}-voice.${ext}`,'Uploading voice note');await sendMessageData({text:sbVoiceTranscript.trim(),audioUrl:url,mediaType:'audio',duration:seconds});}catch(e){console.error(e);alert('Voice note failed to send. '+(e?.message||'Check microphone permission and internet connection.'));}finally{$('chatTyping').textContent='';voiceRecorder=null;voiceChunks=[];sbVoiceTranscript='';}};
+      voiceRecorder.start(250); if(window.updateVoiceTimer){updateVoiceTimer();window.voiceTimer=setInterval(updateVoiceTimer,500);} $('voiceRecordBar')?.classList.remove('hidden');$('chatRecordBtn')?.classList.add('recording');const st=$('voiceRecordStatus');if(st)st.innerHTML='● Recording… <b id="voiceRecordTimer" class="voiceRecordTimer">00:00</b>';
+    }catch(e){console.error(e);try{voiceStream?.getTracks().forEach(t=>t.stop())}catch(x){};voiceStream=null;alert('Microphone access failed. Press Allow when Chrome asks for microphone permission.');}
+  };
+  // Image generation through the secure Vercel backend.
+  window.generateSBImage=async function(){const prompt=$('aiImagePrompt')?.value.trim();if(!prompt)return alert('Write what you want to create first.');const st=$('aiImageStatus'),img=$('aiImageResult');if(st)st.textContent='Creating image…';try{const r=await fetch('/api/image',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})});const d=await r.json();if(!r.ok||!d.image)throw new Error(d.error||'Image generation failed.');img.src=d.image;img.classList.remove('hidden');if(st)st.textContent='Image ready.';}catch(e){console.error(e);if(st)st.textContent='Could not create image.';alert(e.message||'Image generation failed.');}};
+})();
+</script></body>
 </html>
