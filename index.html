@@ -9,10 +9,10 @@
 <meta name="googlebot" content="index, follow">
 <meta name="keywords" content="Smart Buwaba, Smart Buwaba App, Malawi videos, Malawi creators, videos, shorts, comedy, films">
 <script>
-const SB_DEFAULT_AI_BACKEND="https://smart-buwaba-ai-git-main-smartbuwaba-art.vercel.app/api/chat";
-const SB_DEFAULT_IMAGE_BACKEND="https://smart-buwaba-ai-git-main-smartbuwaba-art.vercel.app/api/image";
-function sbAIEndpoint(){const v=(localStorage.getItem("sb_ai_backend")||"").trim();return /^https?:\/\//i.test(v)?v:SB_DEFAULT_AI_BACKEND;}
-function sbImageEndpoint(){const v=(localStorage.getItem("sb_ai_image_backend")||"").trim();return /^https?:\/\//i.test(v)?v:SB_DEFAULT_IMAGE_BACKEND;}
+const SB_DEFAULT_AI_BACKEND="https://smart-buwaba-ai-theta.vercel.app/api/chat";
+const SB_DEFAULT_IMAGE_BACKEND="https://smart-buwaba-ai-theta.vercel.app/api/image";
+function sbAIEndpoint(){const v=(localStorage.getItem("sb_ai_backend")||"").trim();if(!v||v==="/api/chat"||/git-main-smartbuwaba-art\.vercel\.app/i.test(v))return SB_DEFAULT_AI_BACKEND;return /^https?:\/\//i.test(v)?v:SB_DEFAULT_AI_BACKEND;}
+function sbImageEndpoint(){const v=(localStorage.getItem("sb_ai_image_backend")||"").trim();if(!v||v==="/api/image"||/git-main-smartbuwaba-art\.vercel\.app/i.test(v))return SB_DEFAULT_IMAGE_BACKEND;return /^https?:\/\//i.test(v)?v:SB_DEFAULT_IMAGE_BACKEND;}
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"SMART BUWABA APP","applicationCategory":"SocialNetworkingApplication","operatingSystem":"Web","description":"SMART BUWABA APP for videos, shorts, films, comedy, music, community and chat.","url":"https://smartbuwaba-art.github.io/smartbuwaba123.github.io/","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
 <link rel="canonical" href="https://smartbuwaba-art.github.io/smartbuwaba123.github.io/">
