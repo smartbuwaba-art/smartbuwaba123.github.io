@@ -10,7 +10,7 @@
 <meta name="keywords" content="Smart Buwaba, Smart Buwaba App, Malawi videos, Malawi creators, videos, shorts, comedy, films">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"SMART BUWABA APP","applicationCategory":"SocialNetworkingApplication","operatingSystem":"Web","description":"SMART BUWABA APP for videos, shorts, films, comedy, music, community and chat.","url":"https://smartbuwaba-art.github.io/smartbuwaba123.github.io/","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
 <link rel="canonical" href="https://smartbuwaba-art.github.io/smartbuwaba123.github.io/">
-<title>SMART BUWABA APP</title>
+<title>SMART BUWABA APP V24</title>
 <style>
 :root{--bg:#07070a;--card:#111117;--card2:#181820;--text:#f7f7fb;--muted:#a7a7b5;--accent:#00f56a;--accent2:#087cff;--line:#282833;--shadow:0 16px 50px rgba(0,0,0,.35)}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(circle at 70% -10%,#031016 0,#07070a 38%),var(--bg);color:var(--text);min-height:100vh}
@@ -240,6 +240,53 @@ main{max-width:1280px;padding:22px 18px 95px}.appHero{min-height:480px;border:1p
 <div class="aiBox"><div id="aiMessages" class="aiMessages"><div class="aiMsg"><strong>Smart Buwaba AI</strong><br>Moni bro! Nditha kukuthandiza ndi captions, video ideas, post ideas, kapena kufotokoza momwe website imagwirira ntchito.</div></div>
 <div class="actions" style="margin:10px 0;flex-wrap:wrap"><button class="btn secondary" onclick="aiQuick('Write a strong caption for my new video')">✍️ Caption</button><button class="btn secondary" onclick="aiQuick('Give me 5 viral video ideas')">🎥 Video Ideas</button><button class="btn secondary" onclick="aiQuick('Write hashtags for my post')">#️⃣ Hashtags</button><button class="btn secondary" onclick="startAISpeech()">🎤 Voice</button><button class="btn secondary" onclick="toggleAISpeech()">🔊 Voice Reply</button></div><div class="chatInput"><input id="aiText" placeholder="Ask Smart Buwaba AI..." onkeydown="if(event.key==='Enter')askAI()"><button class="btn secondary" onclick="startAISpeech()">🎤</button><button class="btn" onclick="askAI()">Ask ➤</button></div>
 <div class="videoEditorBox" style="margin-top:12px"><div class="editorTitle">🎨 AI Image Creator</div><div class="muted">Write what you want Smart Buwaba AI to create.</div><div class="chatInput" style="margin-top:10px"><input id="aiImagePrompt" placeholder="e.g. Smart Buwaba logo in neon style"><button class="btn" onclick="generateSBImage()">✨ Create</button></div><div id="aiImageStatus" class="tinyHelp"></div><img id="aiImageResult" class="messageImage hidden" style="max-width:100%;margin-top:10px" alt="AI generated image"></div>
+
+<div class="videoEditorBox sbStudio" style="margin-top:14px">
+  <div class="editorTitle">🛠️ Smart Buwaba Creator Studio</div>
+  <div class="muted">Edit photos and short videos directly in the app. Video export is limited to 2 minutes.</div>
+
+  <div class="sbStudioGrid">
+    <div class="sbToolCard">
+      <h3>🖼️ Image Editor</h3>
+      <input id="sbImgFile" type="file" accept="image/*" class="search" style="width:100%;min-width:0">
+      <canvas id="sbImgCanvas" style="display:block;width:100%;margin-top:10px;border-radius:12px;background:#05070a;max-height:380px;object-fit:contain"></canvas>
+      <div class="editorControls">
+        <label>Brightness<input id="sbImgBright" type="range" min="50" max="150" value="100"></label>
+        <label>Contrast<input id="sbImgContrast" type="range" min="50" max="150" value="100"></label>
+        <label>Saturation<input id="sbImgSat" type="range" min="0" max="200" value="100"></label>
+        <label>Rotation<input id="sbImgRotate" type="range" min="-180" max="180" value="0"></label>
+      </div>
+      <label style="display:block;margin:8px 0">Text on image
+        <input id="sbImgText" placeholder="Optional title/text">
+      </label>
+      <div class="actions">
+        <button class="btn secondary" type="button" onclick="sbImgReset()">Reset</button>
+        <button class="btn" type="button" onclick="sbImgExport()">⬇️ Save Image</button>
+      </div>
+      <div id="sbImgStatus" class="tinyHelp"></div>
+    </div>
+
+    <div class="sbToolCard">
+      <h3>🎬 2-Min Video Editor</h3>
+      <input id="sbVideoFile" type="file" accept="video/*" class="search" style="width:100%;min-width:0">
+      <video id="sbVideoPreview" controls playsinline style="width:100%;margin-top:10px;border-radius:12px;background:#000;max-height:380px"></video>
+      <div class="editorControls">
+        <label>Start (sec)<input id="sbVStart" type="number" min="0" max="120" step="0.1" value="0"></label>
+        <label>End (sec)<input id="sbVEnd" type="number" min="0" max="120" step="0.1" value="0"></label>
+        <label>Speed<select id="sbVSpeed"><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></label>
+        <label>Audio<select id="sbVMute"><option value="no">Sound on</option><option value="yes">Mute</option></select></label>
+      </div>
+      <div class="note">Choose any video, select a section up to 120 seconds, then export a web-ready copy. Your original file is never changed.</div>
+      <div class="actions">
+        <button class="btn secondary" type="button" onclick="sbVideoReset()">Reset</button>
+        <button class="btn" type="button" onclick="sbVideoExport()">✂️ Export 2-Min Copy</button>
+      </div>
+      <div id="sbVideoStatus" class="tinyHelp"></div>
+      <a id="sbVideoDownload" class="btn secondary hidden" style="display:inline-block;margin-top:8px;text-decoration:none" download="smart-buwaba-video.webm">⬇️ Save edited video</a>
+    </div>
+  </div>
+</div>
+
 <div class="note" style="margin-top:10px">Smart Buwaba AI works with a smart local assistant now. Voice input/replies use your browser. A secure AI backend can be connected later without putting an API secret in the app.</div></div>
 </section>
 
@@ -1371,5 +1418,280 @@ if ('serviceWorker' in navigator) {
   // Image generation through the secure Vercel backend.
   window.generateSBImage=async function(){const prompt=$('aiImagePrompt')?.value.trim();if(!prompt)return alert('Write what you want to create first.');const st=$('aiImageStatus'),img=$('aiImageResult');if(st)st.textContent='Creating image…';try{const r=await fetch('/api/image',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})});const d=await r.json();if(!r.ok||!d.image)throw new Error(d.error||'Image generation failed.');img.src=d.image;img.classList.remove('hidden');if(st)st.textContent='Image ready.';}catch(e){console.error(e);if(st)st.textContent='Could not create image.';alert(e.message||'Image generation failed.');}};
 })();
-</script></body>
+</script>
+<script id="sb-v24-final-repair">
+(function(){
+  "use strict";
+
+  // ---------- Stable navigation ----------
+  const sbOriginalShowPage = window.showPage;
+  window.showPage = function(id){
+    try {
+      if (typeof sbOriginalShowPage === "function") sbOriginalShowPage(id);
+      else {
+        document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
+        document.getElementById(id)?.classList.remove("hidden");
+      }
+      document.querySelectorAll(".navlinks button[data-page]").forEach(b=>{
+        b.classList.toggle("active", b.getAttribute("data-page") === id);
+      });
+      document.querySelector(".nav")?.classList.remove("open");
+      if(id === "chat" && typeof window.loadChatUsers === "function") {
+        try { window.loadChatUsers(); } catch(e) {}
+      }
+    } catch(e) { console.error("Smart Buwaba navigation error", e); }
+  };
+
+  // ---------- Better AI endpoint handling ----------
+  window.askRemoteAI = async function(q){
+    const endpoint=(localStorage.getItem("sb_ai_backend")||"/api/chat").trim()||"/api/chat";
+    const history=[...document.querySelectorAll("#aiMessages .aiMsg")].slice(-12).map(el=>({
+      role:el.classList.contains("user")?"user":"assistant",
+      content:el.innerText.replace(/^Smart Buwaba AI\s*/,"").trim()
+    }));
+    const res=await fetch(endpoint,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({message:String(q).slice(0,8000),history})
+    });
+    let data={}; try{data=await res.json()}catch(e){}
+    if(!res.ok) throw new Error(data.error||data.detail||("AI server returned HTTP "+res.status));
+    return data.reply||"Pepani bro, AI sinapeze yankho pano.";
+  };
+
+  // ---------- Image editor ----------
+  let sbImg = new Image(), sbImgLoaded=false, sbImgObjectUrl="";
+  const imgCanvas=()=>document.getElementById("sbImgCanvas");
+  const imgCtx=()=>imgCanvas()?.getContext("2d");
+
+  function sbDrawImage(){
+    const c=imgCanvas(), ctx=imgCtx();
+    if(!c||!ctx||!sbImgLoaded)return;
+    const rot=(Number(document.getElementById("sbImgRotate")?.value)||0)*Math.PI/180;
+    const bright=Number(document.getElementById("sbImgBright")?.value)||100;
+    const contrast=Number(document.getElementById("sbImgContrast")?.value)||100;
+    const sat=Number(document.getElementById("sbImgSat")?.value)||100;
+    const w=sbImg.naturalWidth||640, h=sbImg.naturalHeight||480;
+    const swap=Math.abs(rot)%(Math.PI*2)>Math.PI/2 && Math.abs(rot)%(Math.PI*2)<3*Math.PI/2;
+    c.width=swap?h:w; c.height=swap?w:h;
+    ctx.save();
+    ctx.translate(c.width/2,c.height/2);
+    ctx.rotate(rot);
+    ctx.filter=`brightness(${bright}%) contrast(${contrast}%) saturate(${sat}%)`;
+    ctx.drawImage(sbImg,-w/2,-h/2,w,h);
+    ctx.filter="none";
+    const text=(document.getElementById("sbImgText")?.value||"").trim();
+    if(text){
+      const size=Math.max(22,Math.round(c.width/18));
+      ctx.font=`900 ${size}px system-ui, sans-serif`;
+      ctx.textAlign="center"; ctx.textBaseline="bottom";
+      ctx.lineWidth=Math.max(3,size/10);
+      ctx.strokeStyle="rgba(0,0,0,.8)"; ctx.fillStyle="#fff";
+      ctx.strokeText(text,0,c.height/2-size/2,c.width*.88);
+      ctx.fillText(text,0,c.height/2-size/2,c.width*.88);
+    }
+    ctx.restore();
+  }
+  function sbImgReset(){
+    ["sbImgBright","sbImgContrast","sbImgSat"].forEach(id=>{const x=document.getElementById(id);if(x)x.value=100});
+    const r=document.getElementById("sbImgRotate");if(r)r.value=0;
+    const t=document.getElementById("sbImgText");if(t)t.value="";
+    sbDrawImage();
+  }
+  window.sbImgReset=sbImgReset;
+  window.sbImgExport=function(){
+    const c=imgCanvas();
+    if(!c||!sbImgLoaded)return alert("Choose a photo first.");
+    c.toBlob(blob=>{
+      if(!blob)return alert("Could not export the image.");
+      const a=document.createElement("a");
+      a.href=URL.createObjectURL(blob);a.download="smart-buwaba-edited-image.png";
+      a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500);
+      const st=document.getElementById("sbImgStatus");if(st)st.textContent="Edited image saved.";
+    },"image/png");
+  };
+  document.addEventListener("DOMContentLoaded",()=>{
+    const f=document.getElementById("sbImgFile");
+    if(f)f.addEventListener("change",()=>{
+      const file=f.files?.[0]; if(!file)return;
+      if(sbImgObjectUrl)URL.revokeObjectURL(sbImgObjectUrl);
+      sbImgObjectUrl=URL.createObjectURL(file);
+      sbImg=new Image();
+      sbImg.onload=()=>{sbImgLoaded=true;sbImgReset();const st=document.getElementById("sbImgStatus");if(st)st.textContent="Photo ready — edit it above.";};
+      sbImg.onerror=()=>alert("Could not open that image.");
+      sbImg.src=sbImgObjectUrl;
+    });
+    ["sbImgBright","sbImgContrast","sbImgSat","sbImgRotate","sbImgText"].forEach(id=>{
+      document.getElementById(id)?.addEventListener("input",sbDrawImage);
+    });
+  });
+
+  // ---------- Reliable 2-minute video editor ----------
+  let sbVideoFile=null, sbVideoUrl="", sbVideoBusy=false, sbVideoExportUrl="";
+  const sv=id=>document.getElementById(id);
+  function sbVideoReset(){
+    sbVideoFile=null;
+    if(sbVideoUrl)URL.revokeObjectURL(sbVideoUrl); sbVideoUrl="";
+    if(sbVideoExportUrl)URL.revokeObjectURL(sbVideoExportUrl); sbVideoExportUrl="";
+    if(sv("sbVideoFile"))sv("sbVideoFile").value="";
+    if(sv("sbVideoPreview")){sv("sbVideoPreview").removeAttribute("src");sv("sbVideoPreview").load();}
+    if(sv("sbVStart"))sv("sbVStart").value=0;
+    if(sv("sbVEnd"))sv("sbVEnd").value=0;
+    if(sv("sbVideoDownload")){sv("sbVideoDownload").classList.add("hidden");sv("sbVideoDownload").removeAttribute("href");}
+    if(sv("sbVideoStatus"))sv("sbVideoStatus").textContent="";
+  }
+  window.sbVideoReset=sbVideoReset;
+
+  document.addEventListener("DOMContentLoaded",()=>{
+    const f=sv("sbVideoFile"),v=sv("sbVideoPreview");
+    if(!f||!v)return;
+    f.addEventListener("change",()=>{
+      const file=f.files?.[0]; if(!file)return;
+      if(!file.type.startsWith("video/"))return alert("Please choose a video file.");
+      sbVideoFile=file;
+      if(sbVideoUrl)URL.revokeObjectURL(sbVideoUrl);
+      sbVideoUrl=URL.createObjectURL(file);v.src=sbVideoUrl;v.load();
+      v.onloadedmetadata=()=>{
+        const d=Number(v.duration)||0;
+        sv("sbVStart").value=0; sv("sbVEnd").value=Math.min(120,d).toFixed(1);
+        sv("sbVideoStatus").textContent=d>120
+          ? `Video is ${d.toFixed(1)}s. Select a section of up to 120s.`
+          : `Video ready • ${d.toFixed(1)}s`;
+      };
+    });
+  });
+
+  window.sbVideoExport=async function(){
+    if(sbVideoBusy)return;
+    const v=sv("sbVideoPreview");
+    if(!sbVideoFile||!v||!v.duration)return alert("Choose a video first.");
+    if(!v.captureStream||!window.MediaRecorder){
+      return alert("Your browser cannot export edited video here. Use the latest Chrome or Edge.");
+    }
+    let start=Math.max(0,Number(sv("sbVStart").value)||0);
+    let end=Math.min(Number(v.duration)||0,Number(sv("sbVEnd").value)||0);
+    if(end<=start+0.1)return alert("End time must be after start time.");
+    if(end-start>120)end=start+120;
+    sv("sbVEnd").value=end.toFixed(1);
+    sbVideoBusy=true;
+    sv("sbVideoStatus").textContent="Preparing export…";
+    try{
+      v.pause();
+      await new Promise(resolve=>{
+        const done=()=>{v.removeEventListener("seeked",done);resolve()};
+        v.addEventListener("seeked",done);v.currentTime=start;
+      });
+      const stream=v.captureStream();
+      const types=["video/webm;codecs=vp9,opus","video/webm;codecs=vp8,opus","video/webm"];
+      const mime=types.find(x=>MediaRecorder.isTypeSupported(x))||"";
+      const rec=mime?new MediaRecorder(stream,{mimeType:mime}):new MediaRecorder(stream);
+      const chunks=[];
+      rec.ondataavailable=e=>{if(e.data?.size)chunks.push(e.data)};
+      const stopped=new Promise(resolve=>{rec.onstop=resolve});
+      const oldRate=v.playbackRate,oldMuted=v.muted;
+      v.playbackRate=Number(sv("sbVSpeed").value)||1;
+      v.muted=sv("sbVMute").value==="yes";
+      rec.start(250);
+      await v.play();
+      // Real-time capture is necessary for a browser-only editor.
+      await new Promise(resolve=>setTimeout(resolve,Math.max(100,end-start)*1000/(Number(sv("sbVSpeed").value)||1)+150));
+      v.pause(); if(rec.state!=="inactive")rec.stop(); await stopped;
+      v.playbackRate=oldRate;v.muted=oldMuted;
+      stream.getTracks().forEach(t=>t.stop());
+      if(!chunks.length)throw new Error("No video data was produced.");
+      const blob=new Blob(chunks,{type:rec.mimeType||"video/webm"});
+      if(sbVideoExportUrl)URL.revokeObjectURL(sbVideoExportUrl);
+      sbVideoExportUrl=URL.createObjectURL(blob);
+      const dl=sv("sbVideoDownload");dl.href=sbVideoExportUrl;dl.classList.remove("hidden");
+      dl.textContent=`⬇️ Save edited video (${Math.round(blob.size/1024/1024*10)/10} MB)`;
+      sv("sbVideoStatus").textContent=`Export ready • ${(end-start).toFixed(1)} seconds`;
+    }catch(e){
+      console.error(e);sv("sbVideoStatus").textContent="Export failed.";
+      alert("Video export failed. The original file is still safe.\n\n"+(e?.message||"Unknown error"));
+    }finally{sbVideoBusy=false;}
+  };
+
+  // ---------- Enforce the same 2-minute limit in the existing Create Video modal ----------
+  const oldTrim=window.makeTrimmedVideo;
+  window.makeTrimmedVideo=async function(){
+    const v=document.getElementById("editorPreview");
+    if(!v)return typeof oldTrim==="function"?oldTrim():null;
+    const start=Math.max(0,Number(document.getElementById("trimStart")?.value)||0);
+    let end=Math.min(Number(v.duration)||0,Number(document.getElementById("trimEnd")?.value)||0);
+    if(end<=start+0.1)return alert("End time must be after start time.");
+    if(end-start>120){
+      end=start+120;
+      document.getElementById("trimEnd").value=end.toFixed(1);
+      alert("Smart Buwaba allows up to 2 minutes per edited video. End time was limited to 120 seconds.");
+    }
+    if(typeof oldTrim==="function")return oldTrim();
+  };
+
+  // ---------- Real-time chat listener + notification ----------
+  let sbChatUnsub=null, sbChatLastId="";
+  window.loadMessages=async function(){
+    if(!window.activeChatUser || !window.currentUser)return;
+    const id=chatId(window.currentUser.uid,window.activeChatUser.uid);
+    const box=document.getElementById("chatMessages");
+    if(!box)return;
+    if(sbChatUnsub){try{sbChatUnsub()}catch(e){} sbChatUnsub=null;}
+    try{
+      const ref=db.collection("chats").doc(id).collection("messages").orderBy("createdAt","asc").limitToLast(100);
+      sbChatUnsub=ref.onSnapshot(snap=>{
+        const docs=snap.docs;
+        box.innerHTML=docs.length?docs.map(d=>{
+          const m=d.data(), mine=m.senderId===window.currentUser.uid;
+          let body="";
+          if(m.imageUrl)body+=`<img class="messageImage" src="${safeText(m.imageUrl)}" alt="Shared photo" style="max-width:260px;display:block;border-radius:12px">`;
+          if(m.audioUrl){
+            const aid="sbvoice_"+d.id.replace(/[^a-zA-Z0-9_-]/g,"");
+            body+=`<div class="voiceNote"><button class="voicePlay" type="button" onclick="toggleVoicePlay('${aid}',this)">▶</button><audio id="${aid}" preload="metadata" controls src="${safeText(m.audioUrl)}" style="max-width:220px"></audio></div>`;
+          }
+          if(m.text)body+=`<div>${safeText(m.text)}</div>`;
+          return `<div class="bubble ${mine?"mine":""}">${body||"📎"}<span class="bubbleMeta">${m.createdAt?.toDate?m.createdAt.toDate().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}):""}${mine?" ✓✓":""}</span></div>`;
+        }).join(""):'<div class="chatEmpty"><div><div class="chatEmptyLogo">💬</div><strong>Start the conversation</strong><div class="muted">Say hello 👋</div></div></div>';
+        box.scrollTop=box.scrollHeight;
+        const newest=docs[docs.length-1];
+        if(newest && newest.id!==sbChatLastId){
+          const m=newest.data();
+          if(sbChatLastId && m.senderId!==window.currentUser.uid){
+            try{window.notify?.("New message from "+(window.activeChatUser.name||"Smart Buwaba user"));}catch(e){}
+            try{if(navigator.vibrate)navigator.vibrate(80)}catch(e){}
+          }
+          sbChatLastId=newest.id;
+        }
+      },err=>{
+        console.error("Chat realtime error",err);
+        box.innerHTML='<div class="chatEmpty"><div>⚠️<br>Could not connect to live messages. Check Firestore rules and internet.</div></div>';
+      });
+    }catch(e){console.error(e);alert("Chat could not start.\n\n"+(e?.message||"Unknown error"))}
+  };
+
+  // Make voice upload failure more understandable.
+  const oldSendMessageData=window.sendMessageData;
+  if(typeof oldSendMessageData==="function"){
+    window.sendMessageData=async function(data){
+      try{return await oldSendMessageData(data)}
+      catch(e){
+        console.error("sendMessageData",e);
+        throw new Error((e?.message||"Message upload failed")+
+          ". If text works but voice/photo fails, check the Cloudinary unsigned upload preset.");
+      }
+    };
+  }
+
+  // Cleanly stop the chat listener when leaving the page.
+  const prevShow=window.showPage;
+  window.showPage=function(id){
+    try{
+      if(id!=="chat" && sbChatUnsub){sbChatUnsub();sbChatUnsub=null;sbChatLastId="";}
+    }catch(e){}
+    return prevShow(id);
+  };
+
+  console.log("Smart Buwaba V24 final repair loaded.");
+})();
+</script>
+
+</body>
 </html>
