@@ -202,16 +202,7 @@ main{max-width:1280px;padding:22px 18px 95px}.appHero{min-height:480px;border:1p
 <div class="sectionHead"><div><h2>🤖 Smart Buwaba AI</h2><div class="muted">Your creative assistant for captions, ideas and website help.</div></div></div>
 <div class="aiBox"><div id="aiMessages" class="aiMessages"><div class="aiMsg"><strong>Smart Buwaba AI</strong><br>Moni bro! Nditha kukuthandiza ndi captions, video ideas, post ideas, kapena kufotokoza momwe website imagwirira ntchito.</div></div>
 <div class="chatInput"><input id="aiText" placeholder="Ask Smart Buwaba AI..." onkeydown="if(event.key==='Enter')askAI()"><button class="btn" onclick="askAI()">Ask</button></div>
-<div class="note" id="aiStatus" style="margin-top:10px">AI: connected to Smart Buwaba secure backend.</div></div>
-<div class="panel" style="margin-top:14px;background:var(--card2)">
-  <div style="font-weight:850;margin-bottom:8px">🎨 Create / Edit Image</div>
-  <div class="muted" style="font-size:12px;margin-bottom:10px">Write what you want. Add a photo if you want the AI to edit it.</div>
-  <input id="aiImageFile" type="file" accept="image/png,image/jpeg,image/webp" style="width:100%;margin-bottom:9px">
-  <textarea id="aiImagePrompt" placeholder="e.g. Create a cinematic Malawi sunset over a lake..." style="width:100%;min-height:85px;background:#0a0a0e;border:1px solid var(--line);color:#fff;border-radius:10px;padding:11px"></textarea>
-  <div class="actions" style="margin-top:9px"><button class="btn" onclick="generateAIImage()">✨ Generate Image</button><button class="btn secondary" onclick="clearAIImage()">Clear</button></div>
-  <div id="aiImageStatus" class="muted" style="margin-top:9px;font-size:12px"></div>
-  <div id="aiImageResult" style="margin-top:12px"></div>
-</div>
+<div class="note" style="margin-top:10px">AI mode is currently local/offline. You can connect a secure AI backend later without exposing an API key in this website.</div></div>
 </section>
 
 </main>
@@ -293,8 +284,8 @@ const firebaseConfig={
  authDomain:"smartbuwaba-40422.firebaseapp.com",
  projectId:"smartbuwaba-40422",
  storageBucket:"smartbuwaba-40422.firebasestorage.app",
- messagingSenderId:"840135135664",
- appId:"1:840135135664:web:7a22f7deaf2e40557ba475",
+ messagingSenderId:"84013599664",
+ appId:"1:84013599664:web:7a22f7deaf2e40557ba475",
  measurementId:"G-QHR81JB1D6"
 };
 firebase.initializeApp(firebaseConfig);
@@ -864,65 +855,49 @@ async function postCameraMedia(){
   notify("Camera post published!");showPage("feed");loadFeed();
  }catch(e){alert("Camera post failed: "+e.message);console.error(e)}
 }
-const SB_DEFAULT_AI_BACKEND="https://smart-buwaba-ai-theta.vercel.app/api/chat";
-function sbAIEndpoint(){
- const v=(localStorage.getItem("sb_ai_backend")||"").trim();
- return /^https?:\/\//i.test(v)&&!/git-main-smartbuwaba-art\.vercel\.app/i.test(v)?v:SB_DEFAULT_AI_BACKEND;
-}
-let sbAIHistory=JSON.parse(localStorage.getItem("sb_ai_history")||"[]");
-function saveAIHistory(){localStorage.setItem("sb_ai_history",JSON.stringify(sbAIHistory.slice(-24)));}
-function restoreAIHistory(){
- const box=$("aiMessages"); if(!box)return;
- const saved=sbAIHistory.slice(-20); if(!saved.length)return;
- box.innerHTML="";
- saved.forEach(x=>addAI(x.content,x.role==="user"?"user":"ai"));
-}
-async function askAI(){
+function askAI(){
  const input=$("aiText"),q=input.value.trim();if(!q)return;
- addAI(q,"user"); input.value="";
- sbAIHistory.push({role:"user",content:q}); saveAIHistory();
- const btn=input.parentElement?.querySelector("button"); if(btn){btn.disabled=true;btn.textContent="…";}
- const status=$("aiStatus"); if(status)status.textContent="AI: thinking…";
- try{
-  const r=await fetch(sbAIEndpoint(),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:q,history:sbAIHistory.slice(-12)})});
-  const data=await r.json().catch(()=>({}));
-  if(!r.ok)throw new Error(data.error||data.detail||("Server error "+r.status));
-  const answer=String(data.reply||"").trim()||"Pepani bro, AI sinapeze yankho pano.";
-  addAI(answer,"ai"); sbAIHistory.push({role:"assistant",content:answer}); saveAIHistory();
-  if(status)status.textContent="AI: connected • Smart Buwaba AI";
- }catch(e){
-  console.error("Remote AI error:",e);
-  if(status)status.textContent="AI: connection failed";
-  addAI("Pepani bro, AI server sikuyankha pano. Tionenso backend/Vercel connection.","ai");
- }finally{if(btn){btn.disabled=false;btn.textContent="Ask";}}
+ addAI(q,"user");input.value="";
+ const l=q.toLowerCase();
+ const greetings=["Moni bro 😎","Eya bro 🔥","Moni! Smart Buwaba AI pano.","Eya! Ndili pano kukuthandiza."];
+ const intro=greetings[Math.floor(Math.random()*greetings.length)];
+ let a="";
+ if(/^(hi|hello|hey|moni|salaam|salam|assalam)/.test(l)){
+   a=intro+" Ndine Smart Buwaba AI. Funsa funso lililonse lokhudza Smart Buwaba, ma video, ma post, ideas, website kapena creative work.";
+ }else if(l.includes("who")&&l.includes("muhammad") || l.includes("owner") || l.includes("mwini") || l.includes("smart buwaba ndi ndani")){
+   a="Smart Buwaba App ndi brand ya Muhammad Allie, wachinyamata wakumangochi, Malawi, yemwe ali kumbuyo kwa Smart Buwaba ndi ntchito zake za videos, films, comedy ndi creativity.";
+ }else if(l.includes("who are you")||l.includes("ndani iwe")){
+   a="Ndine Smart Buwaba AI 🤖, creative assistant wa Smart Buwaba. Ndingayankhe mafunso osiyanasiyana, kukupatsani ideas, captions, komanso kukuthandizani kumvetsa website.";
+ }else if(l.includes("caption")){
+   const caps=[
+    "Caption idea: “Dream it. Create it. Achieve it. 🔥🎬 #SmartBuwabaApp”",
+    "Caption idea: “New content, new energy. Smart Buwaba App 🎥🔥”",
+    "Caption idea: “From an idea to the screen — this is Smart Buwaba. 🎬✨”"
+   ];
+   a=caps[Math.floor(Math.random()*caps.length)];
+ }else if(l.includes("idea")||l.includes("video")||l.includes("film")){
+   const ideas=[
+    "Video idea: pangani comedy ya masekondi 30–60 yokhala ndi hook yamphamvu koyambirira, vuto pakati, kenako punchline kumapeto.",
+    "Film idea: yambani ndi scene yomwe imadzutsa funso, pangani conflict pakati, kenako ending yomwe imasiya anthu akufuna sequel.",
+    "Content idea: pangani “Behind the Scenes” ya Smart Buwaba — show preparation, acting, camera work ndi final clip."
+   ];
+   a=ideas[Math.floor(Math.random()*ideas.length)];
+ }else if(l.includes("website")||l.includes("upload")||l.includes("publish")){
+   a="Pa Smart Buwaba App tili ndi Videos, Community Feed, Chat, Camera, Account, Settings ndi Smart Buwaba AI. Official Smart Buwaba videos zimapangidwa ndi admin account, ndipo community users angapange community posts.";
+ }else if(l.includes("malawi")||l.includes("mangochi")){
+   a="Smart Buwaba ikuchokera ku Malawi, ndipo brand yake ikuyang'ana pa creativity, videos, films, comedy ndi digital entertainment.";
+ }else if(l.includes("how")||l.includes("bwanji")||l.includes("nding")){
+   a="Nditha kukuthandizani step-by-step bro. Funsani funso limodzi kapena angapo — monga website, video ideas, captions, account, posting kapena Smart Buwaba.";
+ }else{
+   const general=[
+    "Funso labwino bro. Ndingakuthandizeni ndi Smart Buwaba, videos, business ideas, captions, website kapena creative projects. Fotokozani zomwe mukufuna.",
+    "Eya, ndikumvetsa. Smart Buwaba AI ingayankhe mafunso osiyanasiyana; yesani kufunsa mwatsatanetsatane kuti ndikupatseni yankho lenileni.",
+    "Ndili pano bro 🤖. Funso limenelo silili mu zomwe ndakonzekera kwambiri pano, koma ndingayesebe kukuthandizani ngati mufotokoza pang'ono."
+   ];
+   a=general[Math.floor(Math.random()*general.length)];
+ }
+ setTimeout(()=>addAI(a,"ai"),220);
 }
-window.addEventListener("load",restoreAIHistory);
-const SB_DEFAULT_IMAGE_BACKEND="https://smart-buwaba-ai-theta.vercel.app/api/image";
-function sbImageEndpoint(){
- const v=(localStorage.getItem("sb_ai_image_backend")||"").trim();
- return /^https?:\/\//i.test(v)&&!/git-main-smartbuwaba-art\.vercel\.app/i.test(v)?v:SB_DEFAULT_IMAGE_BACKEND;
-}
-function clearAIImage(){
- const f=$("aiImageFile"),p=$("aiImagePrompt"),r=$("aiImageResult"),st=$("aiImageStatus");
- if(f)f.value=""; if(p)p.value=""; if(r)r.innerHTML=""; if(st)st.textContent="";
-}
-function fileToDataURL(file){return new Promise((resolve,reject)=>{const fr=new FileReader();fr.onload=()=>resolve(fr.result);fr.onerror=reject;fr.readAsDataURL(file);});}
-async function generateAIImage(){
- const prompt=$("aiImagePrompt")?.value.trim(); const file=$("aiImageFile")?.files?.[0];
- const st=$("aiImageStatus"),out=$("aiImageResult");
- if(!prompt){alert("Write what you want the AI to create or edit first.");return;}
- if(file&&file.size>10*1024*1024){alert("Please use an image smaller than 10 MB.");return;}
- try{
-  if(st)st.textContent="Image AI: creating..."; if(out)out.innerHTML="";
-  const body={prompt}; if(file)body.imageData=await fileToDataURL(file);
-  const r=await fetch(sbImageEndpoint(),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
-  const data=await r.json().catch(()=>({})); if(!r.ok)throw new Error(data.error||data.detail||("Server error "+r.status));
-  if(!data.image)throw new Error("Image service returned no image.");
-  if(out)out.innerHTML=`<img src="${esc(data.image)}" alt="AI generated image" style="width:100%;max-width:760px;border-radius:16px;border:1px solid var(--line);display:block"><div class="actions" style="margin-top:9px"><a class="btn" href="${data.image}" download="smart-buwaba-ai-image.png">⬇ Save Image</a></div>`;
-  if(st)st.textContent="Image AI: ready";
- }catch(e){console.error("Image AI error",e);if(st)st.textContent="Image AI: connection failed";if(out)out.innerHTML=`<div class="note">Image AI failed: ${esc(e.message||String(e))}</div>`;}
-}
-
 
 const oldShowPage=window.showPage;
 window.showPage=function(id){oldShowPage(id);if(id==="feed")loadFeed();if(id==="chat")loadChatUsers();};
