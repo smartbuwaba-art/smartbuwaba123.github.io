@@ -53,11 +53,21 @@ footer{border-top:1px solid var(--line);padding:28px 18px;color:var(--muted);tex
 .pill{display:inline-flex;align-items:center;padding:5px 9px;border:1px solid var(--line);border-radius:99px;font-size:11px;color:var(--muted)}
 .authGrid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.twoCol{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:700px){.authGrid,.twoCol{grid-template-columns:1fr}}
-.chatWrap{display:grid;grid-template-columns:230px 1fr;gap:12px;min-height:460px}
-.chatUsers,.chatPanel{border:1px solid var(--line);background:var(--card);border-radius:14px}
-.chatUsers{padding:10px}.chatUser{padding:10px;border-radius:10px;cursor:pointer}.chatUser:hover{background:var(--card2)}
-.chatPanel{display:flex;flex-direction:column}.chatMessages{flex:1;overflow:auto;padding:14px}.bubble{max-width:75%;padding:9px 12px;border-radius:14px;background:var(--card2);margin:6px 0}.bubble.mine{margin-left:auto;background:rgba(225,29,72,.2)}
-.chatInput{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line)}
+.chatWrap{display:grid;grid-template-columns:250px 1fr;gap:0;min-height:560px;overflow:hidden;border:1px solid var(--line);border-radius:20px;background:var(--card);box-shadow:0 12px 35px rgba(0,0,0,.12)}
+.chatUsers{padding:14px;background:linear-gradient(180deg,var(--card),var(--card2));border:0;border-right:1px solid var(--line);overflow:auto}
+.chatUsers>strong{display:block;font-size:13px;letter-spacing:.4px;margin:2px 4px 12px}
+.chatUser{display:flex;align-items:center;gap:10px;padding:11px 9px;border-radius:14px;cursor:pointer;transition:.15s}.chatUser:hover{background:rgba(34,197,94,.08)}
+.chatUserAvatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;font-weight:800;position:relative;flex:0 0 42px}.onlineDot{position:absolute;right:-1px;bottom:1px;width:11px;height:11px;border-radius:50%;background:#22c55e;border:2px solid var(--card)}
+.chatUserInfo{min-width:0;flex:1}.chatUserName{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chatUserStatus{font-size:11px;color:#22c55e;margin-top:2px}
+.chatPanel{display:flex;flex-direction:column;border:0;border-radius:0;background:var(--card)}
+.chatTop{display:flex;align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid var(--line);background:var(--card)}
+.chatTopAvatar{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;font-weight:800;position:relative}
+.chatTopMeta{flex:1}.chatTopName{font-weight:850}.chatTopStatus{font-size:11px;color:#22c55e;margin-top:2px}
+.chatMessages{flex:1;overflow:auto;padding:18px 18px 12px;background:radial-gradient(circle at top right,rgba(34,197,94,.05),transparent 35%)}
+.bubbleRow{display:flex;gap:7px;align-items:flex-end;margin:5px 0}.bubbleRow.mine{justify-content:flex-end}.bubble{max-width:min(75%,420px);padding:9px 12px;border-radius:16px 16px 16px 5px;background:var(--card2);margin:0;box-shadow:0 2px 8px rgba(0,0,0,.06);line-height:1.4}.bubble.mine{margin-left:0;border-radius:16px 16px 5px 16px;background:#16a34a;color:#fff}.bubbleTime{font-size:9px;opacity:.55;margin-top:3px;text-align:right}.voiceBubble audio{width:230px;max-width:100%;display:block;margin-top:3px}
+.chatInput{display:flex;align-items:center;gap:8px;padding:11px;border-top:1px solid var(--line);background:var(--card)}
+.chatInput input{border-radius:999px!important;padding:12px 15px!important;background:var(--card2)!important}.chatInput .btn{border-radius:999px!important;min-width:44px}
+@media(max-width:700px){.chatWrap{grid-template-columns:1fr;min-height:calc(100vh - 180px)}.chatUsers{display:flex;gap:7px;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line);padding:9px}.chatUsers>strong{display:none}.chatUser{min-width:70px;display:flex;flex-direction:column;gap:4px;text-align:center;padding:7px}.chatUserInfo{width:70px}.chatUserStatus{display:none}.chatUserAvatar{width:40px;height:40px;flex-basis:40px}.chatMessages{padding:12px}.bubble{max-width:84%}}
 .chatInput input{flex:1}.aiBox{border:1px solid var(--line);background:linear-gradient(145deg,var(--card),var(--card2));border-radius:16px;padding:16px}
 .aiMessages{height:260px;overflow:auto;display:grid;align-content:start;gap:8px;margin:10px 0}.aiMsg{padding:9px 12px;border-radius:12px;background:var(--card2);max-width:85%}.aiMsg.user{margin-left:auto;background:rgba(225,29,72,.18)}
 .progress{height:8px;background:var(--card2);border-radius:99px;overflow:hidden;margin-top:8px}.progress i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
@@ -168,7 +178,7 @@ main{max-width:1280px;padding:22px 18px 95px}.appHero{min-height:480px;border:1p
 <div class="sectionHead"><div><h2>💬 Chat</h2><div class="muted">Chat with other Smart Buwaba users.</div></div></div>
 <div class="chatWrap">
 <div class="chatUsers"><strong>People</strong><div id="chatUsers" style="margin-top:10px"></div></div>
-<div class="chatPanel"><div id="chatTitle" style="padding:12px;border-bottom:1px solid var(--line);font-weight:800">Select a person</div><div id="chatMessages" class="chatMessages"></div><div class="chatInput"><button class="btn secondary" id="voiceBtn" onclick="toggleVoiceRecording()">🎙️</button><input id="chatText" placeholder="Write a message..." onkeydown="if(event.key==='Enter')sendChat()"><button class="btn" onclick="sendChat()">Send</button></div><div id="voiceStatus" class="muted" style="padding:0 10px 10px;display:none"></div></div>
+<div class="chatPanel"><div class="chatTop"><div class="chatTopAvatar" id="chatTopAvatar">SB<span class="onlineDot"></span></div><div class="chatTopMeta"><div id="chatTitle" class="chatTopName">Select a person</div><div id="chatTopStatus" class="chatTopStatus">● Online</div></div></div><div id="chatMessages" class="chatMessages"></div><div class="chatInput"><button class="btn secondary" id="voiceBtn" onclick="toggleVoiceRecording()" title="Record voice">🎙️</button><input id="chatText" placeholder="Write a message..." onkeydown="if(event.key==='Enter')sendChat()"><button class="btn" onclick="sendChat()" title="Send message">➤</button></div><div id="voiceStatus" class="muted" style="padding:0 14px 10px;display:none"></div></div>
 </div>
 </section>
 
@@ -724,10 +734,10 @@ async function loadChatUsers(){
  const box=$("chatUsers"); if(!box)return;
  if(!currentUser){box.innerHTML='<div class="muted" style="margin-top:8px">Sign in to chat.</div>';return;}
  const snap=await db.collection("users").limit(30).get();
- box.innerHTML=snap.docs.filter(d=>d.id!==currentUser.uid).map(d=>{const u=d.data();return `<div class="chatUser" onclick="selectChatUser('${d.id}','${safeText(u.name||u.email||"User")}')">👤 ${safeText(u.name||u.email||"User")}</div>`}).join("")||'<div class="muted">No other users yet.</div>';
+ box.innerHTML=snap.docs.filter(d=>d.id!==currentUser.uid).map(d=>{const u=d.data();const name=safeText(u.name||u.email||"User");const initials=safeText((u.name||u.email||"U").trim().slice(0,2).toUpperCase());const online=u.online===true;return `<div class="chatUser" onclick="selectChatUser('${d.id}','${name}')"><div class="chatUserAvatar">${initials}${online?'<span class="onlineDot"></span>':''}</div><div class="chatUserInfo"><div class="chatUserName">${name}</div><div class="chatUserStatus">${online?'● Online':'○ Offline'}</div></div></div>`}).join("")||'<div class="muted">No other users yet.</div>';
 }
 function chatId(a,b){return [a,b].sort().join("_")}
-function selectChatUser(uid,name){activeChatUser={uid,name};$("chatTitle").textContent="💬 "+name;loadMessages();}
+function selectChatUser(uid,name){activeChatUser={uid,name};$("chatTitle").textContent=name;$("chatTopStatus").textContent="● Online";$("chatTopAvatar").firstChild.nodeValue=(name||"SB").slice(0,2).toUpperCase();loadMessages();}
 async function loadMessages(){
  if(!activeChatUser||!currentUser)return;
  const id=chatId(currentUser.uid,activeChatUser.uid),box=$("chatMessages");
