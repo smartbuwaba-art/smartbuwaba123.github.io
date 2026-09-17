@@ -201,18 +201,18 @@ main{max-width:1280px;padding:22px 18px 95px}.appHero{min-height:480px;border:1p
 
 <section id="ai" class="page hidden">
 <div class="sectionHead"><div><h2>🤖 Smart Buwaba AI</h2><div class="muted">Your creative assistant for captions, ideas and website help.</div></div></div>
-<div class="aiBox"><div id="aiMessages" class="aiMessages"><div class="aiMsg"><strong>Smart Buwaba AI</strong><br>Moni bro! Nditha kukuthandiza ndi captions, video ideas, post ideas, kapena kufotokoza momwe website imagwirira ntchito.</div></div>
-<div class="chatInput"><button class="btn secondary" id="aiPlusBtn" onclick="openAIImagePicker()" title="Add photo / create image">＋</button><input id="aiText" placeholder="Ask Smart Buwaba AI... (e.g. Create an image of...)" onkeydown="if(event.key==='Enter')askAI()"><button class="btn" onclick="askAI()">Ask</button></div>
-<div class="note" id="aiStatus" style="margin-top:10px">AI: connected to Smart Buwaba secure backend.</div></div>
+<div class="aiBox"><div id="aiMessages" class="aiMessages"><div class="aiMsg"><strong>Smart Buwaba AI</strong><br>Moni bro! Nditha kukuthandiza ndi captions, video ideas, post ideas, kapena kufotokoza momwe website imagwirira ntchito. Ndipemphenso kuti <b>panga chithunzi...</b> ngati ufuna image.</div></div>
+<div class="chatInput"><button class="btn secondary" id="aiPlusBtn" onclick="openAIImagePicker()" title="Add photo / AI image" style="min-width:48px;font-size:22px;font-weight:1000;padding:8px 14px">＋</button><input id="aiText" placeholder="Ask AI or type: Create an image of..." onkeydown="if(event.key==='Enter')askAI()"><button class="btn" id="aiAskBtn" onclick="askAI()">Ask</button></div>
+<div class="note" id="aiStatus" style="margin-top:10px">AI: ready • tap ＋ to add a photo</div></div>
 <div class="panel" style="margin-top:14px;background:var(--card2)">
   <div style="font-weight:850;margin-bottom:8px">🎨 Create / Edit Image</div>
   <div class="muted" style="font-size:12px;margin-bottom:10px">Write what you want. Add a photo if you want the AI to edit it.</div>
-  <input id="aiImageFile" type="file" accept="image/png,image/jpeg,image/webp" style="width:100%;margin-bottom:9px">
+  <div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:10px"><button class="btn secondary" type="button" onclick="openAIImagePicker()">＋ Add Photo</button><span class="muted" style="align-self:center;font-size:12px">Optional — add a photo to edit it</span></div>
+  <input id="aiImageFile" type="file" accept="image/png,image/jpeg,image/webp" style="display:none">
   <textarea id="aiImagePrompt" placeholder="e.g. Create a cinematic Malawi sunset over a lake..." style="width:100%;min-height:85px;background:#0a0a0e;border:1px solid var(--line);color:#fff;border-radius:10px;padding:11px"></textarea>
   <div class="actions" style="margin-top:9px"><button class="btn" onclick="generateAIImage()">✨ Generate Image</button><button class="btn secondary" onclick="clearAIImage()">Clear</button></div>
   <div id="aiImageStatus" class="muted" style="margin-top:9px;font-size:12px"></div>
   <div id="aiImageResult" style="margin-top:12px"></div>
-  <input id="aiPlusFile" type="file" accept="image/png,image/jpeg,image/webp" style="display:none" onchange="handleAIPlusFile(this)">
 </div>
 </section>
 
@@ -841,6 +841,21 @@ async function sendChat(){
 function addAI(text,who){
  const box=$("aiMessages");box.insertAdjacentHTML("beforeend",`<div class="aiMsg ${who==="user"?"user":""}">${safeText(text)}</div>`);box.scrollTop=box.scrollHeight;
 }
+function openAIImagePicker(){
+ const f=$("aiImageFile");
+ if(f){ f.value=""; f.click(); }
+}
+function handleAIImageSelected(file){
+ if(!file)return;
+ const prompt=$("aiImagePrompt");
+ if(prompt && !prompt.value.trim()) prompt.value="Edit this photo in a creative, professional Smart Buwaba style.";
+ const st=$("aiImageStatus");
+ if(st)st.textContent="Photo selected ✓ Write your edit request, then tap Generate Image.";
+ const result=$("aiImageResult");
+ if(result){ const url=URL.createObjectURL(file); result.innerHTML='<img src="'+url+'" alt="Selected photo" style="max-width:100%;max-height:260px;border-radius:14px;display:block;margin-bottom:9px">'; }
+ $("aiImagePrompt")?.scrollIntoView({behavior:"smooth",block:"center"});
+}
+
 let cameraStream=null, mediaRecorder=null, recordedChunks=[], cameraMedia=null;
 async function startCamera(){
  try{
@@ -895,83 +910,65 @@ function restoreAIHistory(){
  box.innerHTML="";
  saved.forEach(x=>addAI(x.content,x.role==="user"?"user":"ai"));
 }
-function openAIImagePicker(){
- const f=$("aiPlusFile"); if(f)f.click();
-}
-function handleAIPlusFile(input){
- const file=input?.files?.[0]; if(!file)return;
- const target=$("aiImageFile");
- if(target){
-   const dt=new DataTransfer(); dt.items.add(file); target.files=dt.files;
- }
- showPage("ai");
- const prompt=$("aiImagePrompt");
- if(prompt&&!prompt.value)prompt.value="Edit this image in a creative, professional Smart Buwaba style.";
- const st=$("aiImageStatus"); if(st)st.textContent="Photo added. Write what you want changed, then tap Generate Image.";
- const section=$("aiImagePrompt"); if(section)section.scrollIntoView({behavior:"smooth",block:"center"});
-}
-function wantsImageGeneration(text){
- const q=String(text||"").toLowerCase();
- return /\b(create|generate|make|draw|design|render|visualize|paint|edit)\b.{0,45}\b(image|picture|photo|portrait|drawing|art|illustration)\b/i.test(q)
-   || /\b(image|picture|photo|chithunzi|chithuz|zojambula|jambula|chithunzi chathu)\b/i.test(q) && /\b(panga|pangani|generate|create|make|draw|edit|jambula)\b/i.test(q);
-}
-function imagePromptFromChat(text){
- let q=String(text||"").trim();
- q=q.replace(/^\s*(please\s+)?(create|generate|make|draw|design|render|visualize|paint|edit)\s+(an?\s+)?(image|picture|photo|portrait|drawing|art|illustration)\s*(of|showing|that|:)?\s*/i,"");
- return q.trim()||String(text||"").trim();
-}
-async function generateAIImageFromPrompt(prompt, file=null){
- const st=$("aiImageStatus"),out=$("aiImageResult");
- try{
-  if(st)st.textContent="Image AI: creating...";
-  const body={prompt:String(prompt||"").slice(0,4000)};
-  if(file)body.imageData=await fileToDataURL(file);
-  const r=await fetch(sbImageEndpoint(),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
-  const data=await r.json().catch(()=>({}));
-  if(!r.ok)throw new Error(data.error||data.detail||("Server error "+r.status));
-  if(!data.image)throw new Error("Image service returned no image.");
-  if(out)out.innerHTML=`<img src="${esc(data.image)}" alt="Smart Buwaba AI image" style="width:100%;max-width:760px;border-radius:16px;border:1px solid var(--line);display:block"><div class="actions" style="margin-top:9px"><a class="btn" href="${data.image}" download="smart-buwaba-ai-image.png">⬇ Save Image</a></div>`;
-  if(st)st.textContent="Image AI: ready ✓";
-  showPage("ai");
-  $("aiImageResult")?.scrollIntoView({behavior:"smooth",block:"center"});
-  return data.image;
- }catch(e){
-  console.error("Image AI error",e);
-  if(st)st.textContent="Image AI: connection failed";
-  if(out)out.innerHTML=`<div class="note">Image AI failed: ${esc(e.message||String(e))}</div>`;
-  throw e;
- }
-}
 async function askAI(){
  const input=$("aiText"),q=input.value.trim();if(!q)return;
- addAI(q,"user"); input.value="";
- sbAIHistory.push({role:"user",content:q}); saveAIHistory();
- const btn=input.parentElement?.querySelector("button.btn:not(.secondary)"); if(btn){btn.disabled=true;btn.textContent="…";}
- const status=$("aiStatus"); if(status)status.textContent="AI: thinking…";
+ addAI(q,"user");input.value="";
+ sbAIHistory.push({role:"user",content:q});saveAIHistory();
+ const btn=$("aiAskBtn");if(btn){btn.disabled=true;btn.textContent="…";}
+ const status=$("aiStatus");if(status)status.textContent="AI: thinking…";
  try{
-  // Natural-language image requests are sent directly to Smart Buwaba's image backend,
-  // while ordinary questions continue through the existing chat backend unchanged.
   if(wantsImageGeneration(q)){
-   const imagePrompt=imagePromptFromChat(q);
-   await generateAIImageFromPrompt(imagePrompt);
-   addAI("Ndalenga chithunzi chako. Iwone pansipa pa Image AI, ndipo ukhoza kusunga chithunzicho.","ai");
-   sbAIHistory.push({role:"assistant",content:"Image generated successfully."}); saveAIHistory();
-   if(status)status.textContent="AI: image created • Smart Buwaba AI";
+   await generateAIImageFromPrompt(imagePromptFromChat(q));
+   addAI("Ndalenga chithunzi chako. Chawoneka pansipa pa Image AI.","ai");
+   if(status)status.textContent="AI: image created ✓";
    return;
   }
   const r=await fetch(sbAIEndpoint(),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:q,history:sbAIHistory.slice(-12)})});
   const data=await r.json().catch(()=>({}));
   if(!r.ok)throw new Error(data.error||data.detail||("Server error "+r.status));
   const answer=String(data.reply||"").trim()||"Pepani bro, AI sinapeze yankho pano.";
-  addAI(answer,"ai"); sbAIHistory.push({role:"assistant",content:answer}); saveAIHistory();
-  if(status)status.textContent="AI: connected • Smart Buwaba AI";
+  addAI(answer,"ai");sbAIHistory.push({role:"assistant",content:answer});saveAIHistory();
+  if(status)status.textContent="AI: connected ✓";
  }catch(e){
-  console.error("Remote AI error:",e);
+  console.error("AI error",e);
   if(status)status.textContent="AI: connection failed";
   if(!wantsImageGeneration(q))addAI("Pepani bro, AI server sikuyankha pano. Tionenso backend/Vercel connection.","ai");
  }finally{if(btn){btn.disabled=false;btn.textContent="Ask";}}
 }
+
 window.addEventListener("load",restoreAIHistory);
+const SB_DEFAULT_IMAGE_BACKEND="https://smart-buwaba-ai-theta.vercel.app/api/image";
+function sbImageEndpoint(){
+ const v=(localStorage.getItem("sb_ai_image_backend")||"").trim();
+ return /^https?:\/\//i.test(v)?v:SB_DEFAULT_IMAGE_BACKEND;
+}
+function fileToDataURL(file){return new Promise((resolve,reject)=>{const fr=new FileReader();fr.onload=()=>resolve(fr.result);fr.onerror=reject;fr.readAsDataURL(file);});}
+function wantsImageGeneration(text){
+ const q=String(text||"").toLowerCase();
+ return (/\b(create|generate|make|draw|design|render|visualize|paint|edit|panga|pangani|jambula)\b/.test(q) && /\b(image|picture|photo|portrait|drawing|art|illustration|chithunzi|chithuz|zojambula)\b/.test(q));
+}
+function imagePromptFromChat(text){return String(text||"").replace(/^\s*(please\s+)?(create|generate|make|draw|design|render|visualize|paint|edit|panga|pangani|jambula)\s+(an?\s+)?(image|picture|photo|portrait|drawing|art|illustration|chithunzi|chithuz|zojambula)\s*(of|showing|that|:)?\s*/i,"").trim()||String(text||"").trim();}
+async function generateAIImageFromPrompt(prompt,file=null){
+ const st=$("aiImageStatus"),out=$("aiImageResult");
+ if(st)st.textContent="Image AI: creating…";
+ try{
+  const body={prompt:String(prompt||"").slice(0,4000)};
+  if(file)body.imageData=await fileToDataURL(file);
+  const r=await fetch(sbImageEndpoint(),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+  const data=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(data.error||data.detail||("Server error "+r.status));
+  if(!data.image)throw new Error("Image service returned no image.");
+  out.innerHTML='<img src="'+data.image+'" alt="Smart Buwaba AI image" style="width:100%;max-width:760px;border-radius:16px;display:block"><div class="actions" style="margin-top:9px"><a class="btn" href="'+data.image+'" download="smart-buwaba-ai-image.png">⬇ Save Image</a></div>';
+  if(st)st.textContent="Image AI: ready ✓";
+  return data.image;
+ }catch(e){
+  console.error(e);
+  if(st)st.textContent="Image AI: connection failed";
+  out.innerHTML='<div class="note">Image AI failed: '+safeText(e.message||e)+'<br><br>Backend ikufunika kukhala deployed ndi OPENAI_API_KEY.</div>';
+  throw e;
+ }
+}
+
 const SB_DEFAULT_IMAGE_BACKEND="https://smart-buwaba-ai-theta.vercel.app/api/image";
 function sbImageEndpoint(){
  const v=(localStorage.getItem("sb_ai_image_backend")||"").trim();
@@ -982,12 +979,25 @@ function clearAIImage(){
  if(f)f.value=""; if(p)p.value=""; if(r)r.innerHTML=""; if(st)st.textContent="";
 }
 function fileToDataURL(file){return new Promise((resolve,reject)=>{const fr=new FileReader();fr.onload=()=>resolve(fr.result);fr.onerror=reject;fr.readAsDataURL(file);});}
+document.addEventListener("change",function(e){
+ if(e.target && e.target.id==="aiImageFile") handleAIImageSelected(e.target.files?.[0]);
+});
 async function generateAIImage(){
  const prompt=$("aiImagePrompt")?.value.trim(); const file=$("aiImageFile")?.files?.[0];
+ const st=$("aiImageStatus"),out=$("aiImageResult");
  if(!prompt){alert("Write what you want the AI to create or edit first.");return;}
  if(file&&file.size>10*1024*1024){alert("Please use an image smaller than 10 MB.");return;}
- try{await generateAIImageFromPrompt(prompt,file);}catch(e){}
+ try{
+  if(st)st.textContent="Image AI: creating..."; if(out)out.innerHTML="";
+  const body={prompt}; if(file)body.imageData=await fileToDataURL(file);
+  const r=await fetch(sbImageEndpoint(),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+  const data=await r.json().catch(()=>({})); if(!r.ok)throw new Error(data.error||data.detail||("Server error "+r.status));
+  if(!data.image)throw new Error("Image service returned no image.");
+  if(out)out.innerHTML=`<img src="${esc(data.image)}" alt="AI generated image" style="width:100%;max-width:760px;border-radius:16px;border:1px solid var(--line);display:block"><div class="actions" style="margin-top:9px"><a class="btn" href="${data.image}" download="smart-buwaba-ai-image.png">⬇ Save Image</a></div>`;
+  if(st)st.textContent="Image AI: ready";
+ }catch(e){console.error("Image AI error",e);if(st)st.textContent="Image AI: connection failed";if(out)out.innerHTML=`<div class="note">Image AI failed: ${esc(e.message||String(e))}</div>`;}
 }
+
 
 const oldShowPage=window.showPage;
 window.showPage=function(id){oldShowPage(id);if(id==="feed")loadFeed();if(id==="chat")loadChatUsers();};
