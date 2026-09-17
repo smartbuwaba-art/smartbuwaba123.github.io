@@ -94,6 +94,7 @@ main{max-width:1280px;padding:22px 18px 95px}.appHero{min-height:480px;border:1p
 @media(max-width:1050px){.navlinks button{padding:8px}.navlinks button span:not(.navAvatar){font-size:13px}.navlinks button{font-size:12px}.appHero{grid-template-columns:1fr .45fr;padding:38px}.heroDevice{transform:none;width:210px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.categoryGrid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:760px){body{padding-bottom:72px}.nav{padding:8px 12px}.brandText{font-size:13px}.navlinks{display:none}.menu{display:block;margin-left:auto}.nav.open .navlinks{display:grid;grid-template-columns:repeat(2,1fr);position:absolute;top:62px;left:10px;right:10px;background:#071018;border:1px solid #173445;padding:9px;border-radius:16px;box-shadow:var(--shadow)}.nav.open .navlinks button{justify-content:flex-start}.accountNav{max-width:none}.appHero{grid-template-columns:1fr;padding:30px 22px;min-height:0}.heroCopy h1{font-size:48px}.heroDevice{display:none}.quickRow{grid-template-columns:repeat(2,1fr)}.quickRow button{min-height:74px}.grid{grid-template-columns:1fr;gap:13px}.thumb{height:230px}.appInfo{grid-template-columns:1fr}.pageBanner{align-items:flex-start;flex-direction:column}.pageBanner .btn{width:100%}.categoryGrid{grid-template-columns:1fr 1fr}.profileHero{align-items:flex-start;flex-wrap:wrap}.profileHero .btn{margin-left:86px;margin-top:-20px}.mobileBottomNav{position:fixed;display:grid;grid-template-columns:repeat(5,1fr);left:8px;right:8px;bottom:8px;height:62px;background:rgba(5,13,18,.94);border:1px solid #173445;border-radius:20px;z-index:80;backdrop-filter:blur(18px);box-shadow:0 12px 35px rgba(0,0,0,.5)}.mobileBottomNav button{border:0;background:transparent;color:#78909f;display:grid;place-items:center;gap:1px;font-size:9px;font-weight:800}.mobileBottomNav button span{font-size:16px;color:#a9bac4}.mobileBottomNav .createFab{width:48px;height:48px;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#031018;align-self:center;justify-self:center;font-size:20px}.mobileBottomNav .createFab span{color:#031018}.socialBar{gap:6px}.socialBtn{padding:7px 9px}}
 @media(max-width:430px){main{padding-left:11px;padding-right:11px}.heroCopy h1{font-size:43px}.quickRow{gap:8px}.categoryGrid{grid-template-columns:1fr}.profileHero .btn{margin-left:0;margin-top:0}.stats{grid-template-columns:repeat(3,1fr)}.stat{padding:12px 8px}.stat strong{font-size:19px}}
+.sbBootNotice{display:none;position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:9999;max-width:min(92vw,620px);padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:rgba(17,17,23,.96);color:var(--muted);font-size:13px;box-shadow:var(--shadow)}
 </style>
 
 <script type="application/ld+json">
@@ -202,7 +203,16 @@ main{max-width:1280px;padding:22px 18px 95px}.appHero{min-height:480px;border:1p
 <div class="sectionHead"><div><h2>🤖 Smart Buwaba AI</h2><div class="muted">Your creative assistant for captions, ideas and website help.</div></div></div>
 <div class="aiBox"><div id="aiMessages" class="aiMessages"><div class="aiMsg"><strong>Smart Buwaba AI</strong><br>Moni bro! Nditha kukuthandiza ndi captions, video ideas, post ideas, kapena kufotokoza momwe website imagwirira ntchito.</div></div>
 <div class="chatInput"><input id="aiText" placeholder="Ask Smart Buwaba AI..." onkeydown="if(event.key==='Enter')askAI()"><button class="btn" onclick="askAI()">Ask</button></div>
-<div class="note" style="margin-top:10px">AI mode is currently local/offline. You can connect a secure AI backend later without exposing an API key in this website.</div></div>
+<div class="note" id="aiStatus" style="margin-top:10px">AI: connected to Smart Buwaba secure backend.</div></div>
+<div class="panel" style="margin-top:14px;background:var(--card2)">
+  <div style="font-weight:850;margin-bottom:8px">🎨 Create / Edit Image</div>
+  <div class="muted" style="font-size:12px;margin-bottom:10px">Write what you want. Add a photo if you want the AI to edit it.</div>
+  <input id="aiImageFile" type="file" accept="image/png,image/jpeg,image/webp" style="width:100%;margin-bottom:9px">
+  <textarea id="aiImagePrompt" placeholder="e.g. Create a cinematic Malawi sunset over a lake..." style="width:100%;min-height:85px;background:#0a0a0e;border:1px solid var(--line);color:#fff;border-radius:10px;padding:11px"></textarea>
+  <div class="actions" style="margin-top:9px"><button class="btn" onclick="generateAIImage()">✨ Generate Image</button><button class="btn secondary" onclick="clearAIImage()">Clear</button></div>
+  <div id="aiImageStatus" class="muted" style="margin-top:9px;font-size:12px"></div>
+  <div id="aiImageResult" style="margin-top:12px"></div>
+</div>
 </section>
 
 </main>
@@ -274,22 +284,34 @@ main{max-width:1280px;padding:22px 18px 95px}.appHero{min-height:480px;border:1p
 <div style="margin-top:18px" class="note">Smart Buwaba • Videos, likes, comments, follows and notifications.</div>
 </div></div>
 
+<div id="sbBootNotice" class="sbBootNotice">Smart Buwaba is starting…</div>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-storage-compat.js"></script>
 <script>
+// Smart Buwaba V36 — safe startup: Firebase problems must never freeze navigation.
+let currentUser=null, currentCommentVideoId=null;
+let db=null, firebaseReady=false;
 const firebaseConfig={
  apiKey:"AIzaSyC5ia_DjqTg-cepVQcbYiM7m3tBTGhtnNs",
  authDomain:"smartbuwaba-40422.firebaseapp.com",
  projectId:"smartbuwaba-40422",
  storageBucket:"smartbuwaba-40422.firebasestorage.app",
- messagingSenderId:"84013599664",
- appId:"1:84013599664:web:7a22f7deaf2e40557ba475",
+ messagingSenderId:"840135135664",
+ appId:"1:840135135664:web:7a22f7deaf2e40557ba475",
  measurementId:"G-QHR81JB1D6"
 };
-firebase.initializeApp(firebaseConfig);
-const db=firebase.firestore();
+try{
+ if(window.firebase && typeof firebase.initializeApp==="function"){
+   if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+   db=firebase.firestore();
+   firebaseReady=true;
+ }else console.warn("Smart Buwaba: Firebase SDK unavailable; offline navigation enabled.");
+}catch(e){
+ console.error("Smart Buwaba Firebase startup failed:",e);
+ db=null; firebaseReady=false;
+}
 const defaultPosts=[
  {id:"demo1",title:"Welcome to Smart Buwaba",category:"Other",desc:"Welcome to the official Smart Buwaba creative space.",thumb:"",video:"",date:new Date().toISOString()},
  {id:"demo2",title:"Coming Soon",category:"Film",desc:"Your next Smart Buwaba film can appear here.",thumb:"",video:"",date:new Date().toISOString()}
@@ -396,6 +418,7 @@ function resetPosts(){alert("Smart Buwaba posts are stored in Firestore. Use the
 function toggleTheme(el){document.body.style.filter=el.checked?"none":"invert(.92) hue-rotate(180deg)";localStorage.setItem("sb_theme",el.checked?"dark":"light")}
 function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 async function loadPosts(){
+ if(!firebaseReady || !db){ posts=[...defaultPosts]; renderHome(); renderVideos(); return; }
  try{
    const snap=await db.collection("videos").get();
    posts=snap.docs.map(d=>{
@@ -415,7 +438,6 @@ async function loadPosts(){
  renderHome();renderVideos();
 }
 
-let currentUser=null, currentCommentVideoId=null;
 const likedPosts=new Set(JSON.parse(localStorage.getItem("sb_likes")||"[]"));
 const followingUsers=new Set(JSON.parse(localStorage.getItem("sb_follows")||"[]"));
 let notifications=JSON.parse(localStorage.getItem("sb_notifications")||"[]");
@@ -432,6 +454,7 @@ function notify(text){
 }
 function updateNotifCount(){
  const n=notifications.filter(x=>!x.read).length, el=$("notifCount");
+ if(!el)return;
  el.textContent=n;if(n)el.classList.remove("hidden");else el.classList.add("hidden");
 }
 function openNotifications(){
@@ -535,7 +558,7 @@ function getYouTubeId(url){
  }catch(e){}
  return null;
 }
-firebase.auth().onAuthStateChanged(u=>{currentUser=u;});
+if(firebaseReady && firebase.auth){ firebase.auth().onAuthStateChanged(u=>{currentUser=u;}); }
 // Anonymous sign-in disabled: users should explicitly sign in or register.
 updateNotifCount();
 
@@ -546,10 +569,11 @@ $("pVideoFile")?.addEventListener("change",function(){
 });
 
 if(localStorage.getItem("sb_theme")==="light"){$("darkSwitch").checked=false;toggleTheme($("darkSwitch"))}
-loadPosts();
+if(firebaseReady) loadPosts();
+else { posts=[...defaultPosts]; renderHome(); renderVideos(); }
 
 /* ===== SMART BUWABA V2 ===== */
-const storage = firebase.storage();
+let storage = null; if(firebaseReady && firebase.storage) storage = firebase.storage();
 const ADMIN_EMAIL = "mmuhammadallie@gmail.com";
 
 /* Smart Buwaba Storage compatibility:
@@ -557,11 +581,13 @@ const ADMIN_EMAIL = "mmuhammadallie@gmail.com";
    or the older .appspot.com bucket name. We try the configured bucket first,
    then the legacy bucket if the first one does not start uploading. */
 let legacyStorage = null;
-try {
-  const legacyConfig = {...firebaseConfig, storageBucket:"smartbuwaba-40422.appspot.com"};
-  const legacyApp = firebase.apps.find(a => a.name === "smart-buwaba-legacy-storage") || firebase.initializeApp(legacyConfig,"smart-buwaba-legacy-storage");
-  legacyStorage = legacyApp.storage();
-} catch(e) { console.warn("Legacy Storage bucket unavailable:", e.message); }
+if(firebaseReady){
+ try {
+   const legacyConfig = {...firebaseConfig, storageBucket:"smartbuwaba-40422.appspot.com"};
+   const legacyApp = firebase.apps.find(a => a.name === "smart-buwaba-legacy-storage") || firebase.initializeApp(legacyConfig,"smart-buwaba-legacy-storage");
+   legacyStorage = legacyApp.storage();
+ } catch(e) { console.warn("Legacy Storage bucket unavailable:", e.message); }
+}
 
 let activeChatUser = null;
 
@@ -591,7 +617,7 @@ async function signIn(){
  catch(e){alert(e.message)}
 }
 async function signOut(){await firebase.auth().signOut();closeModal("authModal");notify("Signed out.");}
-firebase.auth().onAuthStateChanged(async u=>{
+if(firebaseReady && firebase.auth) firebase.auth().onAuthStateChanged(async u=>{
  currentUser=u;
  if($("userLabel")){
    $("userLabel").textContent =
@@ -855,49 +881,65 @@ async function postCameraMedia(){
   notify("Camera post published!");showPage("feed");loadFeed();
  }catch(e){alert("Camera post failed: "+e.message);console.error(e)}
 }
-function askAI(){
- const input=$("aiText"),q=input.value.trim();if(!q)return;
- addAI(q,"user");input.value="";
- const l=q.toLowerCase();
- const greetings=["Moni bro 😎","Eya bro 🔥","Moni! Smart Buwaba AI pano.","Eya! Ndili pano kukuthandiza."];
- const intro=greetings[Math.floor(Math.random()*greetings.length)];
- let a="";
- if(/^(hi|hello|hey|moni|salaam|salam|assalam)/.test(l)){
-   a=intro+" Ndine Smart Buwaba AI. Funsa funso lililonse lokhudza Smart Buwaba, ma video, ma post, ideas, website kapena creative work.";
- }else if(l.includes("who")&&l.includes("muhammad") || l.includes("owner") || l.includes("mwini") || l.includes("smart buwaba ndi ndani")){
-   a="Smart Buwaba App ndi brand ya Muhammad Allie, wachinyamata wakumangochi, Malawi, yemwe ali kumbuyo kwa Smart Buwaba ndi ntchito zake za videos, films, comedy ndi creativity.";
- }else if(l.includes("who are you")||l.includes("ndani iwe")){
-   a="Ndine Smart Buwaba AI 🤖, creative assistant wa Smart Buwaba. Ndingayankhe mafunso osiyanasiyana, kukupatsani ideas, captions, komanso kukuthandizani kumvetsa website.";
- }else if(l.includes("caption")){
-   const caps=[
-    "Caption idea: “Dream it. Create it. Achieve it. 🔥🎬 #SmartBuwabaApp”",
-    "Caption idea: “New content, new energy. Smart Buwaba App 🎥🔥”",
-    "Caption idea: “From an idea to the screen — this is Smart Buwaba. 🎬✨”"
-   ];
-   a=caps[Math.floor(Math.random()*caps.length)];
- }else if(l.includes("idea")||l.includes("video")||l.includes("film")){
-   const ideas=[
-    "Video idea: pangani comedy ya masekondi 30–60 yokhala ndi hook yamphamvu koyambirira, vuto pakati, kenako punchline kumapeto.",
-    "Film idea: yambani ndi scene yomwe imadzutsa funso, pangani conflict pakati, kenako ending yomwe imasiya anthu akufuna sequel.",
-    "Content idea: pangani “Behind the Scenes” ya Smart Buwaba — show preparation, acting, camera work ndi final clip."
-   ];
-   a=ideas[Math.floor(Math.random()*ideas.length)];
- }else if(l.includes("website")||l.includes("upload")||l.includes("publish")){
-   a="Pa Smart Buwaba App tili ndi Videos, Community Feed, Chat, Camera, Account, Settings ndi Smart Buwaba AI. Official Smart Buwaba videos zimapangidwa ndi admin account, ndipo community users angapange community posts.";
- }else if(l.includes("malawi")||l.includes("mangochi")){
-   a="Smart Buwaba ikuchokera ku Malawi, ndipo brand yake ikuyang'ana pa creativity, videos, films, comedy ndi digital entertainment.";
- }else if(l.includes("how")||l.includes("bwanji")||l.includes("nding")){
-   a="Nditha kukuthandizani step-by-step bro. Funsani funso limodzi kapena angapo — monga website, video ideas, captions, account, posting kapena Smart Buwaba.";
- }else{
-   const general=[
-    "Funso labwino bro. Ndingakuthandizeni ndi Smart Buwaba, videos, business ideas, captions, website kapena creative projects. Fotokozani zomwe mukufuna.",
-    "Eya, ndikumvetsa. Smart Buwaba AI ingayankhe mafunso osiyanasiyana; yesani kufunsa mwatsatanetsatane kuti ndikupatseni yankho lenileni.",
-    "Ndili pano bro 🤖. Funso limenelo silili mu zomwe ndakonzekera kwambiri pano, koma ndingayesebe kukuthandizani ngati mufotokoza pang'ono."
-   ];
-   a=general[Math.floor(Math.random()*general.length)];
- }
- setTimeout(()=>addAI(a,"ai"),220);
+const SB_DEFAULT_AI_BACKEND="https://smart-buwaba-ai-theta.vercel.app/api/chat";
+function sbAIEndpoint(){
+ const v=(localStorage.getItem("sb_ai_backend")||"").trim();
+ return /^https?:\/\//i.test(v)&&!/git-main-smartbuwaba-art\.vercel\.app/i.test(v)?v:SB_DEFAULT_AI_BACKEND;
 }
+let sbAIHistory=JSON.parse(localStorage.getItem("sb_ai_history")||"[]");
+function saveAIHistory(){localStorage.setItem("sb_ai_history",JSON.stringify(sbAIHistory.slice(-24)));}
+function restoreAIHistory(){
+ const box=$("aiMessages"); if(!box)return;
+ const saved=sbAIHistory.slice(-20); if(!saved.length)return;
+ box.innerHTML="";
+ saved.forEach(x=>addAI(x.content,x.role==="user"?"user":"ai"));
+}
+async function askAI(){
+ const input=$("aiText"),q=input.value.trim();if(!q)return;
+ addAI(q,"user"); input.value="";
+ sbAIHistory.push({role:"user",content:q}); saveAIHistory();
+ const btn=input.parentElement?.querySelector("button"); if(btn){btn.disabled=true;btn.textContent="…";}
+ const status=$("aiStatus"); if(status)status.textContent="AI: thinking…";
+ try{
+  const r=await fetch(sbAIEndpoint(),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:q,history:sbAIHistory.slice(-12)})});
+  const data=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(data.error||data.detail||("Server error "+r.status));
+  const answer=String(data.reply||"").trim()||"Pepani bro, AI sinapeze yankho pano.";
+  addAI(answer,"ai"); sbAIHistory.push({role:"assistant",content:answer}); saveAIHistory();
+  if(status)status.textContent="AI: connected • Smart Buwaba AI";
+ }catch(e){
+  console.error("Remote AI error:",e);
+  if(status)status.textContent="AI: connection failed";
+  addAI("Pepani bro, AI server sikuyankha pano. Tionenso backend/Vercel connection.","ai");
+ }finally{if(btn){btn.disabled=false;btn.textContent="Ask";}}
+}
+window.addEventListener("load",restoreAIHistory);
+const SB_DEFAULT_IMAGE_BACKEND="https://smart-buwaba-ai-theta.vercel.app/api/image";
+function sbImageEndpoint(){
+ const v=(localStorage.getItem("sb_ai_image_backend")||"").trim();
+ return /^https?:\/\//i.test(v)&&!/git-main-smartbuwaba-art\.vercel\.app/i.test(v)?v:SB_DEFAULT_IMAGE_BACKEND;
+}
+function clearAIImage(){
+ const f=$("aiImageFile"),p=$("aiImagePrompt"),r=$("aiImageResult"),st=$("aiImageStatus");
+ if(f)f.value=""; if(p)p.value=""; if(r)r.innerHTML=""; if(st)st.textContent="";
+}
+function fileToDataURL(file){return new Promise((resolve,reject)=>{const fr=new FileReader();fr.onload=()=>resolve(fr.result);fr.onerror=reject;fr.readAsDataURL(file);});}
+async function generateAIImage(){
+ const prompt=$("aiImagePrompt")?.value.trim(); const file=$("aiImageFile")?.files?.[0];
+ const st=$("aiImageStatus"),out=$("aiImageResult");
+ if(!prompt){alert("Write what you want the AI to create or edit first.");return;}
+ if(file&&file.size>10*1024*1024){alert("Please use an image smaller than 10 MB.");return;}
+ try{
+  if(st)st.textContent="Image AI: creating..."; if(out)out.innerHTML="";
+  const body={prompt}; if(file)body.imageData=await fileToDataURL(file);
+  const r=await fetch(sbImageEndpoint(),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+  const data=await r.json().catch(()=>({})); if(!r.ok)throw new Error(data.error||data.detail||("Server error "+r.status));
+  if(!data.image)throw new Error("Image service returned no image.");
+  if(out)out.innerHTML=`<img src="${esc(data.image)}" alt="AI generated image" style="width:100%;max-width:760px;border-radius:16px;border:1px solid var(--line);display:block"><div class="actions" style="margin-top:9px"><a class="btn" href="${data.image}" download="smart-buwaba-ai-image.png">⬇ Save Image</a></div>`;
+  if(st)st.textContent="Image AI: ready";
+ }catch(e){console.error("Image AI error",e);if(st)st.textContent="Image AI: connection failed";if(out)out.innerHTML=`<div class="note">Image AI failed: ${esc(e.message||String(e))}</div>`;}
+}
+
 
 const oldShowPage=window.showPage;
 window.showPage=function(id){oldShowPage(id);if(id==="feed")loadFeed();if(id==="chat")loadChatUsers();};
@@ -919,6 +961,7 @@ window.openAddPost = function(){
 <script>
 // Smart Buwaba navigation safety layer
 document.addEventListener("DOMContentLoaded",()=>{
+  const boot=$("sbBootNotice"); if(boot)boot.style.display="none";
   document.querySelectorAll("[onclick=\"openSettings()\"]").forEach(b=>b.addEventListener("click",e=>{e.preventDefault();openSettings();}));
   document.querySelectorAll("[onclick=\"openAuth()\"]").forEach(b=>b.addEventListener("click",e=>{e.preventDefault();openAuth();}));
 });
