@@ -202,6 +202,15 @@ main{max-width:1280px;padding:22px 18px 95px}.appHero{min-height:480px;border:1p
 <div class="sectionHead"><div><h2>🤖 Smart Buwaba AI</h2><div class="muted">Your creative assistant for captions, ideas and website help.</div></div></div>
 <div class="aiBox"><div id="aiMessages" class="aiMessages"><div class="aiMsg"><strong>Smart Buwaba AI</strong><br>Moni bro! Nditha kukuthandiza ndi captions, video ideas, post ideas, kapena kufotokoza momwe website imagwirira ntchito.</div></div>
 <div class="chatInput"><input id="aiText" placeholder="Ask Smart Buwaba AI..." onkeydown="if(event.key==='Enter')askAI()"><button class="btn" onclick="askAI()">Ask</button></div>
+<div class="panel" style="margin-top:14px;background:var(--card2)">
+  <div style="font-weight:850;margin-bottom:8px">🎨 Create / Edit Image</div>
+  <div class="muted" style="font-size:12px;margin-bottom:10px">Write what you want. Add a photo if you want the AI to edit it.</div>
+  <input id="aiImageFile" type="file" accept="image/png,image/jpeg,image/webp" style="width:100%;margin-bottom:9px">
+  <textarea id="aiImagePrompt" placeholder="e.g. Create a cinematic Malawi sunset over a lake..." style="width:100%;min-height:85px;background:#0a0a0e;border:1px solid var(--line);color:#fff;border-radius:10px;padding:11px"></textarea>
+  <div class="actions" style="margin-top:9px"><button class="btn" onclick="generateAIImage()">✨ Generate Image</button><button class="btn secondary" onclick="clearAIImage()">Clear</button></div>
+  <div id="aiImageStatus" class="muted" style="margin-top:9px;font-size:12px"></div>
+  <div id="aiImageResult" style="margin-top:12px"></div>
+</div>
 <div class="note" id="aiStatus" style="margin-top:10px">AI: connected to Smart Buwaba secure backend.</div></div>
 </section>
 
@@ -868,6 +877,33 @@ function restoreAIHistory(){
  box.innerHTML="";
  saved.forEach(x=>addAI(x.content,x.role==="user"?"user":"ai"));
 }
+const SB_DEFAULT_IMAGE_BACKEND="https://smart-buwaba-ai-theta.vercel.app/api/image";
+function sbImageEndpoint(){
+ const v=(localStorage.getItem("sb_ai_image_backend")||"").trim();
+ return /^https?:\/\//i.test(v)&&!/git-main-smartbuwaba-art\.vercel\.app/i.test(v)?v:SB_DEFAULT_IMAGE_BACKEND;
+}
+function clearAIImage(){ $("aiImagePrompt").value=""; $("aiImageFile").value=""; $("aiImageResult").innerHTML=""; $("aiImageStatus").textContent=""; }
+async function generateAIImage(){
+ const prompt=$("aiImagePrompt").value.trim();
+ const file=$("aiImageFile").files?.[0];
+ const status=$("aiImageStatus"), result=$("aiImageResult");
+ if(!prompt){alert("Write what you want the AI to create or edit first.");return;}
+ status.textContent="AI image is creating…"; result.innerHTML="";
+ try{
+   let imageData=null;
+   if(file){
+     if(file.size>10*1024*1024)throw new Error("Please use an image smaller than 10MB.");
+     imageData=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file);});
+   }
+   const r=await fetch(sbImageEndpoint(),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt,imageData})});
+   const data=await r.json().catch(()=>({}));
+   if(!r.ok)throw new Error(data.error||data.detail||("Image server error "+r.status));
+   if(!data.image)throw new Error("Image server returned no image.");
+   result.innerHTML=`<img src="${data.image}" alt="AI generated" style="width:100%;max-height:650px;object-fit:contain;border-radius:14px;background:#000"><div class="actions" style="margin-top:9px"><a class="btn" href="${data.image}" download="smart-buwaba-ai.png">⬇️ Save Image</a></div>`;
+   status.textContent="Image ready ✓";
+ }catch(e){console.error("AI image error:",e);status.textContent="Image creation failed";result.innerHTML=`<div class="note">${safeText(e?.message||"Unknown error")}</div>`;}
+}
+
 async function askAI(){
  const input=$("aiText"),q=input.value.trim();if(!q)return;
  addAI(q,"user"); input.value="";
