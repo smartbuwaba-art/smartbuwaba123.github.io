@@ -919,7 +919,7 @@ async function askAI(){
  const status=$("aiStatus");if(status)status.textContent="AI: thinking…";
  try{
   if(wantsImageGeneration(q)){
-   await generateAIImageFromPrompt(imagePromptFromChat(q));
+   await generateAIImageFromPrompt(imagePromptFromChat(q), sbSelectedAIImageFile);
    addAI("Ndalenga chithunzi chako. Chawoneka pansipa pa Image AI.","ai");
    if(status)status.textContent="AI: image created ✓";
    return;
@@ -945,8 +945,10 @@ function sbImageEndpoint(){
 }
 function fileToDataURL(file){return new Promise((resolve,reject)=>{const fr=new FileReader();fr.onload=()=>resolve(fr.result);fr.onerror=reject;fr.readAsDataURL(file);});}
 function wantsImageGeneration(text){
- const q=String(text||"").toLowerCase();
- return (/\b(create|generate|make|draw|design|render|visualize|paint|edit|panga|pangani|jambula)\b/.test(q) && /\b(image|picture|photo|portrait|drawing|art|illustration|chithunzi|chithuz|zojambula)\b/.test(q));
+ const q=String(text||"").toLowerCase().trim();
+ const hasImage=/\b(image|picture|photo|portrait|drawing|art|illustration|chithunzi|chithuz|zojambula|chithunzicho)\b/.test(q);
+ const hasAction=/\b(create|generate|make|draw|design|render|visualize|paint|edit|panga|pangani|pangira|ndipange|ndipangire|jambula|jambulani)\b/.test(q);
+ return hasImage && hasAction;
 }
 function imagePromptFromChat(text){return String(text||"").replace(/^\s*(please\s+)?(create|generate|make|draw|design|render|visualize|paint|edit|panga|pangani|jambula)\s+(an?\s+)?(image|picture|photo|portrait|drawing|art|illustration|chithunzi|chithuz|zojambula)\s*(of|showing|that|:)?\s*/i,"").trim()||String(text||"").trim();}
 async function generateAIImageFromPrompt(prompt,file=null){
