@@ -965,7 +965,7 @@ async function generateAIImageFromPrompt(prompt,file=null){
  }catch(e){
   console.error(e);
   if(st)st.textContent="Image AI: connection failed";
-  out.innerHTML='<div class="note">Image AI failed: '+safeText(e.message||e)+'<br><br>Backend ikufunika kukhala deployed ndi OPENAI_API_KEY.</div>';
+  out.innerHTML='<div class="note">Image AI failed: '+safeText(e.message||e)+'<br><br>Image backend ikufunika kukhala deployed pa Vercel ndi OPENAI_API_KEY.</div>';
   throw e;
  }
 }
