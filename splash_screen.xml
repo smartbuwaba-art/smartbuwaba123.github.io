@@ -1,0 +1,4 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="#020b05" />
+    <item android:gravity="center" android:width="230dp" android:height="230dp" android:drawable="@drawable/app_logo" />
+</layer-list>
