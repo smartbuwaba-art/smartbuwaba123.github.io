@@ -200,7 +200,7 @@ main{max-width:1280px;padding:22px 18px 95px}.appHero{min-height:480px;border:1p
 </section>
 
 <section id="ai" class="page hidden">
-<div class="sectionHead"><div><h2>🤖 Smart Buwaba AI</h2><div class="muted">Your creative assistant for captions, ideas and website help.</div></div></div>
+<div class="sectionHead"><div><h2>🤖 Smart Buwaba AI</h2><div class="muted">Your creative assistant for captions, ideas and website help.</div></div><button class="btn secondary" type="button" onclick="newAIChat()">＋ New Chat</button></div>
 <div class="aiBox"><div id="aiMessages" class="aiMessages"><div class="aiMsg"><strong>Smart Buwaba AI</strong><br>Moni bro! Nditha kukuthandiza ndi captions, video ideas, post ideas, kapena kufotokoza momwe website imagwirira ntchito. Ndipemphenso kuti <b>panga chithunzi...</b> ngati ufuna image.</div></div>
 <div class="chatInput"><button class="btn secondary" id="aiPlusBtn" onclick="openAIImagePicker()" title="Add photo / AI image" style="min-width:48px;font-size:22px;font-weight:1000;padding:8px 14px">＋</button><input id="aiText" placeholder="Ask AI or type: Create an image of..." onkeydown="if(event.key==='Enter')askAI()"><button class="btn" id="aiAskBtn" onclick="askAI()">Ask</button></div>
 <div class="note" id="aiStatus" style="margin-top:10px">AI: ready • tap ＋ to add a photo</div></div>
@@ -208,7 +208,7 @@ main{max-width:1280px;padding:22px 18px 95px}.appHero{min-height:480px;border:1p
   <div style="font-weight:850;margin-bottom:8px">🎨 Create / Edit Image</div>
   <div class="muted" style="font-size:12px;margin-bottom:10px">Write what you want. Add a photo if you want the AI to edit it.</div>
   <div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:10px"><button class="btn secondary" type="button" onclick="openAIImagePicker()">＋ Add Photo</button><span class="muted" style="align-self:center;font-size:12px">Optional — add a photo to edit it</span></div>
-  <input id="aiImageFile" type="file" accept="image/png,image/jpeg,image/webp" style="display:none">
+  <input id="aiImageFile" type="file" accept="image/png,image/jpeg,image/webp" style="display:none" onchange="handleAIImageSelected(this.files&&this.files[0])">
   <textarea id="aiImagePrompt" placeholder="e.g. Create a cinematic Malawi sunset over a lake..." style="width:100%;min-height:85px;background:#0a0a0e;border:1px solid var(--line);color:#fff;border-radius:10px;padding:11px"></textarea>
   <div class="actions" style="margin-top:9px"><button class="btn" onclick="generateAIImage()">✨ Generate Image</button><button class="btn secondary" onclick="clearAIImage()">Clear</button></div>
   <div id="aiImageStatus" class="muted" style="margin-top:9px;font-size:12px"></div>
@@ -971,6 +971,60 @@ async function generateAIImageFromPrompt(prompt,file=null){
 }
 
 
+
+
+// V41 AI-only stability patch: image selection/preview, real Generate button, and New Chat.
+let sbSelectedAIImageFile=null;
+function newAIChat(){
+  sbAIHistory=[];
+  localStorage.removeItem("sb_ai_history");
+  sbSelectedAIImageFile=null;
+  const box=$("aiMessages");
+  if(box) box.innerHTML='<div class="aiMsg"><strong>Smart Buwaba AI</strong><br>Moni bro! Chat yatsopano yayamba. Ndikhoza kukuthandiza ndi ma ideas, captions, website help, kapena kupanga/edit image.</div>';
+  const input=$("aiText"), prompt=$("aiImagePrompt"), file=$("aiImageFile"), result=$("aiImageResult"), st=$("aiImageStatus"), status=$("aiStatus");
+  if(input)input.value="";
+  if(prompt)prompt.value="";
+  if(file)file.value="";
+  if(result)result.innerHTML="";
+  if(st)st.textContent="";
+  if(status)status.textContent="AI: ready ✓";
+  if(input)input.focus();
+}
+const _handleAIImageSelectedV40=handleAIImageSelected;
+handleAIImageSelected=function(file){
+  if(!file)return;
+  sbSelectedAIImageFile=file;
+  _handleAIImageSelectedV40(file);
+  const box=$("aiMessages");
+  if(box){
+    const url=URL.createObjectURL(file);
+    box.insertAdjacentHTML("beforeend",'<div class="aiMsg user"><strong>📷 Photo added</strong><br><img src="'+url+'" alt="Selected photo" style="max-width:220px;max-height:220px;border-radius:14px;margin-top:7px;display:block;object-fit:cover"></div>');
+    box.scrollTop=box.scrollHeight;
+  }
+  const st=$("aiStatus"); if(st)st.textContent="AI: photo added ✓ • write what you want and tap Generate Image";
+};
+async function generateAIImage(){
+  const promptEl=$("aiImagePrompt");
+  const prompt=String(promptEl?.value||"").trim();
+  if(!prompt){
+    if(promptEl)promptEl.focus();
+    alert("Lembani zomwe mukufuna image AI ipange kapena edit.");
+    return;
+  }
+  const btns=document.querySelectorAll('button[onclick="generateAIImage()"]');
+  btns.forEach(b=>{b.disabled=true;b.dataset.oldText=b.textContent;b.textContent="Creating…";});
+  try{
+    const image=await generateAIImageFromPrompt(prompt,sbSelectedAIImageFile);
+    const box=$("aiMessages");
+    if(box && image){
+      box.insertAdjacentHTML("beforeend",'<div class="aiMsg"><strong>🎨 Smart Buwaba AI</strong><br><img src="'+image+'" alt="Smart Buwaba AI generated image" style="width:100%;max-width:520px;border-radius:16px;margin-top:8px;display:block"><br><a class="btn" href="'+image+'" download="smart-buwaba-ai-image.png">⬇ Save Image</a></div>');
+      box.scrollTop=box.scrollHeight;
+    }
+    return image;
+  }finally{
+    btns.forEach(b=>{b.disabled=false;b.textContent=b.dataset.oldText||"✨ Generate Image";});
+  }
+}
 
 const oldShowPage=window.showPage;
 window.showPage=function(id){oldShowPage(id);if(id==="feed")loadFeed();if(id==="chat")loadChatUsers();};
