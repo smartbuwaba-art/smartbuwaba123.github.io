@@ -118,6 +118,30 @@ main{max-width:1280px;padding:22px 18px 95px}.appHero{min-height:480px;border:1p
 
 </head>
 <body>
+<div id="sbSplash" aria-label="Smart Buwaba loading">
+  <div class="sbSplashBox">
+    <img class="sbSplashLogo" src="logo.png" alt="Smart Buwaba">
+    <div class="sbSplashTitle">SMART <b>BUWABA</b></div>
+    <div class="sbSplashSub">APP</div>
+    <div class="sbSplashDots"><i></i><i></i><i></i></div>
+    <div class="sbSplashStatus">Loading your Smart Buwaba…</div>
+  </div>
+</div>
+<script>
+(function(){
+  var started=Date.now();
+  function hideSplash(){
+    var el=document.getElementById('sbSplash');
+    if(!el)return;
+    var wait=Math.max(0,1100-(Date.now()-started));
+    setTimeout(function(){el.classList.add('hide');setTimeout(function(){el.remove()},500)},wait);
+  }
+  document.addEventListener('DOMContentLoaded',hideSplash,{once:true});
+  window.addEventListener('load',hideSplash,{once:true});
+  setTimeout(hideSplash,2200);
+})();
+</script>
+
 <header><nav class="nav" id="nav">
 <a class="brand" href="#home" onclick="showPage('home')"><span class="brandMark"><img src="logo.png" onerror="this.style.display='none'" alt="Smart Buwaba logo"></span><span class="brandText">SMART <b>BUWABA</b><small>APP</small></span></a>
 <button class="iconbtn menu" aria-label="Menu" onclick="document.getElementById('nav').classList.toggle('open')">☰</button>
