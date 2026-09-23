@@ -622,7 +622,7 @@ else { posts=[...defaultPosts]; renderHome(); renderVideos(); }
 
 /* ===== SMART BUWABA V2 ===== */
 let storage = null; if(firebaseReady && firebase.storage) storage = firebase.storage();
-const ADMIN_EMAIL = "mmuhammadallie@gmail.com";
+const ADMIN_EMAIL = "smartbuwaba@gmail.com";
 
 /* Smart Buwaba Storage compatibility:
    Firebase projects can use either the newer .firebasestorage.app bucket name
@@ -828,7 +828,9 @@ function selectChatUser(uid,name){activeChatUser={uid,name};$("chatTitle").textC
 async function loadMessages(){
  if(!activeChatUser||!currentUser)return;
  const id=chatId(currentUser.uid,activeChatUser.uid),box=$("chatMessages");
- const snap=await db.collection("chats").doc(id).collection("messages").orderBy("createdAt","asc").limit(100).get();
+ let snap;
+ try{ snap=await db.collection("chats").doc(id).collection("messages").orderBy("createdAt","asc").limit(100).get(); }
+ catch(orderErr){ console.warn("Ordered chat load failed, using fallback:",orderErr); snap=await db.collection("chats").doc(id).collection("messages").limit(100).get(); }
  box.innerHTML=snap.docs.map(d=>{const m=d.data();const voice=m.audioUrl?`<audio controls preload="metadata" src="${safeText(m.audioUrl)}" style="max-width:230px;width:100%;margin-top:5px"></audio><div class="muted" style="font-size:11px">${Number(m.audioDuration||0)}s</div>`:"";return `<div class="bubble ${m.senderId===currentUser.uid?"mine":""}">${safeText(m.text||"")}${voice}</div>`}).join("");
  box.scrollTop=box.scrollHeight;
 }
@@ -849,11 +851,10 @@ async function toggleVoiceRecording(){
      voiceStream?.getTracks().forEach(t=>t.stop()); voiceStream=null;
      if(status){status.style.display="block";status.textContent="Sending voice message...";}
      try{
-       const form=new FormData(); form.append("file",blob,"smart-buwaba-voice.webm"); form.append("upload_preset","smart buwaba upload");
-       const r=await fetch("https://api.cloudinary.com/v1_1/ehwhaqzt/video/upload",{method:"POST",body:form});
-       const data=await r.json(); if(!r.ok||!data.secure_url)throw new Error(data.error?.message||"Voice upload failed.");
        const id=chatId(currentUser.uid,activeChatUser.uid);
-       await db.collection("chats").doc(id).collection("messages").add({text:"🎙️ Voice message",audioUrl:data.secure_url,audioDuration:duration,senderId:currentUser.uid,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+       await db.collection("chats").doc(id).set({members:[currentUser.uid,activeChatUser.uid],updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+       const voiceUrl=await uploadFile(blob,`chats/${id}/voice_${Date.now()}.webm`,"Uploading voice message");
+       await db.collection("chats").doc(id).collection("messages").add({text:"🎙️ Voice message",audioUrl:voiceUrl,audioDuration:duration,senderId:currentUser.uid,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
        await loadMessages();
        if(status){status.textContent="Voice message sent ✓";setTimeout(()=>status.style.display="none",1800);}
      }catch(e){console.error("Voice send error:",e);alert("Voice message could not be sent. "+(e?.message||"Unknown error"));if(status)status.style.display="none";}
@@ -870,6 +871,7 @@ async function sendChat(){
  if(btn){btn.disabled=true;btn.textContent="Sending...";}
  try{
    const id=chatId(currentUser.uid,activeChatUser.uid);
+   await db.collection("chats").doc(id).set({members:[currentUser.uid,activeChatUser.uid],updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
    await db.collection("chats").doc(id).collection("messages").add({
      text,
      senderId:currentUser.uid,
@@ -1083,7 +1085,7 @@ window.openAddPost = function(){
  if(!isAdmin()){
    openAuth();
    if(!isRealAccount()) notify("Sign in with the Smart Buwaba admin account to publish official Smart Buwaba videos.");
-   else alert("Only the Smart Buwaba admin account can publish official Smart Buwaba videos.\n\nAdmin: mmuhammadallie@gmail.com");
+   else alert("Only the Smart Buwaba admin account can publish official Smart Buwaba videos.\n\nAdmin: smartbuwaba@gmail.com");
    return;
  }
  _openAddPost();
