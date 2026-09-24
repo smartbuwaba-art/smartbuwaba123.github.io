@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
             }
         });
         requestNeededPermissions();
-        webView.loadUrl("https://smartbuwaba-art.github.io/smartbuwaba123.github.io/");
+        webView.loadUrl("file:///android_asset/index.html");
     }
     private void requestNeededPermissions() {
         if (android.os.Build.VERSION.SDK_INT >= 23) {
