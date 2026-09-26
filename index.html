@@ -965,6 +965,19 @@ function sbAIEndpoint(){
  const v=(localStorage.getItem("sb_ai_backend")||"").trim();
  return /^https?:\/\//i.test(v)&&!/git-main-smartbuwaba-art\.vercel\.app/i.test(v)?v:SB_DEFAULT_AI_BACKEND;
 }
+async function sbFetchJSON(url,options={},timeoutMs=45000){
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),timeoutMs);
+ try{
+  const r=await fetch(url,{...options,signal:controller.signal});
+  const raw=await r.text(); let data={};
+  try{data=raw?JSON.parse(raw):{};}catch(_){data={raw:raw.slice(0,500)};}
+  if(!r.ok)throw new Error(String(data.error||data.detail||data.message||data.raw||("Server error "+r.status)));
+  return data;
+ }catch(e){
+  if(e?.name==="AbortError")throw new Error("AI server took too long to respond.");
+  throw e;
+ }finally{clearTimeout(timer);}
+}
 let sbAIHistory=JSON.parse(localStorage.getItem("sb_ai_history")||"[]");
 function saveAIHistory(){localStorage.setItem("sb_ai_history",JSON.stringify(sbAIHistory.slice(-24)));}
 function restoreAIHistory(){
@@ -986,10 +999,11 @@ async function askAI(){
    if(status)status.textContent="AI: image created ✓";
    return;
   }
-  const r=await fetch(sbAIEndpoint(),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:q,history:sbAIHistory.slice(-12)})});
-  const data=await r.json().catch(()=>({}));
-  if(!r.ok)throw new Error(data.error||data.detail||("Server error "+r.status));
-  const answer=String(data.reply||"").trim()||"Pepani bro, AI sinapeze yankho pano.";
+  const data=await sbFetchJSON(sbAIEndpoint(),{
+   method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},
+   body:JSON.stringify({message:q,history:sbAIHistory.slice(-12),app:"Smart Buwaba AI",language:"auto"})
+  });
+  const answer=String(data.reply||data.output_text||data.answer||"").trim()||"Pepani bro, AI sinapeze yankho pano.";
   addAI(answer,"ai");sbAIHistory.push({role:"assistant",content:answer});saveAIHistory();
   if(status)status.textContent="AI: connected ✓";
  }catch(e){
@@ -1019,9 +1033,10 @@ async function generateAIImageFromPrompt(prompt,file=null){
  try{
   const body={prompt:String(prompt||"").slice(0,4000)};
   if(file)body.imageData=await fileToDataURL(file);
-  const r=await fetch(sbImageEndpoint(),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
-  const data=await r.json().catch(()=>({}));
-  if(!r.ok)throw new Error(data.error||data.detail||("Server error "+r.status));
+  const data=await sbFetchJSON(sbImageEndpoint(),{
+   method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},
+   body:JSON.stringify(body)
+  });
   if(!data.image)throw new Error("Image service returned no image.");
   out.innerHTML='<img src="'+data.image+'" alt="Smart Buwaba AI image" style="width:100%;max-width:760px;border-radius:16px;display:block"><div class="actions" style="margin-top:9px"><a class="btn" href="'+data.image+'" download="smart-buwaba-ai-image.png">⬇ Save Image</a></div>';
   if(st)st.textContent="Image AI: ready ✓";
@@ -1067,6 +1082,15 @@ handleAIImageSelected=function(file){
   }
   const st=$("aiStatus"); if(st)st.textContent="AI: photo added ✓ • write what you want and tap Generate Image";
 };
+function clearAIImage(){
+  sbSelectedAIImageFile=null;
+  const file=$("aiImageFile"),prompt=$("aiImagePrompt"),result=$("aiImageResult"),st=$("aiImageStatus");
+  if(file)file.value="";
+  if(prompt)prompt.value="";
+  if(result)result.innerHTML="";
+  if(st)st.textContent="";
+  const status=$("aiStatus"); if(status)status.textContent="AI: ready ✓";
+}
 async function generateAIImage(){
   const promptEl=$("aiImagePrompt");
   const prompt=String(promptEl?.value||"").trim();
