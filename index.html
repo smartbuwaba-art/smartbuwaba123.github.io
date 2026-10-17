@@ -95,6 +95,54 @@ main{max-width:1280px;padding:22px 18px 95px}.appHero{min-height:480px;border:1p
 @media(max-width:760px){body{padding-bottom:72px}.nav{padding:8px 12px}.brandText{font-size:13px}.navlinks{display:none}.menu{display:block;margin-left:auto}.nav.open .navlinks{display:grid;grid-template-columns:repeat(2,1fr);position:absolute;top:62px;left:10px;right:10px;background:#071018;border:1px solid #173445;padding:9px;border-radius:16px;box-shadow:var(--shadow)}.nav.open .navlinks button{justify-content:flex-start}.accountNav{max-width:none}.appHero{grid-template-columns:1fr;padding:30px 22px;min-height:0}.heroCopy h1{font-size:48px}.heroDevice{display:none}.quickRow{grid-template-columns:repeat(2,1fr)}.quickRow button{min-height:74px}.grid{grid-template-columns:1fr;gap:13px}.thumb{height:230px}.appInfo{grid-template-columns:1fr}.pageBanner{align-items:flex-start;flex-direction:column}.pageBanner .btn{width:100%}.categoryGrid{grid-template-columns:1fr 1fr}.profileHero{align-items:flex-start;flex-wrap:wrap}.profileHero .btn{margin-left:86px;margin-top:-20px}.mobileBottomNav{position:fixed;display:grid;grid-template-columns:repeat(5,1fr);left:8px;right:8px;bottom:8px;height:62px;background:rgba(5,13,18,.94);border:1px solid #173445;border-radius:20px;z-index:80;backdrop-filter:blur(18px);box-shadow:0 12px 35px rgba(0,0,0,.5)}.mobileBottomNav button{border:0;background:transparent;color:#78909f;display:grid;place-items:center;gap:1px;font-size:9px;font-weight:800}.mobileBottomNav button span{font-size:16px;color:#a9bac4}.mobileBottomNav .createFab{width:48px;height:48px;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#031018;align-self:center;justify-self:center;font-size:20px}.mobileBottomNav .createFab span{color:#031018}.socialBar{gap:6px}.socialBtn{padding:7px 9px}}
 @media(max-width:430px){main{padding-left:11px;padding-right:11px}.heroCopy h1{font-size:43px}.quickRow{gap:8px}.categoryGrid{grid-template-columns:1fr}.profileHero .btn{margin-left:0;margin-top:0}.stats{grid-template-columns:repeat(3,1fr)}.stat{padding:12px 8px}.stat strong{font-size:19px}}
 .sbBootNotice{display:flex;position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:9999;max-width:min(92vw,620px);padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:rgba(17,17,23,.96);color:var(--muted);font-size:13px;box-shadow:var(--shadow)}
+
+/* SMART BUWABA CHAT REDESIGN — emerald WhatsApp-inspired, keeping Firebase chat logic intact */
+#chat{--chat-green:#00c96b;--chat-deep:#002d22;--chat-ink:#e9fff6;--chat-muted:#a7d5c8}
+#chat .sectionHead{display:none}
+#chat .chatWrap{grid-template-columns:minmax(260px,36%) minmax(0,1fr);min-height:690px;height:min(78vh,850px);border:1px solid rgba(0,201,107,.32);border-radius:24px;background:#001e18;box-shadow:0 18px 55px rgba(0,0,0,.35)}
+#chat .chatUsers{padding:14px;background:linear-gradient(180deg,#003629,#001f19);border-right:1px solid rgba(0,201,107,.25);scrollbar-width:thin}
+#chat .chatUsers>strong{font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:#8de8bd;padding:7px 9px}
+#chat .chatUser{padding:12px 10px;border-radius:15px;border-bottom:1px solid rgba(0,201,107,.16);transition:background .18s}
+#chat .chatUser:hover,#chat .chatUser:focus{background:rgba(0,201,107,.14);outline:none}
+#chat .chatUserAvatar,#chat .chatTopAvatar{background:linear-gradient(135deg,#00d879,#008b55);box-shadow:0 0 0 2px rgba(0,201,107,.12);color:#fff}
+#chat .onlineDot{background:#00e676;border-color:#003629}
+#chat .chatUserName,#chat .chatTopName{color:#f0fff8}
+#chat .chatUserStatus,#chat .chatTopStatus{color:#91d8bd}
+#chat .chatPanel{min-width:0;background:#00271e}
+#chat .chatTop{padding:16px 19px;background:linear-gradient(110deg,#003d2c,#00251c);border-bottom:1px solid rgba(0,201,107,.25);min-height:76px}
+#chat .chatTopAvatar{width:46px;height:46px;flex-basis:46px}
+#chat .chatMessages{padding:22px 18px 16px;background-color:#00261d;background-image:radial-gradient(circle at 20% 20%,rgba(0,201,107,.09) 0 1px,transparent 2px),radial-gradient(circle at 80% 70%,rgba(0,201,107,.07) 0 1px,transparent 2px),linear-gradient(135deg,rgba(0,15,11,.35),transparent 55%);background-size:34px 34px,47px 47px,auto;scrollbar-width:thin;scrollbar-color:#087a50 transparent}
+#chat .bubbleRow{margin:9px 0;gap:8px}
+#chat .bubble{max-width:min(78%,460px);padding:11px 14px;background:#173b3a;color:#f0fff8;border:1px solid rgba(190,255,227,.04);border-radius:18px 18px 18px 5px;box-shadow:0 5px 14px rgba(0,0,0,.14);overflow-wrap:anywhere}
+#chat .bubble.mine{background:linear-gradient(135deg,#00b963,#008f50);color:#fff;border-radius:18px 18px 5px 18px}
+#chat .bubbleTime{color:#d4f7e8;font-size:10px;opacity:.82}
+#chat .chatInput{gap:9px;padding:13px 15px;background:#00251d;border-top:1px solid rgba(0,201,107,.22)}
+#chat .chatInput input{min-width:0;color:#f1fff8!important;background:#123c37!important;border:1px solid transparent!important;border-radius:999px!important;padding:14px 17px!important;outline:none}
+#chat .chatInput input::placeholder{color:#9bc8bd}
+#chat .chatInput input:focus{border-color:#00c96b!important}
+#chat .chatInput .btn{min-width:47px;min-height:46px;border-radius:50%!important;background:#00bd65;color:white;box-shadow:0 5px 16px rgba(0,201,107,.18);padding:10px}
+#chat .chatInput .btn.secondary{background:#123c37;border:1px solid rgba(0,201,107,.22);box-shadow:none}
+#chat #voiceStatus{color:#9bc8bd!important;background:#00251d}
+@media(max-width:700px){
+ #chat{margin-left:-8px;margin-right:-8px}
+ #chat .chatWrap{grid-template-columns:minmax(0,1fr);height:calc(100dvh - 145px);min-height:540px;border-radius:18px;overflow:hidden}
+ #chat .chatUsers{display:flex;align-items:flex-start;gap:8px;overflow-x:auto;overflow-y:hidden;border-right:0;border-bottom:1px solid rgba(0,201,107,.22);padding:9px 10px;max-height:104px}
+ #chat .chatUsers>strong{display:none}
+ #chat #chatUsers{display:flex;gap:8px;margin-top:0!important}
+ #chat .chatUser{flex:0 0 72px;min-width:72px;max-width:80px;display:flex;flex-direction:column;align-items:center;gap:5px;text-align:center;padding:5px 3px;border:0}
+ #chat .chatUserAvatar{width:46px;height:46px;flex-basis:46px;font-size:13px}
+ #chat .chatUserInfo{width:100%;min-width:0;flex:none}
+ #chat .chatUserName{font-size:11px;font-weight:700;max-width:72px}
+ #chat .chatUserStatus{display:none}
+ #chat .chatTop{padding:12px 14px;min-height:68px}
+ #chat .chatTopAvatar{width:42px;height:42px;flex-basis:42px}
+ #chat .chatMessages{padding:15px 11px 12px}
+ #chat .bubble{max-width:86%;padding:10px 12px;font-size:14px}
+ #chat .chatInput{padding:10px 9px;gap:6px}
+ #chat .chatInput input{padding:12px 13px!important;font-size:14px}
+ #chat .chatInput .btn{min-width:42px;min-height:42px}
+}
+
 </style>
 
 <script type="application/ld+json">
@@ -222,7 +270,7 @@ main{max-width:1280px;padding:22px 18px 95px}.appHero{min-height:480px;border:1p
 </section>
 
 <section id="chat" class="page hidden">
-<div class="sectionHead"><div><h2>💬 Chat</h2><div class="muted">Chat with other Smart Buwaba users.</div></div></div>
+<div class="sectionHead"><div><h2>💬 Smart Buwaba Chat</h2><div class="muted">Chat with other Smart Buwaba users.</div></div></div>
 <div class="chatWrap">
 <div class="chatUsers"><strong>People</strong><div id="chatUsers" style="margin-top:10px"></div></div>
 <div class="chatPanel"><div class="chatTop"><div class="chatTopAvatar" id="chatTopAvatar">SB<span class="onlineDot"></span></div><div class="chatTopMeta"><div id="chatTitle" class="chatTopName">Select a person</div><div id="chatTopStatus" class="chatTopStatus">● Online</div></div></div><div id="chatMessages" class="chatMessages"></div><div class="chatInput"><button class="btn secondary" id="voiceBtn" onclick="toggleVoiceRecording()" title="Record voice">🎙️</button><input id="chatText" placeholder="Write a message..." onkeydown="if(event.key==='Enter')sendChat()"><button class="btn" onclick="sendChat()" title="Send message">➤</button></div><div id="voiceStatus" class="muted" style="padding:0 14px 10px;display:none"></div></div>
