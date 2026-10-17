@@ -209,6 +209,18 @@ body{background:radial-gradient(circle at 50% -20%,#07583d 0,#03150f 42%),var(--
 @keyframes sbPulse{0%,100%{transform:scale(.94);opacity:.35}50%{transform:scale(1.04);opacity:.8}}
 @media (prefers-reduced-motion:reduce){#sbSplash:before,#sbSplash:after,.sbSplashLogo,.sbSplashDots i{animation:none}}
 </style>
+
+<style id="smartBuwabaReelsStyles">
+.reelsPage{max-width:100%!important;width:100%;padding:0!important;margin:0 auto!important;background:#041b16;color:#f4fff9;min-height:calc(100vh - 72px);overflow:hidden;border-radius:18px}
+.reelsTop{height:62px;display:flex;align-items:center;gap:12px;padding:8px 16px;background:rgba(3,24,19,.96);border-bottom:1px solid rgba(65,255,176,.18);position:sticky;top:0;z-index:5}
+.reelsTop>div{display:flex;flex-direction:column;gap:2px;flex:1}.reelsTop strong{font-size:17px}.reelsTop small{font-size:11px;color:#9ac9b7}.reelsBack,.reelsCreate{border:0;background:#0d4b38;color:#5dffb3;border-radius:50%;width:38px;height:38px;font-size:24px;cursor:pointer}
+.reelsFeed{height:calc(100dvh - 140px);min-height:460px;overflow-y:auto;scroll-snap-type:y mandatory;overscroll-behavior-y:contain;scrollbar-width:none}.reelsFeed::-webkit-scrollbar{display:none}
+.reelItem{height:calc(100dvh - 140px);min-height:460px;max-height:900px;position:relative;scroll-snap-align:start;scroll-snap-stop:always;background:radial-gradient(ellipse at top,#0c4a36,#020d0a 75%);overflow:hidden;isolation:isolate}
+.reelMedia{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#020806}.reelPoster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.52}.reelShade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.88),transparent 45%,rgba(0,0,0,.15));pointer-events:none;z-index:1}
+.reelInfo{position:absolute;z-index:2;left:16px;right:82px;bottom:25px;text-shadow:0 1px 6px #000}.reelInfo h3{font-size:19px;margin:8px 0}.reelInfo p{font-size:14px;line-height:1.4;margin:5px 0;color:#effff8;white-space:pre-wrap}.reelOwner{font-weight:700;color:#6dffbd;font-size:13px}.reelActions{position:absolute;z-index:3;right:13px;bottom:32px;display:flex;flex-direction:column;gap:20px;align-items:center}.reelAction{border:0;background:rgba(0,20,14,.7);border:1px solid rgba(98,255,185,.35);color:white;width:49px;height:49px;border-radius:50%;font-size:22px;cursor:pointer}.reelAction span{display:block;font-size:11px;margin-top:3px}.reelsLoading,.reelsEmpty{padding:40px 20px;text-align:center;color:#b9dfd0}.reelNoVideo{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:#9df4ca;text-align:center;padding:30px}.reelNoVideo .playMark{font-size:52px;background:#0c5c40;border-radius:50%;width:88px;height:88px;display:grid;place-items:center}
+@media(min-width:760px){.reelsPage{max-width:560px!important;border:1px solid rgba(78,255,181,.2)}.reelsFeed{height:calc(100vh - 145px)}.reelItem{height:calc(100vh - 145px)}}
+</style>
+
 </head>
 <body>
 <div id="sbSplash" aria-label="Smart Buwaba loading">
@@ -241,6 +253,7 @@ body{background:radial-gradient(circle at 50% -20%,#07583d 0,#03150f 42%),var(--
 <div class="navlinks">
 <button class="active" data-page="home" onclick="showPage('home')"><span>⌂</span> Home</button>
 <button data-page="videos" onclick="showPage('videos')"><span>▶</span> Videos</button>
+<button data-page="reels" onclick="showPage('reels')"><span>▮</span> Reels</button>
 <button data-page="feed" onclick="showPage('feed')"><span>◉</span> Feed</button>
 <button data-page="categories" onclick="showPage('categories')"><span>▦</span> Categories</button>
 <button data-page="chat" onclick="showPage('chat')"><span>◌</span> Chat</button>
@@ -285,6 +298,11 @@ body{background:radial-gradient(circle at 50% -20%,#07583d 0,#03150f 42%),var(--
 <div class="videoTools"><div class="searchWrap"><span>⌕</span><input id="search" class="search" placeholder="Search Smart Buwaba videos..." oninput="renderVideos()"></div></div>
 <div class="filters" id="filters"><button class="filter active" onclick="setCategory('All',this)">All</button><button class="filter" onclick="setCategory('Film',this)">Films</button><button class="filter" onclick="setCategory('Comedy',this)">Comedy</button><button class="filter" onclick="setCategory('Music',this)">Music</button><button class="filter" onclick="setCategory('Other',this)">Other</button></div>
 <div id="videoGrid" class="grid videoGrid" style="margin-top:18px"></div>
+</section>
+
+<section id="reels" class="page hidden reelsPage">
+ <div class="reelsTop"><button class="reelsBack" onclick="showPage('home')" aria-label="Back">‹</button><div><strong>Smart Buwaba Reels</strong><small>Swipe or scroll for the next video</small></div><button class="reelsCreate" onclick="openAddPost()" aria-label="Add video">＋</button></div>
+ <div id="reelsFeed" class="reelsFeed"><div class="reelsLoading">Loading Reels…</div></div>
 </section>
 
 <section id="categories" class="page hidden"><div class="pageBanner"><div><div class="sectionKicker">EXPLORE</div><h2>Categories</h2><p class="muted">Choose what you want to watch.</p></div></div><div class="categoryGrid"><button onclick="showPage('videos');setTimeout(()=>document.querySelector('#filters .filter:nth-child(2)').click(),50)"><span>▣</span><b>Films</b><small>Stories & movies</small></button><button onclick="showPage('videos');setTimeout(()=>document.querySelector('#filters .filter:nth-child(3)').click(),50)"><span>◉</span><b>Comedy</b><small>Laugh & enjoy</small></button><button onclick="showPage('videos');setTimeout(()=>document.querySelector('#filters .filter:nth-child(4)').click(),50)"><span>♪</span><b>Music</b><small>Sound & rhythm</small></button><button onclick="showPage('videos');setTimeout(()=>document.querySelector('#filters .filter:nth-child(5)').click(),50)"><span>✦</span><b>Other</b><small>Everything else</small></button></div></section>
@@ -460,6 +478,7 @@ function showPage(id){
  document.querySelectorAll(".navlinks button[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
  const nav=$("nav"); if(nav)nav.classList.remove("open");
  if(id==="videos")renderVideos();
+ if(id==="reels")renderReels();
  if(id==="home")renderHome();
  if(id==="feed")loadFeed();
  if(id==="chat")loadChatUsers();
@@ -502,11 +521,34 @@ async function deleteVideo(id){
    notify('Video deleted successfully.');
  }catch(e){console.error(e);alert('Could not delete this video.\n\n'+e.message);}
 }
-function renderHome(){ $("homeGrid").innerHTML=posts.slice().reverse().slice(0,4).map(card).join("")||empty(); $("countStat").textContent=posts.length }
+function renderReels(){
+ const host=$("reelsFeed"); if(!host)return;
+ const arr=posts.slice().reverse().filter(p=>String(p.videoUrl||p.video||"").trim());
+ if(!arr.length){
+  host.innerHTML='<div class="reelsEmpty"><div style="font-size:48px">▶</div><h3>Palibe Reels pano</h3><p>Mavidiyo omwe ali ndi video link adzaoneka pano. Admin angawonjezere video pa Videos.</p><button class="btn" onclick=&quot;showPage(\'videos\')&quot;>Pitani ku Videos</button></div>';
+  return;
+ }
+ host.innerHTML=arr.map((p,i)=>{
+  const id=String(p.id), video=esc(p.videoUrl||p.video||""), thumb=esc(p.thumbnailUrl||p.thumbUrl||p.thumb||""), title=esc(p.title||"Smart Buwaba Reel"), desc=esc(p.description||p.desc||""), owner=esc(p.ownerName||p.displayName||"Smart Buwaba Creator"), likes=Number(p.likeCount||0), liked=likedPosts.has(id);
+  const media=`<video class="reelMedia" src="${video}" ${thumb?`poster="${thumb}"`:''} controls playsinline loop muted preload="metadata" onplay="pauseOtherReels(this)"></video>`;
+  return `<article class="reelItem" data-reel-id="${esc(id)}">${media}<div class="reelShade"></div><div class="reelInfo"><div class="reelOwner">● ${owner}</div><h3>${title}</h3>${desc?`<p>${desc}</p>`:''}<p>▶ ${Number(p.viewCount||0).toLocaleString()} views</p></div><div class="reelActions"><button class="reelAction" onclick="toggleReelLike('${esc(id)}',this)" aria-label="Like">${liked?'❤️':'♡'}<span>${likes}</span></button><button class="reelAction" onclick="shareReel('${esc(id)}')" aria-label="Share">↗<span>Share</span></button><button class="reelAction" onclick="toggleReelSound(this)" aria-label="Sound">🔇<span>Sound</span></button></div></article>`;
+ }).join('');
+}
+function pauseOtherReels(active){document.querySelectorAll('#reelsFeed video').forEach(v=>{if(v!==active)v.pause();});}
+function toggleReelSound(btn){const v=btn.closest('.reelItem')?.querySelector('video');if(!v)return;v.muted=!v.muted;btn.innerHTML=(v.muted?'🔇':'🔊')+'<span>Sound</span>';}
+async function toggleReelLike(id,btn){
+ const key=String(id),p=posts.find(x=>String(x.id)===key);if(!p)return;
+ const wasLiked=likedPosts.has(key); if(wasLiked){likedPosts.delete(key);p.likeCount=Math.max(0,Number(p.likeCount||0)-1)}else{likedPosts.add(key);p.likeCount=Number(p.likeCount||0)+1;}
+ btn.innerHTML=(wasLiked?'♡':'❤️')+`<span>${p.likeCount}</span>`;
+ try{if(db&&firebaseReady&&!key.startsWith('demo'))await db.collection('videos').doc(key).update({likeCount:p.likeCount});}catch(e){console.warn('Reel like could not be synced:',e.message);notify('Like yasinthidwa pa screen koma sinasungidwe pa server.');}
+}
+async function shareReel(id){const p=posts.find(x=>String(x.id)===String(id));if(!p)return;const url=p.videoUrl||p.video||location.href;try{if(navigator.share)await navigator.share({title:p.title||'Smart Buwaba Reel',text:p.description||'Watch this on Smart Buwaba',url});else if(navigator.clipboard){await navigator.clipboard.writeText(url);notify('Video link copied.');}else prompt('Copy this video link:',url);}catch(e){if(e.name!=='AbortError')console.warn(e);}}
+function renderHome(){ $("homeGrid").innerHTML=posts.slice().reverse().slice(0,4).map(card).join("")||empty(); $("countStat").textContent=posts.length; if(!$("reels").classList.contains("hidden"))renderReels(); }
 function renderVideos(){
  const q=($("search").value||"").toLowerCase();
  let arr=posts.slice().reverse().filter(p=>(category==="All"||(p.category||"Other")==category)&&((p.title+" "+(p.description||p.desc||"")).toLowerCase().includes(q)));
  $("videoGrid").innerHTML=arr.map(card).join("")||empty();
+ if($("reels") && !$("reels").classList.contains("hidden"))renderReels();
 }
 function empty(){return `<div class="empty" style="grid-column:1/-1">No posts found yet.<br><button class="btn" style="margin-top:12px" onclick="openAddPost()">＋ Add your first post</button></div>`}
 function setCategory(c,el){category=c;document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));el.classList.add("active");renderVideos()}
