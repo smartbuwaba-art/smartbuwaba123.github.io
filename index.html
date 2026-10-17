@@ -120,6 +120,21 @@ main{max-width:1280px;padding:22px 18px 95px}.appHero{min-height:480px;border:1p
 #chat .chatInput input{min-width:0;color:#f1fff8!important;background:#123c37!important;border:1px solid transparent!important;border-radius:999px!important;padding:14px 17px!important;outline:none}
 #chat .chatInput input::placeholder{color:#9bc8bd}
 #chat .chatInput input:focus{border-color:#00c96b!important}
+/* SMART BUWABA COLORFUL CHAT COMPOSER + SOCIAL FOLLOW POLISH */
+#chat .chatInput{position:relative;gap:8px;flex-wrap:nowrap}
+#chat .chatInput .composerTool{width:39px;min-width:39px;height:39px;border-radius:13px!important;display:grid;place-items:center;padding:0;font-size:18px;background:linear-gradient(145deg,#173f54,#26304e);border:1px solid #3c7180;color:#a8f4ff;box-shadow:0 3px 10px #0003}
+#chat .chatInput .composerTool.stylo{background:linear-gradient(145deg,#42245d,#253b66);border-color:#8755aa;color:#f0c8ff}
+#chat .chatInput .composerTool.attach{background:linear-gradient(145deg,#5a3b17,#3e2e1c);border-color:#a77b36;color:#ffe2a3}
+#chat .chatInput #chatText{flex:1;min-width:0;border:1px solid #245c55!important;box-shadow:inset 0 1px 5px #0004}
+#chat .chatInput #chatText:focus{box-shadow:0 0 0 3px #00c96b18;border-color:#00c96b!important}
+#chat .chatInput #voiceBtn{background:linear-gradient(145deg,#00d879,#087bba)!important;border:0;color:white}
+#chat .chatInput .sendChatBtn{background:linear-gradient(145deg,#00d879,#00a96b)!important;border:0;color:white;font-size:18px}
+#chat .bubble{position:relative}
+#chat .bubble.mine{background:linear-gradient(135deg,#00c878 0%,#078e9d 55%,#3868bf 100%);border-color:#4ce4bd55}
+#chat .bubble:not(.mine){background:linear-gradient(135deg,#183f42,#26354b);border-color:#59d7d022}
+.socialBtn.following{background:linear-gradient(135deg,#073e32,#174d6b)!important;border-color:#21d6a0!important;color:#a8ffe0!important}
+.socialBtn.followBack{background:linear-gradient(135deg,#4b2671,#174d6b)!important;border-color:#bd8aff!important;color:#f3dcff!important}
+@media(max-width:700px){#chat .chatInput .composerTool{width:34px;min-width:34px;height:36px;border-radius:11px!important;font-size:16px}#chat .chatInput{gap:5px;padding:9px 7px}}
 #chat .chatInput .btn{min-width:47px;min-height:46px;border-radius:50%!important;background:#00bd65;color:white;box-shadow:0 5px 16px rgba(0,201,107,.18);padding:10px}
 #chat .chatInput .btn.secondary{background:#123c37;border:1px solid rgba(0,201,107,.22);box-shadow:none}
 #chat #voiceStatus{color:#9bc8bd!important;background:#00251d}
@@ -287,7 +302,7 @@ body{background:radial-gradient(circle at 50% -20%,#07583d 0,#03150f 42%),var(--
 <div class="sectionHead"><div><h2>💬 Smart Buwaba Chat</h2><div class="muted">Chat with other Smart Buwaba users.</div></div></div>
 <div class="chatWrap">
 <div class="chatUsers"><strong>People</strong><div id="chatUsers" style="margin-top:10px"></div></div>
-<div class="chatPanel"><div class="chatTop"><div class="chatTopAvatar" id="chatTopAvatar">SB<span class="onlineDot"></span></div><div class="chatTopMeta"><div id="chatTitle" class="chatTopName">Select a person</div><div id="chatTopStatus" class="chatTopStatus">● Online</div></div></div><div id="chatMessages" class="chatMessages"></div><div class="chatInput"><button class="btn secondary" id="voiceBtn" onclick="toggleVoiceRecording()" title="Record voice">🎙️</button><input id="chatText" placeholder="Write a message..." onkeydown="if(event.key==='Enter')sendChat()"><button class="btn" onclick="sendChat()" title="Send message">➤</button></div><div id="voiceStatus" class="muted" style="padding:0 14px 10px;display:none"></div></div>
+<div class="chatPanel"><div class="chatTop"><div class="chatTopAvatar" id="chatTopAvatar">SB<span class="onlineDot"></span></div><div class="chatTopMeta"><div id="chatTitle" class="chatTopName">Select a person</div><div id="chatTopStatus" class="chatTopStatus">● Online</div></div></div><div id="chatMessages" class="chatMessages"></div><div class="chatInput"><button class="btn secondary composerTool attach" onclick="document.getElementById('chatAttachInput').click()" title="Attach a photo">＋</button><input id="chatAttachInput" type="file" accept="image/*,video/*" class="hidden" onchange="handleChatAttachment(this)"><button class="btn secondary composerTool stylo" onclick="toggleChatStylo()" title="Text style">✎</button><input id="chatText" placeholder="Message Smart Buwaba..." onkeydown="if(event.key==='Enter')sendChat()"><button class="btn secondary" id="voiceBtn" onclick="toggleVoiceRecording()" title="Record voice">🎙️</button><button class="btn sendChatBtn" onclick="sendChat()" title="Send message">➤</button></div><div id="voiceStatus" class="muted" style="padding:0 14px 10px;display:none"></div></div>
 </div>
 </section>
 
@@ -471,7 +486,7 @@ function card(p){
  <div class="socialBar">
  <button class="socialBtn ${liked?"liked":""}" onclick="toggleLike('${String(p.id).replace(/'/g,"\\'")}')">❤️ <span id="like-${esc(p.id)}">${p.likeCount||0}</span></button>
  <button class="socialBtn" onclick="openComments('${String(p.id).replace(/'/g,"\\'")}')">💬 <span id="comment-${esc(p.id)}">${p.commentCount||0}</span></button><button class="socialBtn" onclick="downloadPost('${String(p.id).replace(/'/g,"\\'")}')">⬇ Download</button>
- ${p.ownerId?`<button class="socialBtn ${following?"following":""}" onclick="toggleFollow('${String(p.ownerId).replace(/'/g,"\\'")}')">＋ ${following?"Following":"Follow"}</button>`:""}
+ ${p.ownerId?`<button class="socialBtn ${following?"following":(Array.isArray(p.followerIds)&&currentUser&&p.followerIds.includes(currentUser.uid)?"followBack":"")}" onclick="toggleFollow('${String(p.ownerId).replace(/'/g,"\\'")}')">${following?"✓ Following":(Array.isArray(p.followerIds)&&currentUser&&p.followerIds.includes(currentUser.uid)?"↩ Follow back":"＋ Follow")}</button>`:""}
  ${canDeleteVideo(p)?`<button class="socialBtn dangerBtn" onclick="deleteVideo('${String(p.id).replace(/'/g,"\'")}')">🗑 Delete</button>`:""}
  </div></div></article>`;
 }
@@ -916,10 +931,34 @@ async function loadMessages(){
  if(!activeChatUser||!currentUser)return;
  const id=chatId(currentUser.uid,activeChatUser.uid),box=$("chatMessages");
  const snap=await db.collection("chats").doc(id).collection("messages").orderBy("createdAt","asc").limit(100).get();
- box.innerHTML=snap.docs.map(d=>{const m=d.data();const voice=m.audioUrl?`<audio controls preload="metadata" src="${safeText(m.audioUrl)}" style="max-width:230px;width:100%;margin-top:5px"></audio><div class="muted" style="font-size:11px">${Number(m.audioDuration||0)}s</div>`:"";return `<div class="bubble ${m.senderId===currentUser.uid?"mine":""}">${safeText(m.text||"")}${voice}</div>`}).join("");
+ box.innerHTML=snap.docs.map(d=>{const m=d.data();const voice=m.audioUrl?`<audio controls preload="metadata" src="${safeText(m.audioUrl)}" style="max-width:230px;width:100%;margin-top:5px"></audio><div class="muted" style="font-size:11px">${Number(m.audioDuration||0)}s</div>`:"";const photo=m.imageData?`<img src="${m.imageData}" alt="Shared photo" style="display:block;max-width:240px;width:100%;border-radius:12px;margin-top:5px">`:"";return `<div class="bubble ${m.senderId===currentUser.uid?"mine":""}">${safeText(m.text||"")}${photo}${voice}</div>`}).join("");
  box.scrollTop=box.scrollHeight;
 }
 let voiceRecorder=null, voiceChunks=[], voiceStream=null, voiceRecordingStartedAt=0;
+function toggleChatStylo(){
+ const input=$("chatText"); if(!input)return;
+ const enabled=input.dataset.stylo==="on";
+ input.dataset.stylo=enabled?"off":"on";
+ input.style.fontFamily=enabled?"inherit":"Georgia, serif";
+ input.style.fontStyle=enabled?"normal":"italic";
+ input.style.letterSpacing=enabled?"normal":".2px";
+ notify(enabled?"Chat text style reset.":"Decorative chat text style enabled.");
+}
+async function handleChatAttachment(input){
+ const file=input?.files?.[0]; if(!file)return;
+ if(!isRealAccount())return openAuth();
+ if(!activeChatUser)return alert("Select a person first.");
+ if(!file.type.startsWith("image/")){alert("Video attachments are not enabled in this chat version yet.");input.value="";return;}
+ try{
+  const reader=new FileReader();
+  reader.onload=async()=>{
+   try{const id=await ensureChat();await db.collection("chats").doc(id).collection("messages").add({text:"📷 Photo",imageData:String(reader.result),senderId:currentUser.uid,createdAt:firebase.firestore.FieldValue.serverTimestamp()});await loadMessages();}
+   catch(e){alert("Photo could not be sent. "+(e.message||""));}
+   input.value="";
+  };
+  reader.readAsDataURL(file);
+ }catch(e){alert("Could not open this photo.");input.value="";}
+}
 async function toggleVoiceRecording(){
  if(!isRealAccount())return openAuth();
  if(!activeChatUser)return alert("Select a person first.");
