@@ -143,6 +143,14 @@ main{max-width:1280px;padding:22px 18px 95px}.appHero{min-height:480px;border:1p
  #chat .chatInput .btn{min-width:42px;min-height:42px}
 }
 
+
+/* Smart Buwaba social refresh: Facebook-inspired home, WhatsApp-inspired chat */
+:root{--accent:#00c96b;--accent2:#21e6a1;--line:#164537;--card:#06251d;--card2:#0b342a;--bg:#03150f;--text:#effff7;--muted:#a5c8ba;--shadow:0 14px 38px rgba(0,0,0,.28)}
+body{background:radial-gradient(circle at 50% -20%,#07583d 0,#03150f 42%),var(--bg)}header{background:rgba(2,26,18,.92);border-bottom-color:#14523c}.navlinks button.active,.navlinks button:hover{background:#00a95b;color:#fff}.brand span b{color:#20e69a}
+.socialWelcome{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:24px 26px;border:1px solid #14543d;border-radius:22px;background:linear-gradient(115deg,#073b2b,#06251d 65%,#063b2a);margin-bottom:16px}.socialWelcome h1{font-size:clamp(25px,4vw,38px);margin:8px 0}.socialWelcome p{color:#b3d6c8;margin:0}.storiesPanel,.composerCard{border:1px solid #164b39;background:#06251d;border-radius:19px;padding:15px;margin-bottom:15px;box-shadow:0 8px 25px #0002}.storiesTitle{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.storiesRail{display:flex;gap:11px;overflow:auto;padding:2px 2px 5px}.storyTile{flex:0 0 112px;height:155px;border:1px solid #21654b;border-radius:15px;background:linear-gradient(160deg,#0c5b3d,#071f18);color:white;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:12px 7px;cursor:pointer}.storyTile b{font-size:12px;text-shadow:0 1px 4px #000}.storyAvatar{display:grid;place-items:center;width:48px;height:48px;border:3px solid #00d977;border-radius:50%;background:#073b2b;font-weight:900}.addStory{background:linear-gradient(160deg,#143d30,#0a261d)}.addStory .storyAvatar{background:#00c96b;color:#002b1b}.storyTwo{background:linear-gradient(160deg,#135f49,#102b2a)}.storyThree{background:linear-gradient(160deg,#184d6b,#0a251f)}.storyFour{background:linear-gradient(160deg,#9b6233,#183d32)}.composerTop{display:flex;align-items:center;gap:12px}.composerAvatar{width:44px;height:44px;flex:0 0 44px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#00d879,#087b50);font-weight:900;color:white}.composerPrompt{flex:1;text-align:left;border:1px solid #1b5a42;border-radius:999px;background:#0a382b;color:#c2ded2;padding:13px 17px;cursor:pointer}.composerActions{display:flex;gap:8px;border-top:1px solid #164b39;margin-top:13px;padding-top:11px}.composerActions button{flex:1;border:0;border-radius:10px;background:transparent;color:#b9dfce;padding:9px;cursor:pointer}.composerActions button:hover{background:#104533}.appHero{display:none}.quickRow{margin-top:0}.appInfo{display:none}.sectionHead h2{color:#effff7}.feedCard,.card,.panel{background:#06251d;border-color:#164b39}.feedCard{border-radius:18px}.btn{background:linear-gradient(135deg,#00c96b,#08a85d);color:#fff;box-shadow:0 7px 20px #00c96b20}.btn.secondary{background:#0c382b;border-color:#1b6046;color:#dcfff0}.profileHero,.pageBanner{background:linear-gradient(120deg,#073b2b,#06251d);border-color:#164b39}.profileAvatar{background:linear-gradient(135deg,#00c96b,#21e6a1);color:#00301d}.statusComposer{display:flex;gap:14px;align-items:flex-start;padding:20px;margin-top:16px}.statusComposer p{margin:6px 0 12px}.callFeature{text-align:center;padding:34px 20px;margin-top:16px}.callIcon{margin:auto;width:76px;height:76px;border-radius:50%;display:grid;place-items:center;background:#00c96b;color:#fff;font-size:34px;box-shadow:0 0 0 12px #00c96b18}.callActions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.callActions button{display:grid;text-align:left;gap:7px;padding:18px;cursor:pointer;color:var(--text)}.callActions button span{font-size:24px}.callActions small{color:var(--muted)}
+#chat .chatWrap{background:#00271e;border-color:#176447}#chat .chatUsers{background:#003629}#chat .chatTop{background:#003d2c}#chat .chatMessages{background-color:#00261d}#chat .bubble{background:#173b3a}#chat .bubble.mine{background:linear-gradient(135deg,#00b963,#008f50)}#chat .chatInput{background:#00251d}#chat .chatInput input{background:#123c37!important}
+@media(max-width:760px){main{padding:12px 10px 84px}.socialWelcome{padding:18px;align-items:flex-start;flex-direction:column}.socialWelcome .btn{width:100%}.storiesPanel,.composerCard{padding:12px}.storyTile{flex-basis:100px;height:140px}.composerActions button{font-size:12px;padding:8px 3px}.callActions{grid-template-columns:1fr}.navlinks{max-height:75vh;overflow:auto}.mobileBottomNav{background:rgba(2,29,20,.97);border-color:#176447}.mobileBottomNav button{color:#b4d9c8}.mobileBottomNav button span{color:#20e69a}.pageBanner{border-radius:17px}.statusComposer{padding:15px}}
+
 </style>
 
 <script type="application/ld+json">
@@ -221,15 +229,21 @@ main{max-width:1280px;padding:22px 18px 95px}.appHero{min-height:480px;border:1p
 <button data-page="feed" onclick="showPage('feed')"><span>◉</span> Feed</button>
 <button data-page="categories" onclick="showPage('categories')"><span>▦</span> Categories</button>
 <button data-page="chat" onclick="showPage('chat')"><span>◌</span> Chat</button>
+<button data-page="status" onclick="showPage('status')"><span>◉</span> Status</button>
+<button data-page="calls" onclick="showPage('calls')"><span>☎</span> Calls</button>
 <button data-page="ai" onclick="showPage('ai')"><span>✦</span> AI</button>
 <button data-page="camera" onclick="showPage('camera');startCamera()"><span>＋</span> Create</button>
 <button onclick="openNotifications()" aria-label="Notifications"><span>♢</span><i id="notifCount" class="notifDot hidden">0</i></button>
+<button data-page="profile" onclick="showPage('profile')"><span>♙</span> Profile</button>
 <button onclick="openAuth()" class="accountNav"><span class="navAvatar">SB</span><span id="userLabel">Account</span></button>
 <button onclick="openSettings()" aria-label="Settings">⚙</button>
 </div></nav></header>
 
 <main>
 <section id="home" class="page">
+<div class="socialWelcome"><div class="socialWelcomeText"><div class="sectionKicker">SMART BUWABA COMMUNITY</div><h1>What’s happening today?</h1><p>Share your moments, discover creators, and connect with your people.</p></div><button class="btn" onclick="openCommunityPost()">＋ Create Post</button></div>
+<div class="storiesPanel"><div class="storiesTitle"><strong>Stories & Status</strong><button class="textBtn" onclick="showPage('status')">See all →</button></div><div class="storiesRail"><button class="storyTile addStory" onclick="showPage('status')"><span class="storyAvatar">＋</span><b>Add to status</b></button><button class="storyTile" onclick="showPage('status')"><span class="storyAvatar">SB</span><b>Smart Buwaba</b></button><button class="storyTile storyTwo" onclick="showPage('status')"><span class="storyAvatar">🎬</span><b>Creators</b></button><button class="storyTile storyThree" onclick="showPage('status')"><span class="storyAvatar">🎵</span><b>Music</b></button><button class="storyTile storyFour" onclick="showPage('status')"><span class="storyAvatar">🌅</span><b>Moments</b></button></div></div>
+<div class="composerCard"><div class="composerTop"><div class="composerAvatar" id="homeComposerAvatar">SB</div><button onclick="openCommunityPost()" class="composerPrompt">What would you like to share?</button></div><div class="composerActions"><button onclick="openCommunityPost()">📷 Photo</button><button onclick="openCommunityPost()">🎥 Video</button><button onclick="showPage('status')">◉ Status</button></div></div>
 <div class="appHero">
   <div class="heroGlow"></div><div class="heroCopy">
     <div class="eyebrow">SMART BUWABA • CREATIVE APP</div>
@@ -277,6 +291,8 @@ main{max-width:1280px;padding:22px 18px 95px}.appHero{min-height:480px;border:1p
 </div>
 </section>
 
+<section id="status" class="page hidden"><div class="pageBanner"><div><div class="sectionKicker">MOMENTS THAT DISAPPEAR</div><h2>Status</h2><p class="muted">Share a quick update with your Smart Buwaba community.</p></div><button class="btn" onclick="createStatus()">＋ Add Status</button></div><div class="statusComposer panel"><div class="composerAvatar">SB</div><div><strong>My Status</strong><p class="muted">Share text, a photo, or a moment with your community.</p><button class="btn secondary" onclick="createStatus()">Create a status</button></div></div><div class="storiesPanel statusStories"><div class="storiesTitle"><strong>Recent updates</strong><span class="muted">Demo previews</span></div><div class="storiesRail"><button class="storyTile" onclick="createStatus()"><span class="storyAvatar">SB</span><b>Your status</b></button><button class="storyTile storyTwo" onclick="createStatus()"><span class="storyAvatar">🎬</span><b>Creators</b></button><button class="storyTile storyThree" onclick="createStatus()"><span class="storyAvatar">🎵</span><b>Music</b></button></div></div><div id="statusNotice" class="note" style="margin-top:14px">Statuses you create here are a visual starting point; audience sharing depends on the app's connected backend.</div></section>
+<section id="calls" class="page hidden"><div class="pageBanner"><div><div class="sectionKicker">STAY CONNECTED</div><h2>Calls</h2><p class="muted">Voice and video call area for Smart Buwaba.</p></div></div><div class="callFeature panel"><div class="callIcon">☎</div><h3>Connect face to face</h3><p class="muted">Choose a person from your chats to start a conversation. Live calling requires a configured calling service.</p><button class="btn" onclick="showPage('chat')">Open Chats →</button></div><div class="section"><div class="sectionHead"><div><h2>Quick actions</h2><div class="muted">Jump into your conversations.</div></div></div><div class="callActions"><button class="panel" onclick="showPage('chat')"><span>💬</span><strong>Messages</strong><small>Continue a chat</small></button><button class="panel" onclick="showPage('profile')"><span>♙</span><strong>Contacts</strong><small>View your profile</small></button><button class="panel" onclick="showPage('status')"><span>◉</span><strong>Status</strong><small>See updates</small></button></div></div></section>
 <section id="camera" class="page hidden">
 <div class="sectionHead"><div><h2>📷 Smart Buwaba Camera</h2><div class="muted">Take a photo or record a video, preview it, then post it to the community.</div></div></div>
 <div class="panel" style="max-width:820px;margin:auto">
@@ -312,7 +328,7 @@ main{max-width:1280px;padding:22px 18px 95px}.appHero{min-height:480px;border:1p
 
 </main>
 
-<div class="mobileBottomNav"><button onclick="showPage('home')"><span>⌂</span>Home</button><button onclick="showPage('videos')"><span>▶</span>Videos</button><button class="createFab" onclick="showPage('camera');startCamera()"><span>＋</span></button><button onclick="showPage('feed')"><span>◉</span>Feed</button><button onclick="showPage('profile')"><span>SB</span>Profile</button></div>
+<div class="mobileBottomNav"><button onclick="showPage('home')"><span>⌂</span>Home</button><button onclick="showPage('feed')"><span>◉</span>Feed</button><button onclick="showPage('chat')"><span>▣</span>Chat</button><button onclick="showPage('status')"><span>◌</span>Status</button><button onclick="showPage('profile')"><span>♙</span>Profile</button></div>
 <footer><div><strong>SMART BUWABA</strong> • Dream • Create • Achieve</div><div class="socials" style="margin-top:12px"><a href="#" onclick="return false">TikTok</a><a href="#" onclick="return false">Facebook</a><a href="#" onclick="return false">YouTube</a></div><div style="margin-top:12px;font-size:12px">© <span id="year"></span> Smart Buwaba</div></footer>
 
 <!-- Add Post -->
@@ -414,6 +430,13 @@ const defaultPosts=[
 let posts=[];
 let category="All";
 const $=id=>document.getElementById(id);
+function createStatus(){
+ const message=prompt("Write a short Smart Buwaba status:");
+ if(message===null)return;
+ const clean=message.trim();
+ if(!clean){alert("Please write something for your status.");return;}
+ const box=$("statusNotice"); if(box){box.textContent="Your status draft: “"+clean+"” — this preview is local to this page; publishing to other users needs a connected status backend.";}
+}
 function showPage(id){
  const page=$(id);
  if(!page){ console.warn("Smart Buwaba: page not found",id); return; }
