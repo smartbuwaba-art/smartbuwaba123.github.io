@@ -496,6 +496,7 @@ function card(p){
  const video=p.videoUrl||p.video||"";
  const liked=likedPosts.has(String(p.id));
  const following=followingUsers.has(String(p.ownerId||""));
+ const followsMe=followersUsers.has(String(p.ownerId||"")) || (Array.isArray(p.followerIds)&&currentUser&&p.followerIds.includes(currentUser.uid));
  const thumbHtml=thumb?`<img src="${esc(thumb)}" alt="">`:`<div class="placeholder"><div class="sbmark">SB</div></div>`;
  return `<article class="card">
  <div class="thumb">${thumbHtml}<span class="badge">${esc(p.category||"Other")}</span>
@@ -505,11 +506,11 @@ function card(p){
  <div class="socialBar">
  <button class="socialBtn ${liked?"liked":""}" onclick="toggleLike('${String(p.id).replace(/'/g,"\\'")}')">❤️ <span id="like-${esc(p.id)}">${p.likeCount||0}</span></button>
  <button class="socialBtn" onclick="openComments('${String(p.id).replace(/'/g,"\\'")}')">💬 <span id="comment-${esc(p.id)}">${p.commentCount||0}</span></button><button class="socialBtn" onclick="downloadPost('${String(p.id).replace(/'/g,"\\'")}')">⬇ Download</button>
- ${p.ownerId?`<button class="socialBtn ${following?"following":(Array.isArray(p.followerIds)&&currentUser&&p.followerIds.includes(currentUser.uid)?"followBack":"")}" onclick="toggleFollow('${String(p.ownerId).replace(/'/g,"\\'")}')">${following?"✓ Following":(Array.isArray(p.followerIds)&&currentUser&&p.followerIds.includes(currentUser.uid)?"↩ Follow back":"＋ Follow")}</button>`:""}
+ ${p.ownerId?`<button class="socialBtn ${following?"following":(followsMe?"followBack":"")}" onclick="toggleFollow('${String(p.ownerId).replace(/'/g,"\\'")}')">${following?"✓ Following":(followsMe?"↩ Follow back":"＋ Follow")}</button>`:""}
  ${canDeleteVideo(p)?`<button class="socialBtn dangerBtn" onclick="deleteVideo('${String(p.id).replace(/'/g,"\'")}')">🗑 Delete</button>`:""}
  </div></div></article>`;
 }
-function isVideoAdmin(){return !!currentUser && String(currentUser.email||'').toLowerCase()==='mmuhammadallie@gmail.com'}
+function isVideoAdmin(){return !!currentUser && String(currentUser.email||'').toLowerCase()==='smartbuwaba@gmail.com'}
 function canDeleteVideo(p){return !!currentUser && (String(p.ownerId||'')===String(currentUser.uid||'') || isVideoAdmin())}
 async function deleteVideo(id){
  const p=posts.find(x=>String(x.id)===String(id)); if(!p || !canDeleteVideo(p)) return;
@@ -616,6 +617,8 @@ async function loadPosts(){
 
 const likedPosts=new Set(JSON.parse(localStorage.getItem("sb_likes")||"[]"));
 const followingUsers=new Set(JSON.parse(localStorage.getItem("sb_follows")||"[]"));
+const followersUsers=new Set();
+let socialLoadUid="";
 let notifications=JSON.parse(localStorage.getItem("sb_notifications")||"[]");
 
 function persistSocial(){
@@ -716,11 +719,49 @@ async function sendComment(){
  }catch(e){alert("Comment could not be saved. Check Firestore Rules.");console.error(e)}
  finally{if(btn){btn.disabled=false;btn.textContent="Post comment";}}
 }
+async function loadSocialGraph(user){
+ followingUsers.clear(); followersUsers.clear();
+ if(!user || user.isAnonymous || !db || !firebaseReady){socialLoadUid="";persistSocial();return;}
+ socialLoadUid=user.uid;
+ try{
+   const [followingSnap,followersSnap]=await Promise.all([
+     db.collection("users").doc(user.uid).collection("following").get(),
+     db.collection("users").doc(user.uid).collection("followers").get()
+   ]);
+   if(socialLoadUid!==user.uid)return;
+   followingSnap.forEach(d=>followingUsers.add(d.id));
+   followersSnap.forEach(d=>followersUsers.add(d.id));
+   persistSocial();renderHome();renderVideos();if(typeof renderReels==="function")renderReels();
+ }catch(e){
+   console.warn("Could not load the server follow graph. Check Firestore Rules:",e);
+   notify("Follow data could not load from the server. Check Firestore Rules.");
+ }
+}
 async function toggleFollow(uid){
- const key=String(uid);if(!key||key==="undefined")return;
- if(followingUsers.has(key)){followingUsers.delete(key);notify("You unfollowed this creator.")}
- else{followingUsers.add(key);notify("You are now following this creator.")}
- persistSocial();renderHome();renderVideos();
+ const key=String(uid||"");
+ if(!key||key==="undefined")return;
+ if(!isRealAccount()) { notify("Sign in to follow people and use Follow back."); return openAuth(); }
+ if(key===String(currentUser.uid)){notify("You cannot follow your own account.");return;}
+ if(!db||!firebaseReady){notify("Connect to Firebase to save follows across devices.");return;}
+ const wasFollowing=followingUsers.has(key), me=currentUser.uid;
+ try{
+   const batch=db.batch();
+   const followingRef=db.collection("users").doc(me).collection("following").doc(key);
+   const followerRef=db.collection("users").doc(key).collection("followers").doc(me);
+   if(wasFollowing){batch.delete(followingRef);batch.delete(followerRef);}
+   else{
+     const relation={uid:key,createdAt:firebase.firestore.FieldValue.serverTimestamp()};
+     batch.set(followingRef,relation,{merge:true});
+     batch.set(followerRef,{uid:me,createdAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+   }
+   await batch.commit();
+   if(wasFollowing){followingUsers.delete(key);notify("You unfollowed this creator.");}
+   else{followingUsers.add(key);notify(followersUsers.has(key)?"Follow back successful — you now follow each other!":"You are now following this creator.");}
+   persistSocial();renderHome();renderVideos();if(typeof renderReels==="function")renderReels();
+ }catch(e){
+   console.error("Follow update failed:",e);
+   alert("Follow could not be saved to Firebase. Check Firestore Rules allow signed-in users to create/delete users/{uid}/following/{targetUid} and users/{uid}/followers/{followerUid} documents.");
+ }
 }
 function getYouTubeId(url){
  try{
@@ -750,7 +791,7 @@ else { posts=[...defaultPosts]; renderHome(); renderVideos(); }
 
 /* ===== SMART BUWABA V2 ===== */
 let storage = null; if(firebaseReady && firebase.storage) storage = firebase.storage();
-const ADMIN_EMAIL = "mmuhammadallie@gmail.com";
+const ADMIN_EMAIL = "smartbuwaba@gmail.com";
 
 /* Smart Buwaba Storage compatibility:
    Firebase projects can use either the newer .firebasestorage.app bucket name
@@ -808,6 +849,7 @@ if(firebaseReady && firebase.auth) firebase.auth().onAuthStateChanged(async u=>{
      },{merge:true});
    }catch(e){}
  }
+ await loadSocialGraph(u);
 });
 
 function openCommunityPost(){
@@ -1251,7 +1293,7 @@ window.openAddPost = function(){
  if(!isAdmin()){
    openAuth();
    if(!isRealAccount()) notify("Sign in with the Smart Buwaba admin account to publish official Smart Buwaba videos.");
-   else alert("Only the Smart Buwaba admin account can publish official Smart Buwaba videos.\n\nAdmin: mmuhammadallie@gmail.com");
+   else alert("Only the Smart Buwaba admin account can publish official Smart Buwaba videos.\n\nAdmin: smartbuwaba@gmail.com");
    return;
  }
  _openAddPost();
