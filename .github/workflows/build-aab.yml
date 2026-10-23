@@ -1,1 +1,43 @@
 
+
+name: Build Smart Buwaba Android App
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "sb44android/**"
+      - ".github/workflows/build-aab.yml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Check Android project
+        run: |
+          ls -la
+          test -f sb44android/settings.gradle || test -f sb44android/settings.gradle.kts
+
+      - name: Build Android App Bundle
+        working-directory: sb44android
+        run: gradle bundleRelease
+
+      - name: Upload AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: smart-buwaba-aab
+          path: sb44android/**/build/outputs/bundle/**/*.aab
+          if-no-files-found: error
