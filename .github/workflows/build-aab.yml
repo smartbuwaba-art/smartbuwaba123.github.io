@@ -3,6 +3,12 @@ name: Build Smart Buwaba Android App
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - "app/**"
+      - "build.gradle"
+      - "settings.gradle"
+      - ".github/workflows/build-aab.yml"
 
 jobs:
   build:
@@ -18,9 +24,12 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Check Android project
-        run: |
-          ls -la
-          cat settings.gradle
-          cat build.gradle
+      - name: Build Android App Bundle
+        run: gradle bundleRelease
 
+      - name: Upload AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: smart-buwaba-aab
+          path: app/build/outputs/bundle/release/*.aab
+          if-no-files-found: error
