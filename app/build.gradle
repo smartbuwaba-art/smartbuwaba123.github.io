@@ -5,13 +5,13 @@ plugins {
 
 android {
     namespace 'com.smartbuwaba.app'
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         applicationId 'com.smartbuwaba.app'
         minSdk 23
-        targetSdk 35
-        versionCode 44
-        versionName '44.0'
+        targetSdk 36
+        versionCode 45
+        versionName '45.0'
     }
 }
