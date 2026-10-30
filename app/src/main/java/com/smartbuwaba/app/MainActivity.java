@@ -2,10 +2,12 @@ package com.smartbuwaba.app;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
@@ -28,6 +30,7 @@ import java.util.Map;
 public class MainActivity extends Activity {
     private static final String HOME_HOST = "smart-buwaba-ai-app.vercel.app";
     private static final int WEB_PERMISSION_REQUEST = 9101;
+    private static final int OVERLAY_PERMISSION_REQUEST = 9102;
 
     private WebView webView;
     private PermissionRequest pendingWebPermissionRequest;
@@ -36,7 +39,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         webView = new WebView(this);
         setContentView(webView);
 
@@ -79,8 +81,43 @@ public class MainActivity extends Activity {
                 runOnUiThread(() -> handleWebPermissionRequest(request, true));
             }
         });
-
         webView.loadUrl("https://" + HOME_HOST + "/");
+
+        if (Settings.canDrawOverlays(this)) {
+            startFloatingAssistant();
+        } else if (!getPreferences(MODE_PRIVATE).getBoolean("overlay_prompt_shown", false)) {
+            getPreferences(MODE_PRIVATE).edit().putBoolean("overlay_prompt_shown", true).apply();
+            new AlertDialog.Builder(this)
+                .setTitle("Chat Buwaba floating button")
+                .setMessage("Allow Chat Buwaba to show a small movable B button over other apps? You can close it any time using the × on the button.")
+                .setPositiveButton("Allow", (dialog, which) -> requestOverlayPermission())
+                .setNegativeButton("Not now", null)
+                .show();
+        }
+    }
+
+    private void requestOverlayPermission() {
+        if (Build.VERSION.SDK_INT >= 23 && !Settings.canDrawOverlays(this)) {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent, OVERLAY_PERMISSION_REQUEST);
+        }
+    }
+
+    private void startFloatingAssistant() {
+        if (!Settings.canDrawOverlays(this)) return;
+        Intent service = new Intent(this, FloatingAssistantService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) startForegroundService(service);
+        else startService(service);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == OVERLAY_PERMISSION_REQUEST) {
+            if (Settings.canDrawOverlays(this)) startFloatingAssistant();
+            else Toast.makeText(this, "Floating button permission was not enabled.", Toast.LENGTH_LONG).show();
+        }
     }
 
     private boolean isSmartBuwabaHost(String host) {
@@ -91,8 +128,6 @@ public class MainActivity extends Activity {
         if (uri == null || !"https".equalsIgnoreCase(uri.getScheme())) return false;
         String host = uri.getHost();
         if (isSmartBuwabaHost(host)) return true;
-
-        // Keep Google/Firebase authentication redirects inside the login flow.
         return host != null && (
             "accounts.google.com".equalsIgnoreCase(host) ||
             "myaccount.google.com".equalsIgnoreCase(host) ||
@@ -104,7 +139,6 @@ public class MainActivity extends Activity {
         if (uri == null) return true;
         if ("about".equalsIgnoreCase(uri.getScheme())) return false;
         if (isWebViewHost(uri)) return false;
-
         try {
             Intent intent;
             if ("intent".equalsIgnoreCase(uri.getScheme())) {
@@ -114,9 +148,7 @@ public class MainActivity extends Activity {
                     startActivity(intent);
                     return true;
                 } catch (ActivityNotFoundException ex) {
-                    if (fallback != null && !fallback.trim().isEmpty()) {
-                        startExternalUri(Uri.parse(fallback));
-                    }
+                    if (fallback != null && !fallback.trim().isEmpty()) startExternalUri(Uri.parse(fallback));
                     return true;
                 }
             }
@@ -129,40 +161,28 @@ public class MainActivity extends Activity {
 
     private void startExternalUri(Uri uri) {
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
-        } else {
-            Toast.makeText(this, "No app is available to open that link.", Toast.LENGTH_SHORT).show();
-        }
+        if (intent.resolveActivity(getPackageManager()) != null) startActivity(intent);
+        else Toast.makeText(this, "No app is available to open that link.", Toast.LENGTH_SHORT).show();
     }
 
     private void handleWebPermissionRequest(PermissionRequest request, boolean askForMissing) {
         if (request == null) return;
         List<String> grant = new ArrayList<>();
         List<String> missing = new ArrayList<>();
-
         for (String resource : request.getResources()) {
             if (PermissionRequest.RESOURCE_AUDIO_CAPTURE.equals(resource)) {
-                if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-                    grant.add(resource);
-                } else {
-                    missing.add(Manifest.permission.RECORD_AUDIO);
-                }
+                if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) grant.add(resource);
+                else missing.add(Manifest.permission.RECORD_AUDIO);
             } else if (PermissionRequest.RESOURCE_VIDEO_CAPTURE.equals(resource)) {
-                if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                    grant.add(resource);
-                } else {
-                    missing.add(Manifest.permission.CAMERA);
-                }
+                if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) grant.add(resource);
+                else missing.add(Manifest.permission.CAMERA);
             }
         }
-
         if (!missing.isEmpty() && askForMissing) {
             pendingWebPermissionRequest = request;
             requestPermissions(missing.toArray(new String[0]), WEB_PERMISSION_REQUEST);
             return;
         }
-
         if (!grant.isEmpty()) request.grant(grant.toArray(new String[0]));
         else request.deny();
     }
@@ -197,13 +217,10 @@ public class MainActivity extends Activity {
         public boolean openApp(String requestedName) {
             if (!trustedPageLoaded || requestedName == null) return false;
             final String name = requestedName.trim().toLowerCase(Locale.ROOT);
-            Intent intent = null;
-
-            if ("settings".equals(name)) {
-                intent = new Intent(Settings.ACTION_SETTINGS);
-            } else if ("camera".equals(name)) {
-                intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            } else if ("calculator".equals(name)) {
+            Intent intent;
+            if ("settings".equals(name)) intent = new Intent(Settings.ACTION_SETTINGS);
+            else if ("camera".equals(name)) intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            else if ("calculator".equals(name)) {
                 intent = new Intent(Intent.ACTION_MAIN);
                 intent.addCategory(Intent.CATEGORY_APP_CALCULATOR);
             } else {
@@ -212,13 +229,11 @@ public class MainActivity extends Activity {
                 intent = getPackageManager().getLaunchIntentForPackage(packageName);
                 if (intent == null) return false;
             }
-
             if (intent.resolveActivity(getPackageManager()) == null) return false;
             final Intent launchIntent = intent;
             runOnUiThread(() -> {
-                try {
-                    startActivity(launchIntent);
-                } catch (ActivityNotFoundException | SecurityException e) {
+                try { startActivity(launchIntent); }
+                catch (ActivityNotFoundException | SecurityException e) {
                     Toast.makeText(MainActivity.this, "That app could not be opened.", Toast.LENGTH_SHORT).show();
                 }
             });
