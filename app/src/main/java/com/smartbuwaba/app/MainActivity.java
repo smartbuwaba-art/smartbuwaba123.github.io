@@ -83,16 +83,9 @@ public class MainActivity extends Activity {
         });
         webView.loadUrl("https://" + HOME_HOST + "/");
 
-        if (Settings.canDrawOverlays(this)) {
+        if (Settings.canDrawOverlays(this) &&
+            getPreferences(MODE_PRIVATE).getBoolean("floating_enabled", false)) {
             startFloatingAssistant();
-        } else if (!getPreferences(MODE_PRIVATE).getBoolean("overlay_prompt_shown", false)) {
-            getPreferences(MODE_PRIVATE).edit().putBoolean("overlay_prompt_shown", true).apply();
-            new AlertDialog.Builder(this)
-                .setTitle("Chat Buwaba floating button")
-                .setMessage("Allow Chat Buwaba to show a small movable B button over other apps? You can close it any time using the × on the button.")
-                .setPositiveButton("Allow", (dialog, which) -> requestOverlayPermission())
-                .setNegativeButton("Not now", null)
-                .show();
         }
     }
 
@@ -115,8 +108,15 @@ public class MainActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == OVERLAY_PERMISSION_REQUEST) {
-            if (Settings.canDrawOverlays(this)) startFloatingAssistant();
-            else Toast.makeText(this, "Floating button permission was not enabled.", Toast.LENGTH_LONG).show();
+            if (Settings.canDrawOverlays(this)) {
+                getPreferences(MODE_PRIVATE).edit().putBoolean("floating_enabled", true).apply();
+                startFloatingAssistant();
+                if (webView != null) webView.evaluateJavascript(
+                    "window.dispatchEvent(new Event('chatbuwaba-floating-enabled'))", null);
+            } else {
+                getPreferences(MODE_PRIVATE).edit().putBoolean("floating_enabled", false).apply();
+                Toast.makeText(this, "Floating button permission was not enabled.", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -211,6 +211,29 @@ public class MainActivity extends Activity {
             packages.put("gmail", "com.google.android.gm");
             packages.put("play_store", "com.android.vending");
             packages.put("chrome", "com.android.chrome");
+        }
+
+        @JavascriptInterface
+        public boolean isFloatingButtonEnabled() {
+            return getPreferences(MODE_PRIVATE).getBoolean("floating_enabled", false)
+                && Settings.canDrawOverlays(MainActivity.this);
+        }
+
+        @JavascriptInterface
+        public String setFloatingButton(boolean enabled) {
+            if (!trustedPageLoaded) return "unavailable";
+            if (!enabled) {
+                getPreferences(MODE_PRIVATE).edit().putBoolean("floating_enabled", false).apply();
+                stopService(new Intent(MainActivity.this, FloatingAssistantService.class));
+                return "off";
+            }
+            if (!Settings.canDrawOverlays(MainActivity.this)) {
+                runOnUiThread(() -> requestOverlayPermission());
+                return "permission";
+            }
+            getPreferences(MODE_PRIVATE).edit().putBoolean("floating_enabled", true).apply();
+            runOnUiThread(() -> startFloatingAssistant());
+            return "on";
         }
 
         @JavascriptInterface
