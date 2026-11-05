@@ -137,7 +137,8 @@ public class FloatingAssistantService extends Service {
                     case MotionEvent.ACTION_UP:
                         if (!moved) {
                             Intent launch = new Intent(FloatingAssistantService.this, MainActivity.class);
-                            launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            launch.putExtra("chat_buwaba_start_voice", true);
+                            launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                             startActivity(launch);
                         }
                         return true;
