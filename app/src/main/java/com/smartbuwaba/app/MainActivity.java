@@ -57,6 +57,16 @@ public class MainActivity extends Activity {
         webView.addJavascriptInterface(new SmartBuwabaNativeBridge(), "SmartBuwabaNative");
         webView.setWebViewClient(new WebViewClient() {
             @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                if (trustedPageLoaded && getIntent().getBooleanExtra("chat_buwaba_start_voice", false)) {
+                    getIntent().removeExtra("chat_buwaba_start_voice");
+                    view.postDelayed(() -> view.evaluateJavascript(
+                        "if (typeof startVoice === 'function') startVoice(); else window.dispatchEvent(new Event('chatbuwaba-start-voice'));", null), 500);
+                }
+            }
+
+            @Override
             public void onPageStarted(WebView view, String url, android.graphics.Bitmap favicon) {
                 Uri uri = Uri.parse(url);
                 trustedPageLoaded = isSmartBuwabaHost(uri.getHost());
@@ -86,6 +96,16 @@ public class MainActivity extends Activity {
         if (Settings.canDrawOverlays(this) &&
             getPreferences(MODE_PRIVATE).getBoolean("floating_enabled", false)) {
             startFloatingAssistant();
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        if (intent != null && intent.getBooleanExtra("chat_buwaba_start_voice", false) && webView != null) {
+            webView.postDelayed(() -> webView.evaluateJavascript(
+                "if (typeof startVoice === 'function') startVoice(); else window.dispatchEvent(new Event('chatbuwaba-start-voice'));", null), 700);
         }
     }
 
